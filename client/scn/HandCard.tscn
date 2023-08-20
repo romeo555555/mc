@@ -1,0 +1,86 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/error.png" type="Texture" id=1]
+[ext_resource path="res://assets/cardback1.png" type="Texture" id=2]
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+
+[node name="HandCard" type="Control"]
+margin_right = 200.0
+margin_bottom = 300.0
+rect_min_size = Vector2( 200, 300 )
+mouse_filter = 2
+
+[node name="TextureRect3" type="TextureRect" parent="."]
+margin_right = 200.0
+margin_bottom = 300.0
+texture = ExtResource( 2 )
+expand = true
+
+[node name="TextureRect4" type="TextureRect" parent="."]
+margin_top = 16.0
+margin_right = 200.0
+margin_bottom = 216.0
+rect_min_size = Vector2( 200, 200 )
+texture = ExtResource( 1 )
+expand = true
+
+[node name="Label8" type="Label" parent="."]
+margin_right = 200.0
+margin_bottom = 25.0
+custom_styles/normal = SubResource( 2 )
+text = "Bill Amstrong"
+align = 1
+valign = 1
+
+[node name="Label5" type="Label" parent="."]
+margin_top = 192.0
+margin_right = 200.0
+margin_bottom = 260.0
+custom_styles/normal = SubResource( 1 )
+text = "desc"
+align = 1
+valign = 1
+
+[node name="Label" type="Label" parent="."]
+margin_top = 258.0
+margin_right = 200.0
+margin_bottom = 300.0
+custom_styles/normal = SubResource( 1 )
+text = "3/4"
+align = 1
+valign = 1
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 175.0
+margin_top = 36.0
+margin_right = 195.0
+margin_bottom = 61.0
+custom_styles/normal = SubResource( 1 )
+text = "A"
+align = 1
+valign = 1
+
+[node name="Label3" type="Label" parent="."]
+margin_left = 175.0
+margin_top = 76.0
+margin_right = 195.0
+margin_bottom = 101.0
+custom_styles/normal = SubResource( 1 )
+text = "j"
+align = 1
+valign = 1
+
+[node name="Label4" type="Label" parent="."]
+margin_left = 175.0
+margin_top = 114.0
+margin_right = 195.0
+margin_bottom = 139.0
+custom_styles/normal = SubResource( 1 )
+text = "G"
+align = 1
+valign = 1

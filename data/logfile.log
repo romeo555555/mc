@@ -1,0 +1,105 @@
+{"level":"warn","ts":"2023-08-03T18:11:32.011Z","caller":"server/config.go:323","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.username"}
+{"level":"warn","ts":"2023-08-03T18:11:32.011Z","caller":"server/config.go:327","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.password"}
+{"level":"warn","ts":"2023-08-03T18:11:32.011Z","caller":"server/config.go:331","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.signing_key"}
+{"level":"warn","ts":"2023-08-03T18:11:32.011Z","caller":"server/config.go:335","msg":"WARNING: insecure default parameter value, change this for production!","param":"socket.server_key"}
+{"level":"warn","ts":"2023-08-03T18:11:32.011Z","caller":"server/config.go:339","msg":"WARNING: insecure default parameter value, change this for production!","param":"session.encryption_key"}
+{"level":"warn","ts":"2023-08-03T18:11:32.011Z","caller":"server/config.go:343","msg":"WARNING: insecure default parameter value, change this for production!","param":"session.refresh_encryption_key"}
+{"level":"warn","ts":"2023-08-03T18:11:32.011Z","caller":"server/config.go:347","msg":"WARNING: insecure default parameter value, change this for production!","param":"runtime.http_key"}
+{"level":"warn","ts":"2023-08-03T18:11:32.779Z","caller":"satori/satori.go:64","msg":"Satori configuration invalid: api_key_name not set, api_key not set, signing_key not set."}
+{"level":"warn","ts":"2023-08-03T18:11:32.782Z","caller":"satori/satori.go:64","msg":"Satori configuration invalid: api_key_name not set, api_key not set, signing_key not set."}
+{"level":"error","ts":"2023-08-03T18:12:24.840Z","caller":"server/console_authenticate.go:139","msg":"Failed to parse the session token.","error":"Token is expired"}
+{"level":"error","ts":"2023-08-03T18:12:24.841Z","caller":"server/console_authenticate.go:143","msg":"Invalid token.","error":"Token is expired"}
+{"level":"error","ts":"2023-08-03T18:12:39.663Z","caller":"server/console_user.go:140","msg":"failed to list console users","error":"timeout: context canceled"}
+{"level":"warn","ts":"2023-08-03T18:47:28.413Z","caller":"server/config.go:323","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.username"}
+{"level":"warn","ts":"2023-08-03T18:47:28.413Z","caller":"server/config.go:327","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.password"}
+{"level":"warn","ts":"2023-08-03T18:47:28.413Z","caller":"server/config.go:331","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.signing_key"}
+{"level":"warn","ts":"2023-08-03T18:47:28.413Z","caller":"server/config.go:335","msg":"WARNING: insecure default parameter value, change this for production!","param":"socket.server_key"}
+{"level":"warn","ts":"2023-08-03T18:47:28.413Z","caller":"server/config.go:339","msg":"WARNING: insecure default parameter value, change this for production!","param":"session.encryption_key"}
+{"level":"warn","ts":"2023-08-03T18:47:28.413Z","caller":"server/config.go:343","msg":"WARNING: insecure default parameter value, change this for production!","param":"session.refresh_encryption_key"}
+{"level":"warn","ts":"2023-08-03T18:47:28.413Z","caller":"server/config.go:347","msg":"WARNING: insecure default parameter value, change this for production!","param":"runtime.http_key"}
+{"level":"warn","ts":"2023-08-03T18:47:28.777Z","caller":"satori/satori.go:64","msg":"Satori configuration invalid: api_key_name not set, api_key not set, signing_key not set."}
+{"level":"warn","ts":"2023-08-03T18:47:28.777Z","caller":"satori/satori.go:64","msg":"Satori configuration invalid: api_key_name not set, api_key not set, signing_key not set."}
+{"level":"warn","ts":"2023-08-03T18:55:42.715Z","caller":"server/config.go:323","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.username"}
+{"level":"warn","ts":"2023-08-03T18:55:42.715Z","caller":"server/config.go:327","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.password"}
+{"level":"warn","ts":"2023-08-03T18:55:42.715Z","caller":"server/config.go:331","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.signing_key"}
+{"level":"warn","ts":"2023-08-03T18:55:42.716Z","caller":"server/config.go:335","msg":"WARNING: insecure default parameter value, change this for production!","param":"socket.server_key"}
+{"level":"warn","ts":"2023-08-03T18:55:42.716Z","caller":"server/config.go:339","msg":"WARNING: insecure default parameter value, change this for production!","param":"session.encryption_key"}
+{"level":"warn","ts":"2023-08-03T18:55:42.716Z","caller":"server/config.go:343","msg":"WARNING: insecure default parameter value, change this for production!","param":"session.refresh_encryption_key"}
+{"level":"warn","ts":"2023-08-03T18:55:42.716Z","caller":"server/config.go:347","msg":"WARNING: insecure default parameter value, change this for production!","param":"runtime.http_key"}
+{"level":"info","ts":"2023-08-03T18:55:42.716Z","caller":"main.go:104","msg":"Nakama starting"}
+{"level":"info","ts":"2023-08-03T18:55:42.716Z","caller":"main.go:105","msg":"Node","name":"nakama1","version":"3.17.0+b99f05a7","runtime":"go1.20.6","cpu":2,"proc":2}
+{"level":"info","ts":"2023-08-03T18:55:42.716Z","caller":"main.go:106","msg":"Data directory","path":"./data/"}
+{"level":"info","ts":"2023-08-03T18:55:42.716Z","caller":"main.go:117","msg":"Database connections","dsns":["root@cockroachdb:26257"]}
+{"level":"debug","ts":"2023-08-03T18:55:42.728Z","caller":"server/db.go:74","msg":"Complete database connection URL","raw_url":"postgres://root@cockroachdb:26257/nakama?sslmode=prefer"}
+{"level":"info","ts":"2023-08-03T18:55:42.748Z","caller":"main.go:123","msg":"Database information","version":"CockroachDB CCL v20.2.19 (x86_64-unknown-linux-gnu, built 2022/02/09 18:48:48, go1.13.14)"}
+{"level":"info","ts":"2023-08-03T18:55:42.773Z","caller":"server/metrics.go:176","msg":"Starting Prometheus server for metrics requests","port":9100}
+{"level":"info","ts":"2023-08-03T18:55:44.820Z","caller":"server/leaderboard_rank_cache.go:120","msg":"Initializing leaderboard rank cache"}
+{"level":"info","ts":"2023-08-03T18:55:44.823Z","caller":"server/runtime.go:628","msg":"Initialising runtime","path":"data/modules"}
+{"level":"info","ts":"2023-08-03T18:55:44.825Z","caller":"server/runtime.go:635","msg":"Initialising runtime event queue processor"}
+{"level":"info","ts":"2023-08-03T18:55:44.825Z","caller":"server/leaderboard_rank_cache.go:181","msg":"Leaderboard rank cache initialization completed successfully","cached":[],"skipped":[],"duration":"4.584235ms"}
+{"level":"info","ts":"2023-08-03T18:55:44.828Z","caller":"server/runtime.go:637","msg":"Runtime event queue processor started","size":65536,"workers":8}
+{"level":"warn","ts":"2023-08-03T18:55:44.830Z","caller":"satori/satori.go:64","msg":"Satori configuration invalid: api_key_name not set, api_key not set, signing_key not set."}
+{"level":"info","ts":"2023-08-03T18:55:44.830Z","caller":"server/runtime_go.go:2672","msg":"Initialising Go runtime provider","path":"data/modules"}
+{"level":"info","ts":"2023-08-03T18:55:44.832Z","caller":"server/runtime_go.go:2696","msg":"Go runtime modules loaded"}
+{"level":"info","ts":"2023-08-03T18:55:44.833Z","caller":"server/runtime_lua.go:115","msg":"Initialising Lua runtime provider","path":"data/modules"}
+{"level":"warn","ts":"2023-08-03T18:55:44.834Z","caller":"satori/satori.go:64","msg":"Satori configuration invalid: api_key_name not set, api_key not set, signing_key not set."}
+{"level":"info","ts":"2023-08-03T18:55:44.834Z","caller":"server/runtime_lua.go:1208","msg":"Lua runtime modules loaded"}
+{"level":"info","ts":"2023-08-03T18:55:44.835Z","caller":"server/runtime_lua.go:1211","msg":"Allocating minimum Lua runtime pool","count":16}
+{"level":"info","ts":"2023-08-03T18:55:44.836Z","caller":"server/runtime_lua.go:1219","msg":"Allocated minimum Lua runtime pool"}
+{"level":"info","ts":"2023-08-03T18:55:44.836Z","caller":"server/runtime_javascript.go:631","msg":"Initialising JavaScript runtime provider","path":"data/modules","entrypoint":""}
+{"level":"info","ts":"2023-08-03T18:55:44.838Z","caller":"server/runtime_javascript.go:1713","msg":"JavaScript runtime modules loaded"}
+{"level":"info","ts":"2023-08-03T18:55:44.839Z","caller":"server/runtime_javascript.go:1716","msg":"Allocating minimum JavaScript runtime pool","count":16}
+{"level":"info","ts":"2023-08-03T18:55:44.839Z","caller":"server/runtime_javascript.go:1724","msg":"Allocated minimum JavaScript runtime pool"}
+{"level":"info","ts":"2023-08-03T18:55:44.841Z","caller":"server/runtime.go:670","msg":"Found runtime modules","count":0,"modules":[]}
+{"level":"info","ts":"2023-08-03T18:55:44.844Z","caller":"server/leaderboard_scheduler.go:109","msg":"Leaderboard scheduler start"}
+{"level":"info","ts":"2023-08-03T18:55:44.844Z","caller":"server/leaderboard_scheduler.go:304","msg":"Leaderboard scheduler update","end_active":"-1ns","end_active_count":0,"expiry":"-1ns","expiry_count":0}
+{"level":"info","ts":"2023-08-03T18:55:44.844Z","caller":"server/api.go:138","msg":"Starting API server for gRPC requests","port":7349}
+{"level":"info","ts":"2023-08-03T18:55:44.852Z","caller":"server/api.go:289","msg":"Starting API server gateway for HTTP requests","port":7350}
+{"level":"info","ts":"2023-08-03T18:55:44.867Z","caller":"server/console.go:220","msg":"Starting Console server for gRPC requests","port":7348}
+{"level":"info","ts":"2023-08-03T18:55:44.868Z","caller":"server/console.go:323","msg":"Starting Console server gateway for HTTP requests","port":7351}
+{"level":"info","ts":"2023-08-03T18:55:46.370Z","caller":"main.go:194","msg":"Startup done"}
+{"level":"info","ts":"2023-08-03T18:57:17.280Z","caller":"main.go:210","msg":"Shutdown started"}
+{"level":"info","ts":"2023-08-03T18:57:17.792Z","caller":"main.go:217","msg":"All authoritative matches stopped"}
+{"level":"info","ts":"2023-08-03T18:57:19.334Z","caller":"main.go:251","msg":"Shutdown complete"}
+{"level":"warn","ts":"2023-08-03T18:58:49.694Z","caller":"server/config.go:323","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.username"}
+{"level":"warn","ts":"2023-08-03T18:58:49.710Z","caller":"server/config.go:327","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.password"}
+{"level":"warn","ts":"2023-08-03T18:58:49.710Z","caller":"server/config.go:331","msg":"WARNING: insecure default parameter value, change this for production!","param":"console.signing_key"}
+{"level":"warn","ts":"2023-08-03T18:58:49.710Z","caller":"server/config.go:335","msg":"WARNING: insecure default parameter value, change this for production!","param":"socket.server_key"}
+{"level":"warn","ts":"2023-08-03T18:58:49.710Z","caller":"server/config.go:339","msg":"WARNING: insecure default parameter value, change this for production!","param":"session.encryption_key"}
+{"level":"warn","ts":"2023-08-03T18:58:49.710Z","caller":"server/config.go:343","msg":"WARNING: insecure default parameter value, change this for production!","param":"session.refresh_encryption_key"}
+{"level":"warn","ts":"2023-08-03T18:58:49.710Z","caller":"server/config.go:347","msg":"WARNING: insecure default parameter value, change this for production!","param":"runtime.http_key"}
+{"level":"info","ts":"2023-08-03T18:58:49.710Z","caller":"main.go:104","msg":"Nakama starting"}
+{"level":"info","ts":"2023-08-03T18:58:49.710Z","caller":"main.go:105","msg":"Node","name":"nakama1","version":"3.17.0+b99f05a7","runtime":"go1.20.6","cpu":2,"proc":2}
+{"level":"info","ts":"2023-08-03T18:58:49.712Z","caller":"main.go:106","msg":"Data directory","path":"./data/"}
+{"level":"info","ts":"2023-08-03T18:58:49.712Z","caller":"main.go:117","msg":"Database connections","dsns":["root@cockroachdb:26257"]}
+{"level":"debug","ts":"2023-08-03T18:58:49.717Z","caller":"server/db.go:74","msg":"Complete database connection URL","raw_url":"postgres://root@cockroachdb:26257/nakama?sslmode=prefer"}
+{"level":"info","ts":"2023-08-03T18:58:49.816Z","caller":"main.go:123","msg":"Database information","version":"CockroachDB CCL v20.2.19 (x86_64-unknown-linux-gnu, built 2022/02/09 18:48:48, go1.13.14)"}
+{"level":"info","ts":"2023-08-03T18:58:50.065Z","caller":"server/metrics.go:176","msg":"Starting Prometheus server for metrics requests","port":9100}
+{"level":"info","ts":"2023-08-03T18:58:51.080Z","caller":"server/leaderboard_rank_cache.go:120","msg":"Initializing leaderboard rank cache"}
+{"level":"info","ts":"2023-08-03T18:58:51.082Z","caller":"server/runtime.go:628","msg":"Initialising runtime","path":"data/modules"}
+{"level":"info","ts":"2023-08-03T18:58:51.083Z","caller":"server/runtime.go:635","msg":"Initialising runtime event queue processor"}
+{"level":"info","ts":"2023-08-03T18:58:51.084Z","caller":"server/leaderboard_rank_cache.go:181","msg":"Leaderboard rank cache initialization completed successfully","cached":[],"skipped":[],"duration":"3.322366ms"}
+{"level":"info","ts":"2023-08-03T18:58:51.087Z","caller":"server/runtime.go:637","msg":"Runtime event queue processor started","size":65536,"workers":8}
+{"level":"warn","ts":"2023-08-03T18:58:51.087Z","caller":"satori/satori.go:64","msg":"Satori configuration invalid: api_key_name not set, api_key not set, signing_key not set."}
+{"level":"info","ts":"2023-08-03T18:58:51.088Z","caller":"server/runtime_go.go:2672","msg":"Initialising Go runtime provider","path":"data/modules"}
+{"level":"info","ts":"2023-08-03T18:58:51.088Z","caller":"server/runtime_go.go:2696","msg":"Go runtime modules loaded"}
+{"level":"info","ts":"2023-08-03T18:58:51.089Z","caller":"server/runtime_lua.go:115","msg":"Initialising Lua runtime provider","path":"data/modules"}
+{"level":"warn","ts":"2023-08-03T18:58:51.093Z","caller":"satori/satori.go:64","msg":"Satori configuration invalid: api_key_name not set, api_key not set, signing_key not set."}
+{"level":"info","ts":"2023-08-03T18:58:51.094Z","caller":"server/runtime_lua.go:1208","msg":"Lua runtime modules loaded"}
+{"level":"info","ts":"2023-08-03T18:58:51.094Z","caller":"server/runtime_lua.go:1211","msg":"Allocating minimum Lua runtime pool","count":16}
+{"level":"info","ts":"2023-08-03T18:58:51.098Z","caller":"server/runtime_lua.go:1219","msg":"Allocated minimum Lua runtime pool"}
+{"level":"info","ts":"2023-08-03T18:58:51.098Z","caller":"server/runtime_javascript.go:631","msg":"Initialising JavaScript runtime provider","path":"data/modules","entrypoint":""}
+{"level":"info","ts":"2023-08-03T18:58:51.169Z","caller":"server/runtime_javascript.go:1713","msg":"JavaScript runtime modules loaded"}
+{"level":"info","ts":"2023-08-03T18:58:51.170Z","caller":"server/runtime_javascript.go:1716","msg":"Allocating minimum JavaScript runtime pool","count":16}
+{"level":"info","ts":"2023-08-03T18:58:51.170Z","caller":"server/runtime_javascript.go:1724","msg":"Allocated minimum JavaScript runtime pool"}
+{"level":"info","ts":"2023-08-03T18:58:51.172Z","caller":"server/runtime.go:670","msg":"Found runtime modules","count":0,"modules":[]}
+{"level":"info","ts":"2023-08-03T18:58:51.173Z","caller":"server/leaderboard_scheduler.go:109","msg":"Leaderboard scheduler start"}
+{"level":"info","ts":"2023-08-03T18:58:51.173Z","caller":"server/leaderboard_scheduler.go:304","msg":"Leaderboard scheduler update","end_active":"-1ns","end_active_count":0,"expiry":"-1ns","expiry_count":0}
+{"level":"info","ts":"2023-08-03T18:58:51.174Z","caller":"server/api.go:138","msg":"Starting API server for gRPC requests","port":7349}
+{"level":"info","ts":"2023-08-03T18:58:51.178Z","caller":"server/api.go:289","msg":"Starting API server gateway for HTTP requests","port":7350}
+{"level":"info","ts":"2023-08-03T18:58:51.186Z","caller":"server/console.go:220","msg":"Starting Console server for gRPC requests","port":7348}
+{"level":"info","ts":"2023-08-03T18:58:51.190Z","caller":"server/console.go:323","msg":"Starting Console server gateway for HTTP requests","port":7351}
+{"level":"info","ts":"2023-08-03T18:58:52.692Z","caller":"main.go:194","msg":"Startup done"}
+{"level":"info","ts":"2023-08-03T18:59:48.669Z","caller":"main.go:210","msg":"Shutdown started"}
+{"level":"info","ts":"2023-08-03T18:59:48.699Z","caller":"main.go:217","msg":"All authoritative matches stopped"}
+{"level":"info","ts":"2023-08-03T18:59:50.203Z","caller":"main.go:251","msg":"Shutdown complete"}

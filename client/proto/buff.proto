@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+// The realtime protocol for the template match engine.
+package api;
+
+option go_package = "mc/protos";
+
+enum OpCode {
+  // No opcode specified. Unused.
+  OPCODE_UNSPECIFIED = 0;
+  // New game round starting.
+  OPCODE_START = 1;
+  // Update to the state of an ongoing round.
+  OPCODE_UPDATE = 2;
+  // A game round has just completed.
+  OPCODE_DONE = 3;
+  // A move the player wishes to make and sends to the server.
+  OPCODE_MOVE = 4;
+  // Move was rejected.
+  OPCODE_REJECTED = 5;
+}
+
+message Mana {
+  int64 red = 1;
+  int64 blue = 2;
+  int64 green = 3;
+  int64 white = 4;
+  int64 black = 5;
+}
+
+message Unit {
+  int64 healty = 1;
+  repeated Mana cost = 2;
+}
+
+message Build {
+  Mana add = 1;
+  Mana sub = 2;
+  Mana one = 3;
+}
+
+message Card{
+  string id = 1;
+  string name = 2;
+  string desc = 3;
+  oneof card_type{
+    Unit unit = 4;
+    Build build = 5;
+  }
+}
+
+message Player {
+  string id = 1;
+  string name = 2;
+  Mana mana = 3;
+  repeated Card tabel = 4;
+  repeated Card build = 5;
+  repeated Card deads = 6;
+//  repeated Card deck = 7;
+//  repeated Card hand = 8;
+}

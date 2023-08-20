@@ -1,0 +1,108 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/err.png" type="Texture" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+
+[node name="AspectRatioContainer" type="AspectRatioContainer"]
+margin_right = 600.0
+margin_bottom = 600.0
+
+[node name="MarginContainer" type="CenterContainer" parent="."]
+margin_right = 600.0
+margin_bottom = 600.0
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer"]
+margin_left = 300.0
+margin_top = 300.0
+margin_right = 300.0
+margin_bottom = 300.0
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="Label8" type="Label" parent="."]
+visible = false
+margin_top = 287.0
+margin_right = 600.0
+margin_bottom = 312.0
+custom_styles/normal = SubResource( 1 )
+text = "Bill Amstrong"
+align = 1
+valign = 1
+
+[node name="Label" type="Label" parent="."]
+visible = false
+margin_top = 287.0
+margin_right = 600.0
+margin_bottom = 312.0
+custom_styles/normal = SubResource( 1 )
+text = "3/4"
+align = 1
+valign = 1
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+margin_right = 600.0
+margin_bottom = 600.0
+color = Color( 1, 0, 0, 1 )
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+visible = false
+margin_right = 600.0
+margin_bottom = 600.0
+color = Color( 0.858824, 0.67451, 0, 1 )
+
+[node name="ColorRect3" type="ColorRect" parent="."]
+visible = false
+margin_right = 600.0
+margin_bottom = 600.0
+color = Color( 0.639216, 0, 0.94902, 1 )
+
+[node name="Label5" type="Label" parent="."]
+visible = false
+margin_top = 287.0
+margin_right = 600.0
+margin_bottom = 312.0
+text = "Bill Amstrong"
+align = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+margin_right = 600.0
+margin_bottom = 600.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer2"]
+margin_right = 600.0
+margin_bottom = 600.0
+alignment = 1
+
+[node name="Label2" type="Label" parent="MarginContainer2/VBoxContainer"]
+margin_top = 172.0
+margin_right = 600.0
+margin_bottom = 252.0
+rect_min_size = Vector2( 80, 80 )
+custom_styles/normal = SubResource( 1 )
+text = "A"
+align = 1
+valign = 1
+
+[node name="Label3" type="Label" parent="MarginContainer2/VBoxContainer"]
+margin_top = 260.0
+margin_right = 600.0
+margin_bottom = 340.0
+rect_min_size = Vector2( 80, 80 )
+custom_styles/normal = SubResource( 1 )
+text = "j"
+align = 1
+valign = 1
+
+[node name="Label4" type="Label" parent="MarginContainer2/VBoxContainer"]
+margin_top = 348.0
+margin_right = 600.0
+margin_bottom = 428.0
+rect_min_size = Vector2( 80, 80 )
+custom_styles/normal = SubResource( 1 )
+text = "G"
+align = 1
+valign = 1
