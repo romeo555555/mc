@@ -1167,8 +1167,9 @@ type Properties struct {
 }
 
 type PropertiesUpdate struct {
-	Default map[string]string `json:"default,omitempty"`
-	Custom  map[string]string `json:"custom,omitempty"`
+	Default   map[string]string `json:"default,omitempty"`
+	Custom    map[string]string `json:"custom,omitempty"`
+	Recompute *bool             `json:"recompute,omitempty"`
 }
 
 type Events struct {
@@ -1210,6 +1211,6 @@ type LiveEvent struct {
 	Name               string `json:"name,omitempty"`
 	Description        string `json:"description,omitempty"`
 	Value              string `json:"value,omitempty"`
-	ActiveStartTimeSec int64  `json:"active_start_time_sec,omitempty"`
-	ActiveEndTimeSec   int64  `json:"active_end_time_sec,omitempty"`
+	ActiveStartTimeSec int64  `json:"active_start_time_sec,string,omitempty"`
+	ActiveEndTimeSec   int64  `json:"active_end_time_sec,string,omitempty"`
 }

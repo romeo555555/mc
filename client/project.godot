@@ -10,6 +10,11 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
+"class": "Client",
+"language": "GDScript",
+"path": "res://src/Client.gd"
+}, {
+"base": "Reference",
 "class": "Layout",
 "language": "GDScript",
 "path": "res://src/Layout.gd"
@@ -90,16 +95,12 @@ _global_script_classes=[ {
 "path": "res://addons/com.heroiclabs.nakama/api/NakamaWriteStorageObject.gd"
 }, {
 "base": "Reference",
-"class": "Network",
-"language": "GDScript",
-"path": "res://src/Network.gd"
-}, {
-"base": "Reference",
 "class": "TargetingArrow",
 "language": "GDScript",
 "path": "res://scn/TargetingArrow.gd"
 } ]
 _global_script_class_icons={
+"Client": "",
 "Layout": "",
 "NakamaAPI": "",
 "NakamaAsyncResult": "",
@@ -116,7 +117,6 @@ _global_script_class_icons={
 "NakamaSocketAdapter": "",
 "NakamaStorageObjectId": "",
 "NakamaWriteStorageObject": "",
-"Network": "",
 "TargetingArrow": ""
 }
 
@@ -124,11 +124,10 @@ _global_script_class_icons={
 
 config/name="client"
 run/main_scene="res://scn/Board.tscn"
-config/icon="res://icon.png"
 
 [autoload]
 
-Nakama="*res://addons/com.heroiclabs.nakama/Nakama.gd"
+Nakama="res://addons/com.heroiclabs.nakama/Nakama.gd"
 
 [display]
 

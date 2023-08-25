@@ -6,20 +6,16 @@ package api;
 option go_package = "mc/protos";
 
 enum OpCode {
-  // No opcode specified. Unused.
   OPCODE_UNSPECIFIED = 0;
-  // New game round starting.
   OPCODE_START = 1;
-  // Update to the state of an ongoing round.
-  OPCODE_UPDATE = 2;
-  // A game round has just completed.
-  OPCODE_DONE = 3;
-  // A move the player wishes to make and sends to the server.
-  OPCODE_MOVE = 4;
-  // Move was rejected.
-  OPCODE_REJECTED = 5;
+  OPCODE_ADD_CARD = 2;
+  OPCODE_ADD_BUILD = 3;
+  OPCODE_CAST_CARD = 4;
+  OPCODE_ATTACK = 5;
+  OPCODE_END_TURN = 6;
 }
 
+// state
 message Mana {
   int64 red = 1;
   int64 blue = 2;
@@ -28,6 +24,9 @@ message Mana {
   int64 black = 5;
 }
 
+message Zone {}
+message Spell {}
+message Item {}
 message Unit {
   int64 healty = 1;
   repeated Mana cost = 2;
@@ -53,9 +52,30 @@ message Player {
   string id = 1;
   string name = 2;
   Mana mana = 3;
-  repeated Card tabel = 4;
-  repeated Card build = 5;
-  repeated Card deads = 6;
-//  repeated Card deck = 7;
-//  repeated Card hand = 8;
+  repeated Card tabel = 5;
+  repeated Card build = 6;
+  repeated Card deads = 7;
+  repeated Card hand = 8;
+  repeated Card deck = 9;
+}
+
+message Enemy {
+  string id = 1;
+  string name = 2;
+  Mana mana = 3;
+  repeated Card tabel = 5;
+  repeated Card build = 6;
+  repeated Card deads = 7;
+  int64 hand_len = 8;
+}
+// send_data
+
+message Attack{
+    string target_player = 1;
+    string target_card = 2;
+    //from
+}
+
+message Cast{
+    string target_card = 1;
 }

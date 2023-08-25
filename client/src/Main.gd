@@ -1,12 +1,14 @@
 extends Control
 
-const proto: Reference = preload("res://proto/buff.gd")
+const proto: Reference = preload("res://protos/buff.gd")
 const layout: Reference = preload("res://src/Layout.gd")
-const network: Reference = preload("res://src/Network.gd")
+const Client: Reference = preload("res://src/Client.gd")
+
 const fab_hand_card: PackedScene = preload("res://scn/HandCard.tscn")
 const fab_tabel_card: PackedScene = preload("res://scn/TabelCard.tscn")
 const fab_build: PackedScene = preload("res://scn/Build.tscn")
 const fab_deck: PackedScene = preload("res://scn/Deck.tscn")
+
 
 const state = {
 	"client": {
@@ -19,7 +21,14 @@ const state = {
 	},
 }
 var sense := layout.Sense.new()
+var client: Client
 #TODO
+#auth
+#matchmeker
+#matchrequest
+#join
+#server state
+#godo_theme_color #265036
 
 func _ready():
 	print("                 [Screen Metrics]")
@@ -29,6 +38,9 @@ func _ready():
 	print("        Project Settings: Width=", ProjectSettings.get_setting("display/window/size/width"), " Height=", ProjectSettings.get_setting("display/window/size/height")) 
 	print(OS.get_window_size().x)
 	print(OS.get_window_size().y)
+
+	client = Client.new($NakamaHTTPAdapter, $NakamaWebSocketAdapter)
+#	client.socket.connect("received_matchmaker_matched", self, "_on_matchmaker_matched")
 
 	#init start state
 	for i in range(3):
