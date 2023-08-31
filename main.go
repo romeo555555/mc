@@ -271,10 +271,10 @@ func (m *MatchHandler) MatchLoop(ctx context.Context, logger runtime.Logger, db 
 			// }
 		case protos.OpCode_OPCODE_ATTACK:
 		case protos.OpCode_OPCODE_END_TURN:
-			state.currentTurn += 1
-			if state.currentTurn > MAX_CLIENT {
-				state.currentTurn = 0
-			}
+			// state.currentTurn += 1
+			// if state.currentTurn > MAX_CLIENT {
+			// 	state.currentTurn = 0
+			// }
 		case protos.OpCode_OPCODE_ADD_BUILD:
 		default:
 		}

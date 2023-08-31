@@ -1,12 +1,23 @@
 extends Reference
 class_name Client
 
+#const proto: Reference = preload("res://protos/buff.gd")
+
+const SERVER_KEY : String = "defaultkey"
+const HOST : String = "127.0.0.1"
+const PORT : int = 7350
+const TIMEOUT = 3
+const CLIENT_SCHEME : String = "http" #"https"
+const SOCKET_SCHEME : String = "ws" #"wss"
+const LOG_LEVEL = NakamaLogger.LOG_LEVEL.DEBUG
+
 #onready var Nakama: Node = preload("res://addons/com.heroiclabs.nakama/Nakama.gd").new()
 onready var nkclient: NakamaClient #setget _set_readonly_variable, get_nakama_client
 onready var session: NakamaSession #setget set_nakama_session
 onready var socket: NakamaSocket #setget _set_readonly_variable
 
-var matchmaker_ticket: String #setget _set_readonly_variable, get_matchmaker_ticket
+var matchmaker_ticket: NakamaRTAPI.MatchmakerTicket #string #setget _set_readonly_variable, get_matchmaker_ticket
+var match_played: NakamaRTAPI.Match #string #setget _set_readonly_variable, get_matchmaker_ticket
 var match_session_id: String #setget _set_readonly_variable, get_my_session_id
 var match_id: String #setget _set_readonly_variable, get_match_id
 # RPC variables:
@@ -20,16 +31,12 @@ var _nakama_socket_connecting := false
 #user registr
 #refresh sesion token auth
 #get user data
-const server_key : String = "defaultkey"
-const host : String = "127.0.0.1"
-const port : int = 7350
-const timeout = 3
-const client_scheme : String = "http" #"https"
-const socket_scheme : String = "ws" #"wss"
-const log_level = NakamaLogger.LOG_LEVEL.DEBUG
 
 var _http_adapter = null
 var logger = NakamaLogger.new()
+
+#var player: proto.Player
+
 
 func _init(http_adapter: Node, ws_adapter: Node):
 	logger._level = NakamaLogger.LOG_LEVEL.DEBUG
@@ -41,12 +48,13 @@ func _init(http_adapter: Node, ws_adapter: Node):
 #	  "AnotherKey": "AnotherValue"
 #	}
 #	var serialized = JSON.print(data)
-	nkclient = NakamaClient.new(http_adapter, server_key, client_scheme, host, port, timeout)
+	nkclient = NakamaClient.new(http_adapter, SERVER_KEY, CLIENT_SCHEME, HOST, PORT, TIMEOUT)
 #	var vars = {
 #    "device_os" : OS.get_name,
 #    "device_model" : OS.get_model_name,
 #    "invite_user_id" : "<some_user_id>,
 #	}
+	socket = NakamaSocket.new(ws_adapter, HOST, PORT, SOCKET_SCHEME, true)
 	var device_id = OS.get_unique_id()
 	print(device_id)
 	session = yield(nkclient.authenticate_device_async(device_id, null, true, null), "completed")
@@ -54,7 +62,6 @@ func _init(http_adapter: Node, ws_adapter: Node):
 		print("An error occurred: %s" % session)
 		return
 	print("Successfully authenticated: %s" % session)
-	socket = NakamaSocket.new(ws_adapter, host, port, socket_scheme, true)
 	var connected : NakamaAsyncResult = yield(socket.connect_async(session), "completed")
 	if connected.is_exception():
 		print("An error occurred: %s" % connected)
@@ -86,9 +93,25 @@ func run_matchmaker():
 	var query = ""
 	var string_properties = { }
 	var numeric_properties = { }
-	var matchmaker_ticket : NakamaRTAPI.MatchmakerTicket = yield(
+	matchmaker_ticket = yield(
 		socket.add_matchmaker_async(query, min_players, max_players, 
 			string_properties, numeric_properties), "completed")
 
 func join_to_match(p_matched : NakamaRTAPI.MatchmakerMatched):
-	var joined_match : NakamaRTAPI.Match = yield(socket.join_matched_async(p_matched), "completed")
+	match_played = yield(socket.join_matched_async(p_matched), "completed")
+
+#func send(match_id):
+#	yield(socket.send_match_state_async(match_id, op_codes.position, JSON.print(state)), "completed")
+
+#func recive(match_state : NakamaRTAPI.MatchData):
+#	match match_state.op_code:
+#		op_code.position:
+#			# Get the updated position data
+#			var position_state = JSON.parse(match_state.data)
+#			# Update the game object associated with that player
+#			var user = match_state.user_presence.session_id
+#			if user in players:
+#				# Here we would normally do something like smoothly interpolate to the new position, but for this example let's just set the position directly.
+#				players[user].transform.Vector3 = vec(position_state.x, position_state.y, position_state.z)
+#		_:
+#			print("Unsupported op code.")

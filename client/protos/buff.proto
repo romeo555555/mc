@@ -7,12 +7,36 @@ option go_package = "mc/protos";
 
 enum OpCode {
   OPCODE_UNSPECIFIED = 0;
-  OPCODE_START = 1;
-  OPCODE_ADD_CARD = 2;
-  OPCODE_ADD_BUILD = 3;
-  OPCODE_CAST_CARD = 4;
-  OPCODE_ATTACK = 5;
-  OPCODE_END_TURN = 6;
+  OPCODE_END_TURN = 1;
+  OPCODE_CAST = 2;
+  OPCODE_CAST_AND_TARGET = 3;
+  OPCODE_TARGET = 4;
+
+  OPCODE_ADD_CARD = 5;
+  OPCODE_ADD_BUILD = 6;
+  OPCODE_INIT_MATCH = 7;
+}
+// send_data
+message Cast{
+    string cast_card_id = 1;
+}
+
+message CastAndTarget{
+    string cast_card_id = 1;
+    string target_card_id = 2;
+    string target_player = 3;
+}
+
+message Target{
+    string target_card_id = 1;
+    string target_player = 2;
+}
+
+message Attack{
+}
+
+message InitMatch{
+  string current_turn = 1;
 }
 
 // state
@@ -24,11 +48,13 @@ message Mana {
   int64 black = 5;
 }
 
+message Flipped {}
 message Zone {}
 message Spell {}
 message Item {}
+
 message Unit {
-  int64 healty = 1;
+  int64 hp = 1;
   repeated Mana cost = 2;
 }
 
@@ -43,39 +69,26 @@ message Card{
   string name = 2;
   string desc = 3;
   oneof card_type{
-    Unit unit = 4;
+    Flipped Flipped = 4;
     Build build = 5;
+    Unit unit = 6;
   }
 }
 
+message Avatar {
+  string name = 1;
+  int64 hp = 2;
+  string desc = 3;
+ }
+
 message Player {
-  string id = 1;
-  string name = 2;
+  string name = 1;
+  Avatar avatar = 2;
   Mana mana = 3;
-  repeated Card tabel = 5;
+  repeated Card l_tabel = 4;
+  repeated Card r_tabel = 5;
   repeated Card build = 6;
   repeated Card deads = 7;
   repeated Card hand = 8;
   repeated Card deck = 9;
-}
-
-message Enemy {
-  string id = 1;
-  string name = 2;
-  Mana mana = 3;
-  repeated Card tabel = 5;
-  repeated Card build = 6;
-  repeated Card deads = 7;
-  int64 hand_len = 8;
-}
-// send_data
-
-message Attack{
-    string target_player = 1;
-    string target_card = 2;
-    //from
-}
-
-message Cast{
-    string target_card = 1;
 }

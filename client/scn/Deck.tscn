@@ -5,11 +5,17 @@
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
 
-[node name="TabelCard" type="Control"]
+[node name="Deck" type="Control"]
 margin_right = 200.0
 margin_bottom = 200.0
 rect_min_size = Vector2( 200, 200 )
 mouse_filter = 2
+
+[node name="Hovered" type="ReferenceRect" parent="."]
+visible = false
+margin_right = 200.0
+margin_bottom = 300.0
+border_width = 5.0
 
 [node name="TextureRect4" type="TextureRect" parent="."]
 margin_right = 200.0

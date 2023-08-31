@@ -1,10 +1,14 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://src/Main.gd" type="Script" id=1]
-[ext_resource path="res://assets/cardback1.png" type="Texture" id=2]
+[ext_resource path="res://src/main.gd" type="Script" id=1]
+[ext_resource path="res://assets/end.png" type="Texture" id=2]
 [ext_resource path="res://assets/board1.png" type="Texture" id=3]
 [ext_resource path="res://addons/com.heroiclabs.nakama/client/NakamaHTTPAdapter.gd" type="Script" id=4]
 [ext_resource path="res://addons/com.heroiclabs.nakama/socket/NakamaSocketAdapter.gd" type="Script" id=5]
+[ext_resource path="res://scn/Deck.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scn/Build.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scn/Avatar.tscn" type="PackedScene" id=8]
+[ext_resource path="res://assets/setting.png" type="Texture" id=9]
 
 [node name="Board" type="TextureRect"]
 physics_interpolation_mode = 1
@@ -40,17 +44,6 @@ antialiased = true
 [node name="Tween" type="Tween" parent="."]
 physics_interpolation_mode = 1
 
-[node name="TextureButton" type="TextureButton" parent="."]
-physics_interpolation_mode = 1
-visible = false
-margin_left = 209.0
-margin_top = 70.0
-margin_right = 811.0
-margin_bottom = 990.0
-mouse_filter = 2
-texture_normal = ExtResource( 2 )
-expand = true
-
 [node name="NakamaHTTPAdapter" type="Node" parent="."]
 pause_mode = 2
 script = ExtResource( 4 )
@@ -58,3 +51,114 @@ script = ExtResource( 4 )
 [node name="NakamaWebSocketAdapter" type="Node" parent="."]
 pause_mode = 2
 script = ExtResource( 5 )
+
+[node name="Hovered" type="ReferenceRect" parent="."]
+visible = false
+margin_right = 100.0
+margin_bottom = 100.0
+border_width = 6.0
+
+[node name="Setting" type="TextureRect" parent="."]
+margin_left = 30.0
+margin_top = 24.0
+margin_right = 130.0
+margin_bottom = 124.0
+texture = ExtResource( 9 )
+expand = true
+
+[node name="End" type="TextureRect" parent="."]
+margin_left = 1657.0
+margin_top = 489.0
+margin_right = 1902.0
+margin_bottom = 594.0
+texture = ExtResource( 2 )
+expand = true
+
+[node name="Client" type="Control" parent="."]
+
+[node name="Build" parent="Client" instance=ExtResource( 7 )]
+margin_left = 62.0
+margin_top = 836.0
+margin_right = 262.0
+margin_bottom = 1036.0
+
+[node name="Deck" parent="Client" instance=ExtResource( 6 )]
+margin_left = 1717.0
+margin_top = 822.0
+margin_right = 1917.0
+margin_bottom = 1022.0
+
+[node name="Avatar" parent="Client" instance=ExtResource( 8 )]
+margin_left = 890.0
+margin_top = 540.0
+margin_right = 1090.0
+margin_bottom = 840.0
+
+[node name="Avatar2" parent="Client" instance=ExtResource( 8 )]
+visible = false
+margin_left = 1742.0
+margin_top = 548.0
+margin_right = 1942.0
+margin_bottom = 848.0
+
+[node name="Avatar3" parent="Client" instance=ExtResource( 8 )]
+visible = false
+margin_left = 1524.0
+margin_top = 556.0
+margin_right = 1724.0
+margin_bottom = 856.0
+
+[node name="Avatar4" parent="Client" instance=ExtResource( 8 )]
+visible = false
+margin_left = 1305.0
+margin_top = 553.0
+margin_right = 1505.0
+margin_bottom = 853.0
+
+[node name="Avatar5" parent="Client" instance=ExtResource( 8 )]
+visible = false
+margin_left = 1086.0
+margin_top = 559.0
+margin_right = 1286.0
+margin_bottom = 859.0
+
+[node name="Fog" type="ColorRect" parent="."]
+visible = false
+margin_left = -3.0
+margin_top = -3.0
+margin_right = 1977.0
+margin_bottom = 1077.0
+color = Color( 0.101961, 0.0784314, 0.105882, 0.764706 )
+
+[node name="SettingMenu" type="Control" parent="."]
+visible = false
+margin_right = 1980.0
+margin_bottom = 1080.0
+
+[node name="Button" type="Button" parent="SettingMenu"]
+margin_left = 769.0
+margin_top = 258.0
+margin_right = 1230.0
+margin_bottom = 349.0
+text = "Continue"
+
+[node name="Button2" type="Button" parent="SettingMenu"]
+margin_left = 769.0
+margin_top = 387.0
+margin_right = 1230.0
+margin_bottom = 478.0
+text = "Continue"
+
+[node name="Button3" type="Button" parent="SettingMenu"]
+margin_left = 769.0
+margin_top = 518.0
+margin_right = 1230.0
+margin_bottom = 609.0
+text = "Continue"
+
+[node name="Button4" type="Button" parent="SettingMenu"]
+margin_left = 769.0
+margin_top = 641.0
+margin_right = 1230.0
+margin_bottom = 732.0
+text = "Continue"

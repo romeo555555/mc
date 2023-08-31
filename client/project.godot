@@ -12,12 +12,12 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Client",
 "language": "GDScript",
-"path": "res://src/Client.gd"
+"path": "res://src/client.gd"
 }, {
 "base": "Reference",
-"class": "Layout",
+"class": "GuiPlayer",
 "language": "GDScript",
-"path": "res://src/Layout.gd"
+"path": "res://src/gui.gd"
 }, {
 "base": "Reference",
 "class": "NakamaAPI",
@@ -95,13 +95,18 @@ _global_script_classes=[ {
 "path": "res://addons/com.heroiclabs.nakama/api/NakamaWriteStorageObject.gd"
 }, {
 "base": "Reference",
+"class": "Select",
+"language": "GDScript",
+"path": "res://src/select.gd"
+}, {
+"base": "Line2D",
 "class": "TargetingArrow",
 "language": "GDScript",
-"path": "res://scn/TargetingArrow.gd"
+"path": "res://scn/old/TargetingArrow.gd"
 } ]
 _global_script_class_icons={
 "Client": "",
-"Layout": "",
+"GuiPlayer": "",
 "NakamaAPI": "",
 "NakamaAsyncResult": "",
 "NakamaClient": "",
@@ -117,6 +122,7 @@ _global_script_class_icons={
 "NakamaSocketAdapter": "",
 "NakamaStorageObjectId": "",
 "NakamaWriteStorageObject": "",
+"Select": "",
 "TargetingArrow": ""
 }
 
