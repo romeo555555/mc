@@ -1,6 +1,6 @@
 # Handles drawing an Object's (primarily a card's) targeting arrow
 # and specifying the final target
-class_name TargetingArrow
+class_name Arrow
 extends Line2D
 
 # Emitted whenever the object spawns a targeting arrow.
@@ -20,21 +20,22 @@ var is_targeting := false
 var target_object : Node = null
 # Stores a reference to the Card that is hosting this node
 onready var owner_object = get_parent()
+var mouse_pos : Vector2
 
 
 func _ready() -> void:
 	# We set the targetting arrow modulation to match our config specification
-	default_color = CFConst.TARGETTING_ARROW_COLOUR
-	$ArrowHead.color = CFConst.TARGETTING_ARROW_COLOUR
+	default_color = Color.aqua #CFConst.TARGETTING_ARROW_COLOUR
+	$ArrowHead.color = Color.aquamarine #CFConst.TARGETTING_ARROW_COLOUR
 	# warning-ignore:return_value_discarded
-	$ArrowHead/Area2D.connect("area_entered", self, "_on_ArrowHead_area_entered")
+#	$ArrowHead/Area2D.connect("area_entered", self, "_on_ArrowHead_area_entered")
 	# warning-ignore:return_value_discarded
-	$ArrowHead/Area2D.connect("area_exited", self, "_on_ArrowHead_area_exited")
+#	$ArrowHead/Area2D.connect("area_exited", self, "_on_ArrowHead_area_exited")
 
 
 func _process(_delta: float) -> void:
 	if is_targeting:
-		_draw_targeting_arrow()
+		_draw_targeting_arrow(mouse_pos)
 
 
 # Will generate a targeting arrow on the card which will follow the mouse cursor.
@@ -77,7 +78,8 @@ func _on_ArrowHead_area_entered(area: Area2D) -> void:
 		_potential_targets.append(area)
 		if 'highlight' in owner_object:
 			owner_object.highlight.highlight_potential_card(
-					CFConst.TARGET_HOVER_COLOUR, _potential_targets)
+					Color.crimson, _potential_targets)
+					#CFConst.TARGET_HOVER_COLOUR, 
 		emit_signal("potential_target_found", area)
 
 
@@ -94,12 +96,13 @@ func _on_ArrowHead_area_exited(area: Area2D) -> void:
 		# Finally, we make sure we highlight any other cards we're still hovering
 		if not _potential_targets.empty() and 'highlight' in owner_object:
 			owner_object.highlight.highlight_potential_card(
-				CFConst.TARGET_HOVER_COLOUR,
+				Color.crimson,
+#				CFConst.TARGET_HOVER_COLOUR,
 				_potential_targets)
 
 
 # Draws a curved arrow, from the center of a card, to the mouse pointer
-func _draw_targeting_arrow() -> void:
+func _draw_targeting_arrow(mouse_pos: Vector2) -> void:
 	# This variable calculates the card center's position on the whole board
 	var card_half_size
 	if "rect_size" in owner_object:
@@ -111,7 +114,8 @@ func _draw_targeting_arrow() -> void:
 	clear_points()
 	# The final position is the mouse position,
 	# but we offset it by the position of the card center on the map
-	var final_point =  cfc.NMAP.board.mouse_pointer.determine_global_mouse_pos() \
+#	var final_point =  cfc.NMAP.board.mouse_pointer.determine_global_mouse_pos() \
+	var final_point =  mouse_pos \
 			- (position + card_half_size)
 	var curve = Curve2D.new()
 #		var middle_point = centerpos + (get_global_mouse_position() - centerpos)/2

@@ -9,31 +9,6 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Node2D",
-"class": "AbstractCard",
-"language": "GDScript",
-"path": "res://old/abstract_card.gd"
-}, {
-"base": "Control",
-"class": "AbstractContainer",
-"language": "GDScript",
-"path": "res://old/abstract_container.gd"
-}, {
-"base": "Line2D",
-"class": "Arrow",
-"language": "GDScript",
-"path": "res://src/Arrow.gd"
-}, {
-"base": "Node2D",
-"class": "Card",
-"language": "GDScript",
-"path": "res://src/Card.gd"
-}, {
-"base": "Reference",
-"class": "Client",
-"language": "GDScript",
-"path": "res://src/Client.gd"
-}, {
 "base": "Reference",
 "class": "NakamaAPI",
 "language": "GDScript",
@@ -63,11 +38,6 @@ _global_script_classes=[ {
 "class": "NakamaLogger",
 "language": "GDScript",
 "path": "res://addons/com.heroiclabs.nakama/utils/NakamaLogger.gd"
-}, {
-"base": "Reference",
-"class": "NakamaMultiplayerBridge",
-"language": "GDScript",
-"path": "res://addons/com.heroiclabs.nakama/utils/NakamaMultiplayerBridge.gd"
 }, {
 "base": "NakamaAsyncResult",
 "class": "NakamaRTAPI",
@@ -108,25 +78,14 @@ _global_script_classes=[ {
 "class": "NakamaWriteStorageObject",
 "language": "GDScript",
 "path": "res://addons/com.heroiclabs.nakama/api/NakamaWriteStorageObject.gd"
-}, {
-"base": "Line2D",
-"class": "TargetingArrow2",
-"language": "GDScript",
-"path": "res://old/TargetingArrow1.gd"
 } ]
 _global_script_class_icons={
-"AbstractCard": "",
-"AbstractContainer": "",
-"Arrow": "",
-"Card": "",
-"Client": "",
 "NakamaAPI": "",
 "NakamaAsyncResult": "",
 "NakamaClient": "",
 "NakamaException": "",
 "NakamaHTTPAdapter": "",
 "NakamaLogger": "",
-"NakamaMultiplayerBridge": "",
 "NakamaRTAPI": "",
 "NakamaRTMessage": "",
 "NakamaSerializer": "",
@@ -134,46 +93,14 @@ _global_script_class_icons={
 "NakamaSocket": "",
 "NakamaSocketAdapter": "",
 "NakamaStorageObjectId": "",
-"NakamaWriteStorageObject": "",
-"TargetingArrow2": ""
+"NakamaWriteStorageObject": ""
 }
 
 [application]
 
-config/name="client"
-run/main_scene="res://src/Main.tscn"
+run/main_scene="res://tester.tscn"
 
-[display]
+[autoload]
 
-window/size/width=1980
-window/size/height=1080
-window/size/test_width=1280
-window/size/test_height=720
-window/stretch/mode="2d"
-window/stretch/aspect="expand"
-
-[editor_plugins]
-
-enabled=PoolStringArray( "res://addons/protobuf/plugin.cfg" )
-
-[gui]
-
-theme/use_hidpi=true
-
-[input]
-
-ui_end={
-"deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777230,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
-}
-Click={
-"deadzone": 0.5,
-"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
- ]
-}
-
-[rendering]
-
-quality/driver/driver_name="GLES2"
-environment/default_environment="res://default_env.tres"
+Nakama="*res://addons/com.heroiclabs.nakama/Nakama.gd"
+Config="*res://utils/config.gd"

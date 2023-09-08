@@ -1,0 +1,179 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://addons/com.heroiclabs.nakama/client/NakamaHTTPAdapter.gd" type="Script" id=1]
+[ext_resource path="res://addons/com.heroiclabs.nakama/socket/NakamaSocketAdapter.gd" type="Script" id=2]
+[ext_resource path="res://src/Main.gd" type="Script" id=3]
+[ext_resource path="res://assets/setting.png" type="Texture" id=4]
+[ext_resource path="res://assets/end.png" type="Texture" id=5]
+[ext_resource path="res://assets/board1.png" type="Texture" id=6]
+[ext_resource path="res://src/CardList.gd" type="Script" id=7]
+[ext_resource path="res://src/Arrow_curve.tres" type="Curve" id=8]
+[ext_resource path="res://src/Side.tscn" type="PackedScene" id=9]
+
+[node name="Root" type="Control"]
+margin_right = 1980.0
+margin_bottom = 1080.0
+script = ExtResource( 3 )
+
+[node name="Board" type="TextureRect" parent="."]
+margin_right = 1980.0
+margin_bottom = 1080.0
+texture = ExtResource( 6 )
+expand = true
+
+[node name="Arrow" type="Line2D" parent="Board"]
+position = Vector2( -890, 0 )
+points = PoolVector2Array( 384, 112 )
+width = 15.0
+width_curve = ExtResource( 8 )
+default_color = Color( 0, 1, 1, 1 )
+
+[node name="Head" type="Control" parent="Board/Arrow"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Head" type="Polygon2D" parent="Board/Arrow/Head"]
+offset = Vector2( -32, -8 )
+polygon = PoolVector2Array( 16, 24, 32, 8, 16, -8 )
+
+[node name="Tween" type="Tween" parent="Board"]
+
+[node name="OppSide" parent="Board" instance=ExtResource( 9 )]
+
+[node name="ClientSide" parent="Board" instance=ExtResource( 9 )]
+margin_top = 810.0
+margin_bottom = 1080.0
+
+[node name="End" type="TextureButton" parent="Board"]
+margin_left = 1648.0
+margin_top = 485.0
+margin_right = 1904.0
+margin_bottom = 597.0
+mouse_filter = 1
+texture_normal = ExtResource( 5 )
+expand = true
+
+[node name="Setting" type="TextureButton" parent="Board"]
+margin_left = 30.0
+margin_top = 24.0
+margin_right = 130.0
+margin_bottom = 124.0
+mouse_filter = 1
+texture_normal = ExtResource( 4 )
+expand = true
+
+[node name="Fog" type="ColorRect" parent="Board"]
+visible = false
+margin_left = -3.0
+margin_top = -3.0
+margin_right = 1977.0
+margin_bottom = 1077.0
+mouse_filter = 1
+color = Color( 0.101961, 0.0784314, 0.105882, 0.764706 )
+
+[node name="SettingScreen" type="Control" parent="Board"]
+visible = false
+margin_right = 1980.0
+margin_bottom = 1080.0
+mouse_filter = 1
+
+[node name="Button" type="Button" parent="Board/SettingScreen"]
+margin_left = 769.0
+margin_top = 258.0
+margin_right = 1230.0
+margin_bottom = 349.0
+text = "Continue"
+
+[node name="Button2" type="Button" parent="Board/SettingScreen"]
+margin_left = 769.0
+margin_top = 387.0
+margin_right = 1230.0
+margin_bottom = 478.0
+text = "Continue"
+
+[node name="Button3" type="Button" parent="Board/SettingScreen"]
+margin_left = 769.0
+margin_top = 518.0
+margin_right = 1230.0
+margin_bottom = 609.0
+text = "Continue"
+
+[node name="Button4" type="Button" parent="Board/SettingScreen"]
+margin_left = 769.0
+margin_top = 641.0
+margin_right = 1230.0
+margin_bottom = 732.0
+text = "Continue"
+
+[node name="BuildScreen" type="ScrollContainer" parent="Board"]
+visible = false
+margin_right = 1980.0
+margin_bottom = 1080.0
+
+[node name="Control" type="Control" parent="Board/BuildScreen"]
+margin_right = 1980.0
+margin_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 7 )
+
+[node name="DeckScreen" type="Control" parent="Board"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="DeadScreen" type="Control" parent="Board"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="HandCardScreen" type="Control" parent="Board"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="TabelCardScreen" type="Control" parent="Board"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="AttackScreen" type="Control" parent="Board"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Auth" type="Control" parent="CanvasLayer"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Main" type="Control" parent="CanvasLayer"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="SearchMatch" type="Control" parent="CanvasLayer"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Collection" type="Control" parent="CanvasLayer"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Setting" type="Control" parent="CanvasLayer"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="NakamaWebSocketAdapter" type="Node" parent="."]
+pause_mode = 2
+script = ExtResource( 2 )
+
+[node name="NakamaHTTPAdapter" type="Node" parent="."]
+pause_mode = 2
+script = ExtResource( 1 )
