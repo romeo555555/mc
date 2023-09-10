@@ -8,9 +8,10 @@
 [ext_resource path="res://assets/board1.png" type="Texture" id=6]
 [ext_resource path="res://src/CardList.gd" type="Script" id=7]
 [ext_resource path="res://src/Arrow_curve.tres" type="Curve" id=8]
-[ext_resource path="res://src/Side.tscn" type="PackedScene" id=9]
+[ext_resource path="res://src/Player.tscn" type="PackedScene" id=9]
 
 [node name="Root" type="Control"]
+show_behind_parent = true
 margin_right = 1980.0
 margin_bottom = 1080.0
 script = ExtResource( 3 )
@@ -38,10 +39,11 @@ polygon = PoolVector2Array( 16, 24, 32, 8, 16, -8 )
 
 [node name="Tween" type="Tween" parent="Board"]
 
-[node name="OppSide" parent="Board" instance=ExtResource( 9 )]
+[node name="Player2" parent="Board" instance=ExtResource( 9 )]
+_miroring = true
 
-[node name="ClientSide" parent="Board" instance=ExtResource( 9 )]
-margin_top = 810.0
+[node name="Player1" parent="Board" instance=ExtResource( 9 )]
+margin_top = 540.0
 margin_bottom = 1080.0
 
 [node name="End" type="TextureButton" parent="Board"]

@@ -19,75 +19,65 @@ var gui_end: Rect2
 #var gui_opp: GuiPlayer = GuiPlayer.new()
 #var select: Select = Select.new()
 
-var guit: int = GUIT.NONE
-var pid: int = PID.NONE
-var action: int = Action.NONE
-var select_node = null #need only for hovered_vible_on
-var card_selected: = false
-var card_target: = false
-var select_card_id: = 0
-var target_card_id: = 0
-var cached_hovered_rect: Rect2
-enum Aligment { CENTER, START, END }
-enum Action { NONE, CLICK, HOVER, DRAG, DRAGGING, DROP }
-enum GUIT { NONE, HAND, R_TABEL, L_TABEL, DECK, AVATAR, BUILD, SETTING, END }
-enum PID { NONE, CLIENT, OPP }
-	
-func is_hovered() -> bool:
-	return action == Action.HOVER
+#var guit: int = GUIT.NONE
+#var pid: int = PID.NONE
+#var action: int = Action.NONE
+#var select_node = null #need only for hovered_vible_on
+#var card_selected: = false
+#var card_target: = false
+#var select_card_id: = 0
+#var target_card_id: = 0
+#var cached_hovered_rect: Rect2
+#enum Aligment { CENTER, START, END }
+#enum Action { NONE, CLICK, HOVER, DRAG, DRAGGING, DROP }
+#enum GUIT { NONE, HAND, R_TABEL, L_TABEL, DECK, AVATAR, BUILD, SETTING, END }
+#enum PID { NONE, CLIENT, OPP }
 
-func is_dragging() -> bool:
-	return action == Action.DRAGGING
 
-func is_clicked() -> bool:
-	return action == Action.CLICK
+enum ComponentID { 
+	NONE, HAND, HAND_CARD, 
+	R_TABEL, R_TABEL_CARD, R_TABEL, R_TABEL_CARD,
+	AVATAR, BUILDS, TRAPS, DEAD, DECK, SETTING, END 
+}
+var players: Dictionary = {}
+var this_player_id: int
 
-func is_card_select() -> bool:
-	return card_selected
+var _clicked := false
+var _hovered := false
+var _dragging := false
+var _select_prev_card_id: int
+var _select_card_id: int
+var _select_line_id: int
+var _select_player_id: int
+var _select_rect: Rect2
 
-func is_card_target() -> bool:
-	return card_target
+func set_select_card(player_id: int, line_id: int, card_id: int):
+	_select_prev_card_id = _select_player_id
+	_select_player_id = player_id
+	_select_line_id = line_id
+	_select_card_id = card_id
 
-func set_taget_card(card_id: int):
-	card_target = true
-	target_card_id = card_id
+func select_card() -> Node:
+	return get_player(_select_player_id).get_line(_select_line_id).get_card(_select_card_id) 
 
-func set_untarget_card():
-	card_target = false
+func get_player(player_id: int) -> Node:
+	return players.get(player_id)
 
-func set_select_card(card_id: int):
-	card_selected = true
-	select_card_id = card_id
-
-func set_unselect_card():
-	card_selected = false
-
-func set_hovered(rect: Rect2, node: Control):
-	cached_hovered_rect = rect
-	node.get_child(0).set_visible(true)
-	select_node = node
-	action = Action.HOVER
-
-func set_dragging():
-	action = Action.DRAGGING
-
-func set_clicked():
-	action = Action.CLICK
-
-func clear_action():
-	action = Action.NONE
+func set_hovered():
+	if _hovered:
+		get_child(_select_prev_card_id).get_child(0).set_visible(false)
+	select_card().get_child(0).set_visible(true)
+	_hovered = true
 
 func check_hovered(mouse_pos: Vector2):
-	if action == Action.HOVER:
-		if cached_hovered_rect.has_point(mouse_pos):
-			print("hovered")
-		else:
-			action = Action.NONE
-			select_node.get_child(0).set_visible(false)
-			select_node = null
+	if _hovered and not _select_rect.has_point(mouse_pos):
+		hovered_off()
 
+func hovered_off():
+	select_card().get_child(0).set_visible(false)
+	_hovered = false
 
-
+signal input_event(player_id, component_id, card_id)
 #auth
 #matchmeker
 #matchrequest
@@ -97,7 +87,10 @@ func check_hovered(mouse_pos: Vector2):
 #default_color = Color.aqua
 #$ArrowHead.color = Color.aquamarine
 #use_parent_material
-
+func init_player(player_id: int, player: Node):
+#	player
+	players[player_id] = player
+var textures: Array
 func _ready():
 	print("                 [Screen Metrics]")
 	print("            Display size: ", OS.get_screen_size())
@@ -108,6 +101,10 @@ func _ready():
 	print(OS.get_window_size().y)
 	Physics2DServer.set_active(false)
 	PhysicsServer.set_active(false)
+	
+	this_player_id = "Client".hash()
+	init_player(this_player_id, $Board/Player1)
+	init_player("Opp".hash(), $Board/Player2)
 	
 #	set_layout(Vector2(1980, 1080))
 #	$Board/ClientAvatar.connect("pressed", self, "_on_Avatar_pressed")
@@ -124,23 +121,39 @@ func _ready():
 	
 	$Board/Setting.connect("pressed", self, "_on_Setting_pressed")
 	$Board/End.connect("pressed", self, "_on_End_pressed")
-	$Board/ClientTabel.connect("click_on_card", self, "_on_Card_pressed")
+#	$Board/ClientSide.tabel.connect("click_on_card", self, "_on_Card_pressed", [x, y], CONNECT_DEFERRED)
 	
 	for i in range(5):
 		var card = card_prefab.instance()
-		$Board/ClientHand.add_card(card)
+		$Board/Player1.hand.add_card(card)
 	for i in range(2):
 		var card = card_prefab.instance()
-		$Board/ClientTabel.cast_right(card)
+		$Board/Player1.tabel.cast_right(card)
 	for i in range(2):
 		var card = card_prefab.instance()
-		$Board/ClientTabel.cast_left(card)
+		$Board/Player1.tabel.cast_left(card)
 #	var node := $Board/BuildScreen/Control
 #	for i in range(60):
 #		var card = card_prefab.instance()
 #		node.add_card(card)
-	
-
+#	for i in range(100):
+#		var card = card_prefab.instance()
+#		add_child(card)
+#	for i in range(100):
+#		var t: Texture = load("res://assets/av1.png")
+#		textures.append(t)
+#
+#func _process(delta):
+#	update()
+#
+#
+#func _draw():
+#	var p:=10.0
+#	for t in textures:
+#		draw_rect(Rect2(p, 0, 300, 300), Color.aqua)
+#		draw_texture_rect(t, Rect2(p, 0, 300, 300), false)
+#		p += p
+#	pass
 #	var _card_size := Vector2(200, 300)
 #	var _card_indent := Vector2(10, 0)
 #	var children := node.get_children()
@@ -155,32 +168,68 @@ func _ready():
 #		children[i].set_position(Vector2(x, 0))
 #		x += offset
 
+var x := 0
+var y := 0
+#func _on_Card_pressed(x: int, y: int):
+func _on_Card_pressed(x2: int, y2: int, x3: int, y3: int):
+	print("do ", x, " ", y)
+	print("do2 ", x2, " ", y2)
+	print("do3 ", x3, " ", y3)
+#	var card = card_prefab.instance()
+#	$Board/ClientSide.hand().add_card(card)
+func callback_avatar():
+	pass
+func callback_tabel():
+	pass
 
-func _on_Card_pressed():
-	var card = card_prefab.instance()
-	$Board/ClientHand.add_card(card)
+func callback_tabel_card(player_id: int, line_id: int, card_id: int):
+	set_select_card(player_id, line_id, card_id)
+#	var card: Node = select_card()
+	if _clicked:
+		pass
+	#hover
+	set_hovered()
+
+func callback_hand_card(player_id: int, line_id: int, card_id: int):
+	set_select_card(player_id, line_id, card_id)
+#	var card: Node = select_card()
+	if _clicked:
+		pass
+	#hover
+	set_hovered()
+
+func callback_hand():
+	pass
+func callback_builds():
+	pass
+func callback_traps():
+	pass
+func callback_dead():
+	pass
+func callback_deck():
+	pass
 func _on_Avatar_pressed():
 	print("av press") 
 func _on_Deck_pressed():
 	print("deck press") 
 func _on_Build_pressed():
 	print("build press") 
-func _on_Setting_pressed():
-	print("setting press") 
-func _on_End_pressed():
-	print("end press") 
 func _on_Tabel_pressed():
 	print("tabelpress") 
 func _on_Hand_pressed():
 	print("hand press") 
+func _on_Setting_pressed():
+	print("setting press") 
+func _on_End_pressed():
+	print("end press") 
 
-var _dragging := false
 
-func _input(event):
-#	_clicked = event is InputEventMouseButton \
-#		and event.button_index == BUTTON_LEFT and event.pressed
+func _input(event: InputEvent):
+	_clicked = event is InputEventMouseButton \
+		and event.button_index == BUTTON_LEFT and event.pressed
 	if event is InputEventMouseMotion:
 		var mouse_pos: Vector2 = event.position
+		check_hovered(mouse_pos)
 		if _dragging:
 			var arrow := $Board/Arrow
 			arrow.clear_points()

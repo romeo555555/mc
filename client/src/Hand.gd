@@ -15,14 +15,10 @@ var _hovered := false
 var _cached_card_id: int
 var _cached_prev_card_id: int
 var _cached_rect: Rect2
+onready var parent: Node = get_parent()
+const line_id: int = 2
 
 func _ready():
-	if _miroring:
-		var build := $Other/Build
-		var deck := $Other/Deck
-		var pos: Vector2 = deck.get_rect().position
-		deck.set_position(build.get_rect().position)
-		build.set_position(pos)
 	self.connect("mouse_exited", self, "_mouse_exited")
 
 func _mouse_exited():
@@ -34,16 +30,11 @@ func _gui_input(event: InputEvent):
 	if event is InputEventMouseMotion:
 		var mouse_pos: Vector2 = event.position
 		check_hovered(mouse_pos)
-		if _build_rect.has_point(mouse_pos):
-#			set_select_card
-			set_hovered()
-		elif _deck_rect.has_point(mouse_pos):
-			set_hovered()
-		elif containe(mouse_pos):
+		if containe(mouse_pos):
 			set_hovered()
 
 func containe(mouse_pos: Vector2) -> bool:
-	for i in range(1, card_count() + 1):
+	for i in range(0, card_count()):
 		var rect: Rect2 = get_child(i).get_rect()
 		if rect.has_point(mouse_pos):
 			set_select_card(i, rect)
@@ -73,7 +64,7 @@ func hovered_off():
 	_hovered = false
 
 func card_count() -> int:
-	return get_child_count() - 1
+	return get_child_count()
 
 func can_add_card() -> bool:
 	return !get_child_count() == _max_size
@@ -99,7 +90,7 @@ func aligment():
 	var x := (rect_size.x + start_x) * 0.5
 	var angel = -(h_twist * count / 2)
 	var y = h_height * count / 2 
-	for i in range(1, count + 1):
+	for i in range(0, count):
 		var child = get_child(i)
 		child.set_position(Vector2(x, abs(y)*1))
 		child.set_rotation(angel)
