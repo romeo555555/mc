@@ -22,17 +22,42 @@ _global_script_classes=[ {
 "base": "Line2D",
 "class": "Arrow",
 "language": "GDScript",
-"path": "res://src/Arrow.gd"
+"path": "res://old/src/Arrow.gd"
 }, {
-"base": "Node2D",
+"base": "Object",
+"class": "Avatar",
+"language": "GDScript",
+"path": "res://src/avatar.gd"
+}, {
+"base": "Object",
 "class": "Card",
 "language": "GDScript",
-"path": "res://src/Card.gd"
+"path": "res://src/card.gd"
 }, {
 "base": "Reference",
 "class": "Client",
 "language": "GDScript",
-"path": "res://src/Client.gd"
+"path": "res://old/src/Client.gd"
+}, {
+"base": "Object",
+"class": "Deck",
+"language": "GDScript",
+"path": "res://src/deck.gd"
+}, {
+"base": "Object",
+"class": "Factorys",
+"language": "GDScript",
+"path": "res://src/factorys.gd"
+}, {
+"base": "Object",
+"class": "Graveyard",
+"language": "GDScript",
+"path": "res://src/graveyard.gd"
+}, {
+"base": "Object",
+"class": "Hand",
+"language": "GDScript",
+"path": "res://src/hand.gd"
 }, {
 "base": "Reference",
 "class": "NakamaAPI",
@@ -109,17 +134,42 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/com.heroiclabs.nakama/api/NakamaWriteStorageObject.gd"
 }, {
+"base": "Object",
+"class": "Player",
+"language": "GDScript",
+"path": "res://src/player.gd"
+}, {
+"base": "Reference",
+"class": "Secrets",
+"language": "GDScript",
+"path": "res://src/secrets.gd"
+}, {
+"base": "Object",
+"class": "Tabel",
+"language": "GDScript",
+"path": "res://src/tabel.gd"
+}, {
 "base": "Line2D",
 "class": "TargetingArrow2",
 "language": "GDScript",
 "path": "res://old/TargetingArrow1.gd"
+}, {
+"base": "Object",
+"class": "View",
+"language": "GDScript",
+"path": "res://src/view.gd"
 } ]
 _global_script_class_icons={
 "AbstractCard": "",
 "AbstractContainer": "",
 "Arrow": "",
+"Avatar": "",
 "Card": "",
 "Client": "",
+"Deck": "",
+"Factorys": "",
+"Graveyard": "",
+"Hand": "",
 "NakamaAPI": "",
 "NakamaAsyncResult": "",
 "NakamaClient": "",
@@ -135,13 +185,21 @@ _global_script_class_icons={
 "NakamaSocketAdapter": "",
 "NakamaStorageObjectId": "",
 "NakamaWriteStorageObject": "",
-"TargetingArrow2": ""
+"Player": "",
+"Secrets": "",
+"Tabel": "",
+"TargetingArrow2": "",
+"View": ""
 }
 
 [application]
 
 config/name="client"
 run/main_scene="res://src/Main.tscn"
+
+[autoload]
+
+Autoloader="*res://src/singelton.gd"
 
 [display]
 

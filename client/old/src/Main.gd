@@ -4,7 +4,7 @@ extends Control
 #const gui: Reference = preload("res://src/gui.gd")
 #const Client: Reference = preload("res://src/client.gd")
 #const fab_deck: PackedScene = preload("res://scn/Deck.tscn")
-const card_prefab: PackedScene = preload("res://src/Card.tscn")
+#const card_prefab: PackedScene = preload("res://src/Card.tscn")
 
 
 #var client: Client = Client.new($NakamaHTTPAdapter, $NakamaWebSocketAdapter)

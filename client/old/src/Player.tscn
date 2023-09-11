@@ -1,10 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://src/Hand.gd" type="Script" id=1]
+[ext_resource path="res://old/src/Hand.gd" type="Script" id=1]
 [ext_resource path="res://assets/error.png" type="Texture" id=2]
-[ext_resource path="res://src/Tabel.gd" type="Script" id=3]
-[ext_resource path="res://src/Player.gd" type="Script" id=4]
-[ext_resource path="res://src/Avatar.gd" type="Script" id=5]
+[ext_resource path="res://old/src/Tabel.gd" type="Script" id=3]
+[ext_resource path="res://old/src/Player.gd" type="Script" id=4]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
@@ -27,7 +26,6 @@ margin_right = 1090.0
 margin_bottom = 270.0
 texture = ExtResource( 2 )
 expand = true
-script = ExtResource( 5 )
 
 [node name="Hovered" type="ReferenceRect" parent="Avatar"]
 visible = false

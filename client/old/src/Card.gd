@@ -1,6 +1,6 @@
 #tool
 extends Node2D#TextureButton
-class_name Card
+#class_name Card
 onready var parent: Node = get_parent()
 
 func _ready():
