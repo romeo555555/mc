@@ -6,9 +6,18 @@ var _position: Vector2
 var _rotation: float
 var _scale: Vector2 = Vector2.ONE
 #var _data
+var _visible := true
+#var _hightlight := false
+#var _hightlight_color := Color.aliceblue
 
 func setup(texture: Texture = load("res://assets/error.png") as Texture):
 	_texture = texture
+
+func set_texture(texture: Texture):
+	_texture = texture
+
+func texture() -> Texture:
+	return _texture
 
 func set_position(pos: Vector2):
 	_position = pos
@@ -16,8 +25,8 @@ func set_position(pos: Vector2):
 func position() -> Vector2:
 	return _position
 
-func set_rotation(rotation: float):
-	_rotation = rotation
+func set_rotation(rot: float):
+	_rotation = rot
 
 func rotation() -> float:
 	return _rotation
@@ -28,10 +37,21 @@ func set_scale(scale: Vector2):
 func scale() -> Vector2:
 	return _scale
 
-func has_point(point: Vector2, size: Vector2) -> bool:
-	#TODO: what about scale?
-	return  Rect2(_position, size * _scale).has_point(point)
+func set_visible(visible: bool):
+	_visible = visible
 
-func draw(ctx: CanvasItem, size: Vector2):
-#	ctx.draw_set_transform(Vector2.ZERO, _rotation, _scale)
-	ctx.draw_texture_rect(_texture, Rect2(_position, size * _scale), false)
+func visible() -> bool:
+	return _visible
+#
+#func set_hightlight(hightlight: bool):
+#	_hightlight = hightlight
+#
+#func hightlight() -> bool:
+#	return _hightlight
+#
+#func set_hightlight_color(color: Color, hightlight: bool = true):
+#	_hightlight_color = color
+#	_hightlight = hightlight
+#
+#func hightlight_color() -> Color:
+#	return _hightlight_color

@@ -5,12 +5,20 @@
 [ext_resource path="res://src/main.gd" type="Script" id=3]
 [ext_resource path="res://assets/board1.png" type="Texture" id=6]
 [ext_resource path="res://old/src/CardList.gd" type="Script" id=7]
-[ext_resource path="res://src/Arrow_curve.tres" type="Curve" id=8]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( -22.2589, 43.6794, 22.2589, -43.6794, 178.998, 98.5368, -22.4932, -45.3594, 22.4932, 45.3594, 271.836, 99.1653 )
+}
 
 [node name="Root" type="Control"]
 margin_right = 1980.0
 margin_bottom = 1080.0
 script = ExtResource( 3 )
+
+[node name="Path2D" type="Path2D" parent="."]
+scale = Vector2( 3.80231, 1.59091 )
+curve = SubResource( 1 )
 
 [node name="Board" type="TextureRect" parent="."]
 visible = false
@@ -20,9 +28,7 @@ texture = ExtResource( 6 )
 expand = true
 
 [node name="Arrow" type="Line2D" parent="Board"]
-points = PoolVector2Array( 384, 112 )
 width = 15.0
-width_curve = ExtResource( 8 )
 default_color = Color( 0, 1, 1, 1 )
 
 [node name="Head" type="Control" parent="Board/Arrow"]

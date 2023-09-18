@@ -1,4 +1,4 @@
-extends Object
+extends View
 class_name Tabel
 
 var avatar: Avatar = Avatar.new()
@@ -7,29 +7,30 @@ var _max_size_side := 4
 #export(bool) var _can_drop := false
 #export(bool) var _miroring := false
 var _card_size := Vector2(200, 200)
+var _card_pivot := _card_size * 0.5
 var _x_indent := 0.0
 var _left_count := 0
 var _right_count := 0
 var _cards: Array
-var _texture: Texture
 var _margin: Rect2
-var _rect: Rect2
 #var _data
 
 func setup(
 	rect: Rect2, 
+	texture: Texture = null,
 	x_indent: float = 0, 
 	margin_offset: Vector2 = Vector2.ZERO, 
-	card_aspect: float = 1, 
-	texture: Texture = null
+	card_aspect: float = 1
 ):
-	_texture = texture
 	_margin = Rect2(rect.position + margin_offset, rect.size - margin_offset * 2.0)
-	_rect = rect
 	_card_size = Vector2(_margin.size.y * card_aspect, _margin.size.y)
+	_card_pivot = _card_size * 0.5
 	_x_indent = x_indent
 	#TODO: avatar-size or aspect 1.5 _card_size
 	avatar.setup(Rect2(rect.position + Vector2((rect.size.x - _card_size.x) * 0.5, 0), _card_size))
+	_texture = texture
+	_rect = rect
+	_type = "Hand".hash()
 
 func set_position(pos: Vector2):
 	_rect.position = pos
@@ -43,11 +44,11 @@ func has_point(point: Vector2) -> bool:
 func has_point_on_card(point: Vector2) -> int:
 	if point.x > _rect.size.x * 0.5:
 		for i in range(_left_count, card_count()):
-			if _cards[i].has_point(point, _card_size):
+			if Rect2(_cards[i].position(), _card_size).has_point(point):
 				return i
 	else: 
 		for i in range(0, _left_count + 1):
-			if _cards[i].has_point(point, _card_size):
+			if Rect2(_cards[i].position(), _card_size).has_point(point):
 				return i
 	return -1
 
@@ -55,13 +56,18 @@ func draw(ctx: CanvasItem):
 	if _texture:
 		ctx.draw_texture_rect(_texture, _rect, false)
 	for card in _cards:
-		draw_card(ctx, card)
-	ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-	avatar.draw(ctx)
+		if card.visible():
+			#	var _pivot := size * 0.5 * _scale
+#			ctx.draw_set_transform(card.position + _card_pivot, card.rotation, card.scale)
+#			ctx.draw_texture_rect(_texture, Rect2(Vector2.ZERO - _card_pivot, _card_size), false)
+			ctx.draw_texture_rect(card.texture(), Rect2(card.position(), _card_size), false)
+			#	ctx.draw_rect()
+			#	ctx.draw_string()
+			if card.hightlight():
+				ctx.draw_rect(Rect2(Vector2.ZERO - _card_pivot, _card_size), card.hightlight_color(), false, 30)
 
-func draw_card(ctx: CanvasItem, card: Card):
-	ctx.draw_texture_rect(card._texture, Rect2(card.position(), _card_size), false)
-	pass
+#	ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+	avatar.draw(ctx)
 
 func card_count() -> int:
 	return _cards.size()
@@ -89,10 +95,15 @@ func cast_left(card: Card):
 #func get_card(card_id: int) -> Node:
 #	return get_child(card_id)
 #
-#func remove_card_right(idx: int):
-##	if idx == _avatar_id:
-##		return
-#	remove_child(get_child(idx))
+func remove(idx: int) -> Card:
+	if card_count() == 0:
+		return null
+	if idx > _left_count:
+		_right_count -= 1
+		return _cards.pop_at(idx)
+	else:
+		_left_count -= 1
+		return _cards.pop_at(idx)
 
 func aligment_left():
 	var offset := _card_size.x + _x_indent
