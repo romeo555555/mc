@@ -11,6 +11,12 @@ var deck: Deck = Deck.new()
 var _margin: Rect2
 #var _data
 
+#var _name: String
+#func _init(name: String):
+#	_name = name
+#func name() -> String:
+#	return _name
+
 func setup(rect: Rect2, texture: Texture = null, margin_offset: Vector2 = Vector2.ZERO, miroring: bool = false):
 	_texture = texture
 	_margin = Rect2(rect.position + margin_offset, rect.size - margin_offset * 2.0)
@@ -22,7 +28,8 @@ func setup(rect: Rect2, texture: Texture = null, margin_offset: Vector2 = Vector
 	var other_indent := Vector2(10, 0) 
 	var card_x_indent := 10.0
 	var hadn_card_x_indent := -50.0
-	var line_margin := Vector2(10, 10) 
+	var line_margin := Vector2(20, 20) 
+#	var line_margin := Vector2(10, 10) 
 	
 	
 	if miroring:
@@ -57,12 +64,12 @@ func position() -> Vector2:
 func has_point(point: Vector2) -> bool:
 	return _rect.has_point(point)
 
-func draw(ctx: CanvasItem):
+func draw(ctx: CanvasItem, font: Font):
 	if _texture:
 		ctx.draw_texture_rect(_texture, _rect, false)
-	factorys.draw(ctx)
-	secrets.draw(ctx)
-	graveyard.draw(ctx)
-	deck.draw(ctx)
-	tabel.draw(ctx)
-	hand.draw(ctx)
+	factorys.draw(ctx, font)
+	secrets.draw(ctx, font)
+	graveyard.draw(ctx, font)
+	deck.draw(ctx, font)
+	tabel.draw(ctx, font)
+	hand.draw(ctx, font)

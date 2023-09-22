@@ -1,10 +1,9 @@
 extends View
 class_name Avatar
-
-func setup(rect: Rect2, texture: Texture = load("res://assets/error.png") as Texture):
-	_texture = texture
-	_rect = rect
-	_type = "Avatar".hash()
+#
+#func setup(rect: Rect2, texture: Texture = load("res://assets/error.png") as Texture):
+#	_texture = texture
+#	_rect = rect
 #
 #func set_position(pos: Vector2):
 #	_rect.position = pos

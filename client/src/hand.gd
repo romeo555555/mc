@@ -27,7 +27,6 @@ func setup(
 	_x_indent = x_indent
 	_texture = texture
 	_rect = rect
-	_type = "Hand".hash()
 
 func set_position(pos: Vector2):
 	_rect.position = pos
@@ -41,41 +40,56 @@ func has_point(point: Vector2) -> bool:
 func has_point_on_card(point: Vector2) -> int:
 	for i in range(0, card_count()):
 		var card: Card = _cards[i]
-		if 	Transform2D(card.rotation(), card.position() + _card_pivot).xform(Rect2(Vector2.ZERO - _card_pivot, _card_size)).has_point(point):
+#		if card.visible():
+#		ctx.draw_set_transform(card.position() + _card_pivot, card.rotation(), card.scale())
+#		ctx.draw_rect(Rect2(Vector2.ZERO - _card_pivot, _card_size), Color.blue, false, 15)
+#		ctx.draw_circle(point, 15, Color.red)
+#		ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+		if Transform2D(card.rotation(), card.position() + _card_pivot).xform(Rect2(Vector2.ZERO - _card_pivot, _card_size)).has_point(point):
 			return i
 	return -1
 
-func draw(ctx: CanvasItem):
+func draw(ctx: CanvasItem, font: Font):
 	if _texture:
 		ctx.draw_texture_rect(_texture, _rect, false)
-	for card in _cards:
-		if card.visible():
-			#	var _pivot := size * 0.5 * _scale
-			ctx.draw_set_transform(card.position() + _card_pivot, card.rotation(), card.scale())
-			ctx.draw_texture_rect(card.texture(), Rect2(Vector2.ZERO - _card_pivot, _card_size), false)
-			#	ctx.draw_rect()
-			#	ctx.draw_string()
-			if card.hightlight():
-				ctx.draw_rect(Rect2(Vector2.ZERO - _card_pivot, _card_size), card.hightlight_color(), false, 15)
+	for i in range(card_count() - 1, -1, -1):
+		var card: Card = _cards[i]
+		draw_card(ctx, card, font)
 	ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+
+func draw_card(ctx: CanvasItem, card: Card, font: Font):
+	if card.visible():
+		#	var _pivot := size * 0.5 * _scale
+		ctx.draw_set_transform(card.position() + _card_pivot, card.rotation(), card.scale())
+		ctx.draw_texture_rect(card.texture(), Rect2(Vector2.ZERO - _card_pivot, _card_size), false)
+		#	ctx.draw_rect()
+		#	ctx.draw_string()
+		if card.highlight():
+			ctx.draw_rect(Rect2(Vector2.ZERO - _card_pivot, _card_size), card.highlight_color(), false, 15)
 
 func card_count() -> int:
 	return _cards.size()
 
-func can_add_card() -> bool:
-	return !card_count() == _max_size
+func is_full() -> bool:
+	return card_count() == _max_size
 
-func add_card(card: Card):
-	_cards.push_back(card)
+func is_empety() -> bool:
+	return _cards.size() == 0
+
+func add_card(card: Card, idx: int = -1):
+	if idx > -1:
+		_cards.insert(idx, card)
+	else:
+		_cards.push_back(card)
 	aligment()
 
-#func get_card(card_id: int) -> Node:
-#	return get_child(card_id)
-#
-#func remove_card_right(idx: int):
-##	if idx == _avatar_id:
-##		return
-#	remove_child(get_child(idx))
+func get_card(card_id: int) -> Card:
+	return _cards[card_id]
+
+func remove_card(idx: int) -> Card:
+	var card: Card = _cards.pop_at(idx)
+	aligment()
+	return card
 
 #func has_point(point: Vector2) -> bool:
 #	#TODO: what about scale?
@@ -148,13 +162,12 @@ func aligment():
 		card.set_rotation(a) #ngel)
 	print("stop" )
 
-func higlight_reset():
+func highlight_reset():
 	for card in _cards:
-		card.set_hightlight(false)
+		card.set_highlight(false)
 
 func hover_on(card_id: int):
-	_cards[card_id].set_hightlight_color(Color.aqua)
+	_cards[card_id].set_highlight(true, Color.aqua)
 
 func hover_off(card_id: int):
-	_cards[card_id].set_hightlight(true)
-
+	_cards[card_id].set_highlight(false)

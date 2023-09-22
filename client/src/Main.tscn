@@ -16,7 +16,20 @@ margin_right = 1980.0
 margin_bottom = 1080.0
 script = ExtResource( 3 )
 
+[node name="Arrow" type="Line2D" parent="."]
+width = 15.0
+default_color = Color( 0, 1, 1, 1 )
+
+[node name="Head" type="Control" parent="Arrow"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Head" type="Polygon2D" parent="Arrow/Head"]
+offset = Vector2( -32, -8 )
+polygon = PoolVector2Array( 16, 24, 32, 8, 16, -8 )
+
 [node name="Path2D" type="Path2D" parent="."]
+visible = false
 scale = Vector2( 3.80231, 1.59091 )
 curve = SubResource( 1 )
 
@@ -26,18 +39,6 @@ margin_right = 1980.0
 margin_bottom = 1080.0
 texture = ExtResource( 6 )
 expand = true
-
-[node name="Arrow" type="Line2D" parent="Board"]
-width = 15.0
-default_color = Color( 0, 1, 1, 1 )
-
-[node name="Head" type="Control" parent="Board/Arrow"]
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="Head" type="Polygon2D" parent="Board/Arrow/Head"]
-offset = Vector2( -32, -8 )
-polygon = PoolVector2Array( 16, 24, 32, 8, 16, -8 )
 
 [node name="Tween" type="Tween" parent="Board"]
 

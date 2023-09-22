@@ -5,10 +5,10 @@ var _texture: Texture
 var _position: Vector2
 var _rotation: float
 var _scale: Vector2 = Vector2.ONE
-#var _data
 var _visible := true
-#var _hightlight := false
-#var _hightlight_color := Color.aliceblue
+var _highlight := false
+var _highlight_color := Color.aliceblue
+#var _data
 
 func setup(texture: Texture = load("res://assets/error.png") as Texture):
 	_texture = texture
@@ -42,16 +42,13 @@ func set_visible(visible: bool):
 
 func visible() -> bool:
 	return _visible
-#
-#func set_hightlight(hightlight: bool):
-#	_hightlight = hightlight
-#
-#func hightlight() -> bool:
-#	return _hightlight
-#
-#func set_hightlight_color(color: Color, hightlight: bool = true):
-#	_hightlight_color = color
-#	_hightlight = hightlight
-#
-#func hightlight_color() -> Color:
-#	return _hightlight_color
+
+func set_highlight(highlight: bool = true, color: Color = Color.aqua):
+	_highlight_color = color
+	_highlight = highlight
+
+func highlight() -> bool:
+	return _highlight
+
+func highlight_color() -> Color:
+	return _highlight_color
