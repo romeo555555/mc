@@ -1,7 +1,7 @@
 extends View
 class_name Hand
 
-var _max_size := 10
+var _max_count := 10
 #export(bool) var _can_drag := false
 #export(bool) var _can_drop := false
 #export(bool) var _miroring := false
@@ -13,8 +13,12 @@ var _hand_height := 25.0
 var _cards: Array
 var _margin: Rect2
 #var _data
+var _cached_card_id: int
+var _cached_card_pos: Vector2
+var _cached_card_rot: float
 
 func setup(
+	id: int,
 	rect: Rect2, 
 	texture: Texture = null,
 	x_indent: float = 0, 
@@ -27,51 +31,14 @@ func setup(
 	_x_indent = x_indent
 	_texture = texture
 	_rect = rect
-
-func set_position(pos: Vector2):
-	_rect.position = pos
-
-func position() -> Vector2:
-	return _rect.position
-
-func has_point(point: Vector2) -> bool:
-	return _rect.has_point(point)
-
-func has_point_on_card(point: Vector2) -> int:
-	for i in range(0, card_count()):
-		var card: Card = _cards[i]
-#		if card.visible():
-#		ctx.draw_set_transform(card.position() + _card_pivot, card.rotation(), card.scale())
-#		ctx.draw_rect(Rect2(Vector2.ZERO - _card_pivot, _card_size), Color.blue, false, 15)
-#		ctx.draw_circle(point, 15, Color.red)
-#		ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-		if Transform2D(card.rotation(), card.position() + _card_pivot).xform(Rect2(Vector2.ZERO - _card_pivot, _card_size)).has_point(point):
-			return i
-	return -1
-
-func draw(ctx: CanvasItem, font: Font):
-	if _texture:
-		ctx.draw_texture_rect(_texture, _rect, false)
-	for i in range(card_count() - 1, -1, -1):
-		var card: Card = _cards[i]
-		draw_card(ctx, card, font)
-	ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-
-func draw_card(ctx: CanvasItem, card: Card, font: Font):
-	if card.visible():
-		#	var _pivot := size * 0.5 * _scale
-		ctx.draw_set_transform(card.position() + _card_pivot, card.rotation(), card.scale())
-		ctx.draw_texture_rect(card.texture(), Rect2(Vector2.ZERO - _card_pivot, _card_size), false)
-		#	ctx.draw_rect()
-		#	ctx.draw_string()
-		if card.highlight():
-			ctx.draw_rect(Rect2(Vector2.ZERO - _card_pivot, _card_size), card.highlight_color(), false, 15)
+	_id = id
+	_cards.resize(_max_count)
 
 func card_count() -> int:
 	return _cards.size()
 
 func is_full() -> bool:
-	return card_count() == _max_size
+	return card_count() == _max_count
 
 func is_empety() -> bool:
 	return _cards.size() == 0
@@ -84,20 +51,15 @@ func add_card(card: Card, idx: int = -1):
 	aligment()
 
 func get_card(card_id: int) -> Card:
-	return _cards[card_id]
+	if _cards.has(card_id):
+		return _cards[card_id]
+	else:
+		return null
 
 func remove_card(idx: int) -> Card:
 	var card: Card = _cards.pop_at(idx)
 	aligment()
 	return card
-
-#func has_point(point: Vector2) -> bool:
-#	#TODO: what about scale?
-##	var mpoint: Vector2 = Transform2D(_rotation, _position + _pivot).xform(point - _position - _pivot) #_position + _pivot-point)
-##	_position = mpoint
-##	return  Rect2(Vector2.ZERO - _pivot, _size).has_point(mpoint)
-#	return Transform2D(_rotation, _position + _pivot).xform(Rect2(Vector2.ZERO - _pivot, _size)).has_point(point)
-##	return  Rect2(_position, _size).has_point(point)
 
 func aligment():
 #	var count := card_count()
@@ -162,6 +124,37 @@ func aligment():
 		card.set_rotation(a) #ngel)
 	print("stop" )
 
+func has_point_on_card(point: Vector2) -> int:
+	for i in range(0, card_count()):
+		var card: Card = _cards[i]
+		if card.visible():
+#		ctx.draw_set_transform(card.position() + _card_pivot, card.rotation(), card.scale())
+#		ctx.draw_rect(Rect2(Vector2.ZERO - _card_pivot, _card_size), Color.blue, false, 15)
+#		ctx.draw_circle(point, 15, Color.red)
+#		ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+			if Transform2D(card.rotation(), card.position() + _card_pivot).xform(Rect2(Vector2.ZERO - _card_pivot, _card_size)).has_point(point):
+				return i
+	return -1
+
+#func has_point(point: Vector2) -> bool:
+#	#TODO: what about scale?
+##	var mpoint: Vector2 = Transform2D(_rotation, _position + _pivot).xform(point - _position - _pivot) #_position + _pivot-point)
+##	_position = mpoint
+##	return  Rect2(Vector2.ZERO - _pivot, _size).has_point(mpoint)
+#	return Transform2D(_rotation, _position + _pivot).xform(Rect2(Vector2.ZERO - _pivot, _size)).has_point(point)
+##	return  Rect2(_position, _size).has_point(point)
+
+func input(sense: Sense):
+	var card_id := has_point_on_card(sense.mouse_pos())
+	sense.set_card_id(card_id)
+	sense.set_view_id(_id)
+#	if sense.clicked():
+#	sense.input_event(sense.MouseEnter, Hand, player_id, card_id, can_drag)
+
+func output(sense: Sense):
+#	aligment()
+	pass
+
 func highlight_reset():
 	for card in _cards:
 		card.set_highlight(false)
@@ -171,3 +164,47 @@ func hover_on(card_id: int):
 
 func hover_off(card_id: int):
 	_cards[card_id].set_highlight(false)
+
+func remove_select_card() -> Card:
+	return remove_card(_cached_card_id)
+
+func select_card(card_id: int):
+	var card: Card = _cards[card_id]
+	_cached_card_id = card_id
+	_cached_card_pos = card.position()
+	_cached_card_rot = card.rotation()
+	card.set_visible(false)
+	card.set_rotation(0)
+	card.set_scale(Vector2.ONE)
+
+func unselect_card():
+	var card: Card = _cards[_cached_card_id]
+	card.set_visible(true)
+	card.set_position(_cached_card_pos)
+	card.set_rotation(_cached_card_rot)
+	card.set_scale(Vector2.ONE)
+
+func draw_select_card(ctx: CanvasItem, position: Vector2):
+	var card: Card = _cards[_cached_card_id]
+	card.set_visible(true)
+	card.set_position(position-_card_pivot)
+	draw_card(ctx, card)
+	card.set_visible(false)
+
+func draw(ctx: CanvasItem):
+	if _texture:
+		ctx.draw_texture_rect(_texture, _rect, false)
+	for i in range(card_count() - 1, -1, -1):
+		var card: Card = _cards[i]
+		draw_card(ctx, card)
+	ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+
+func draw_card(ctx: CanvasItem, card: Card):
+	if card.visible():
+		#	var _pivot := size * 0.5 * _scale
+		ctx.draw_set_transform(card.position() + _card_pivot, card.rotation(), card.scale())
+		ctx.draw_texture_rect(card.texture(), Rect2(Vector2.ZERO - _card_pivot, _card_size), false)
+		#	ctx.draw_rect()
+		#	ctx.draw_string()
+		if card.highlight():
+			ctx.draw_rect(Rect2(Vector2.ZERO - _card_pivot, _card_size), card.highlight_color(), false, 15)

@@ -1,23 +1,50 @@
 extends Object
 class_name View
 
+var _id: int
 var _texture: Texture
 var _rect: Rect2
 var _highlight := false
 var _highlight_color := Color.aliceblue
 
-func setup(rect: Rect2, texture: Texture = load("res://assets/error.png") as Texture):
+func setup(id: int, rect: Rect2, texture: Texture = load("res://assets/error.png") as Texture):
 	_texture = texture
 	_rect = rect
+	_id = id
 
 func set_position(pos: Vector2):
 	_rect.position = pos
 
 func position() -> Vector2:
 	return _rect.position
+	
+func _mouse_enter(sense: Sense) -> bool:
+	if _rect.has_point(sense.mouse_pos()):
+		input(sense)
+		hovered(sense)
+		return true
+	return false
 
-func has_point(point: Vector2) -> bool:
-	return _rect.has_point(point)
+func _mouse_exit(sense: Sense):
+	output(sense)
+	unhovered(sense)
+
+func input(sense: Sense):
+	sense.set_view_id(_id)
+
+func output(sense: Sense):
+	pass
+
+func drop(sense: Sense):
+	pass
+
+func hovered(sense: Sense):
+#	sense.set_hovered(true)
+	set_highlight(true, (Color.red if sense.clicked() else Color.yellow))
+
+func unhovered(sense: Sense):
+#	sense.set_hovered(false)
+	set_highlight(false)
 
 func set_highlight(highlight: bool = true, color: Color = Color.aqua):
 	_highlight_color = color
@@ -29,13 +56,7 @@ func highlight() -> bool:
 func highlight_color() -> Color:
 	return _highlight_color
 
-func mouse_enter(clicked: bool):
-	set_highlight(true, (Color.red if clicked else Color.yellow))
-
-func mouse_exit():
-	set_highlight(false)
-
-func draw(ctx: CanvasItem, font: Font):
+func draw(ctx: CanvasItem):
 #	if _texture:
 	ctx.draw_texture_rect(_texture, _rect, false)
 	if _highlight:
