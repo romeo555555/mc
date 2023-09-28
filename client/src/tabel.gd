@@ -1,7 +1,6 @@
 extends View
 class_name Tabel
 
-var _max_size_line := 4
 #export(bool) var _can_drag := false
 #export(bool) var _can_drop := false
 #export(bool) var _miroring := false
@@ -12,25 +11,29 @@ var _card_pivot := Vector2.ZERO
 var _avatar_rect: Rect2
 var _avatar_pivot := Vector2.ZERO
 var _x_indent := 0.0
+var _avatar_card: Card
+var left_line: Line
+var right_line: Line
 
-var _left_count := 0
-var _right_count := 0
-var _avatar_id := 0
-var _cards: Array
+#var _left_count := 0
+#var _right_count := 0
+#var _avatar_id := 0
+#var _cards: Array
 
-var _left_line: Line = Line.new()
-var _right_line: Line = Line.new()
+var _cached_start_pos := Vector2.ZERO
+var _cached_player_id: String
+var _cached_view_id: int = 0
+var _cached_card_id: int
+var _targeting_player_id: String
+var _targeting_view_id: int = 0
+var _targeting_card_id: int = -1
+var _arrow: Line2D = null
 #var _data
 
-class Line:
-	var _miroring := false
-	var _cards: Array
-
-
 func setup(
-	id: int,
 	rect: Rect2, 
 	texture: Texture = null,
+	arrow: Line2D = null,
 	avatar: Card = null,
 	x_indent: float = 0, 
 	margin_offset: Vector2 = Vector2.ZERO, 
@@ -46,197 +49,140 @@ func setup(
 		rect.position.y + (rect.size.y - avatar_size.y) * 0.5), avatar_size)
 	_avatar_pivot = avatar_size * 0.5
 	avatar.set_position(_avatar_rect.position)
-#	_cards.resize(_max_size_line * 2 + 1)
-	_cards.push_back(avatar)
+	_avatar_card = avatar
+	left_line = Line.new()
+	right_line = Line.new()
+	var center_tabel := Vector2(rect.position.x + rect.size.x * 0.5, _margin.position.y)
+	right_line.setup(center_tabel, 4, Vector2(_avatar_rect.end.x + _x_indent, _margin.position.y), _card_size.x + _x_indent)
+	center_tabel.x -= _card_size.x
+	left_line.setup(center_tabel, 4, Vector2(_avatar_rect.position.x - _card_size.x - _x_indent, _margin.position.y), -1 * (_card_size.x + _x_indent))
 #	avatar.setup(Rect2(rect.position + Vector2((rect.size.x - _card_size.x) * 0.5, 0), _card_size))
+	_arrow = arrow
 	_texture = texture
 	_rect = rect
-	_id = id
-	print(rect)
-	print(_margin)
 
-func card_count() -> int:
-	return _right_count + _left_count + 1
+func line_has_point(point: Vector2) -> int:
+	if _rect.position.x + _rect.size.x * 0.5 < point.x:
+		return Sense.R_Tabel
+	return Sense.L_Tabel
 
-func is_full(is_right: bool) -> bool:
-	if is_right:
-		return _right_count == _max_size_line
-	else:
-		return _left_count == _max_size_line
-
-func is_empety() -> bool:
-	return _cards.size() == 0
-
-func add_card(card: Card, is_right: bool, idx: int = -1):
-	if is_right:
-#		var x := avatar._rect.end.x + _x_indent \
-#			+ (_card_size.x + _x_indent) * _right_count
-#		card.set_position(Vector2(x, _margin.position.y))
-#		card.set_rotation(0)
-#		_cards.push_back(card)
-		card.set_rotation(0)
-		if idx > -1:
-			_cards.insert(idx, card)
-		else:
-			_cards.push_back(card)
-		_right_count += 1
-		aligment()
-	else:
-#		var x := avatar._rect.position.x - _x_indent \
-#		 - _card_size.x - (_card_size.x + _x_indent) * _left_count
-#		_cards.push_front(card)
-#		card.set_position(Vector2(x, _margin.position.y))
-#		card.set_rotation(0)
-		card.set_rotation(0)
-		if idx > -1:
-			_cards.insert(idx, card)
-		else:
-			_cards.push_front(card)
-		_avatar_id += 1
-		_left_count += 1
-		aligment()
-
-func has_card(card_id: int) -> bool:
-	return _cards.has(card_id)
-
-func get_card(card_id: int) -> Card:
-	if _cards.has(card_id):
-		return _cards[card_id]
-	else:
-		return null
-
-func remove_card(idx: int) -> Card:
-#	if card_count() == 0:
-#		return null
-	if idx > _left_count:
-		_right_count -= 1
-		return _cards.pop_at(idx)
-	else:
-		_avatar_id -= 1
-		_left_count -= 1
-		return _cards.pop_at(idx)
-
-func aligment():
-	var offset := _card_size.x + _x_indent
-#	if is_right:
-	var x := _avatar_rect.end.x + _x_indent
-	for i in range(_avatar_id + 1, card_count()):
-		print(i)
-		_cards[i].set_position(Vector2(x, _margin.position.y))
-		x += offset
-#	else:
-	var x1 := _avatar_rect.position.x - _x_indent - _card_size.x
-	for i in range(_avatar_id - 1, -1, -1):
-		_cards[i].set_position(Vector2(x1, _margin.position.y))
-		x1 -= offset
-
-func casting_on(card_id: int, is_right: bool):
-#	aligment()
-	var offset := _card_size.x + _x_indent
-	if is_right:
-		#check _cards.size != 0
-		print("do")
-		var card: Card = get_card(card_id)
-#		if has_card(card_id):
-		if card:
-			print("has_do")
-			var x := card.position().x
-	#		var x := avatar._rect.end.x + _x_indent
-	#		x += offset * card_id
-			for i in range(card_id, card_count()):
-				x += offset
-				_cards[i].set_position(Vector2(x, _margin.position.y))
-	else:
-		#check _cards.size != 0
-		var card: Card = get_card(card_id)
-#		if has_card(card_id):
-		if card:
-			var x := card.position().x
-	#		var x := avatar._rect.position.x - _x_indent - _card_size.x
-	#		x -= offset * card_id
-			for i in range(card_id, -1, -1):
-				x -= offset
-				_cards[i].set_position(Vector2(x, _margin.position.y))
+func line(view_id) -> Line:
+	if view_id == Sense.R_Tabel:
+		return right_line
+	elif view_id == Sense.L_Tabel:
+		return left_line
+	return null
 
 func input(sense: Sense):
-	if sense.dragging():
-		dragging(sense)
-	else:
-#					var is_right := tabel.has_right_side(mouse_pos)
-#					# if casting change type check card position evaible
-#					#if card_id >= avatar_id = is_right
-		var card_id := has_point_on_card(sense.mouse_pos())
-		sense.set_card_id(card_id)
-		sense.set_view_id(_id)
-	
-#	if sense.clicked():
-		
-#		sense.input_event(MouseEnter, Tabel, player_id, card_id, can_drag)
-#func has_right_side(point: Vector2) -> bool:
-#	return point.x > _rect.size.x * 0.5
-	
-func output(sense: Sense):
-	aligment()
+	var line_id := line_has_point(sense.mouse_pos())
+	var line: Line = line(line_id)
+	if line:
+		line.input(sense, _card_size)
+		sense.set_view_id(line_id)
+
+func targeting(sense: Sense):
+	var line_id := line_has_point(sense.mouse_pos())
+	var line: Line = line(line_id)
+	if line:
+		line.input(sense, _card_size)
+		sense.set_view_id(line_id)
+		target_card(sense)
 
 func dragging(sense: Sense):
-#	if targgeting() and player_id != this_player_id():
-#	if casting() and player_id == this_player_id() and card_id > -1:
-#	tabel.casting_on(card_id, is_right)
-	if sense.drag_view_id() == Sense.Hand:
-			print("gggg")
-			var is_right := has_point_is_right(sense.mouse_pos())
-			var card_id := has_point_on_cast(sense.mouse_pos())
-			sense.set_is_right(is_right)
-			sense.set_card_id(card_id)
-			sense.set_view_id(_id)
-			casting_on(card_id, is_right)
-#	if sense.drag_view_id() == Sense.Tabel:
-	pass
+	var line_id := line_has_point(sense.mouse_pos())
+	var line: Line = line(line_id)
+	if line:
+		line.dragging(sense, _card_size)
+		sense.set_view_id(line_id)
+#		return true
+#	return false
 
-func has_point_is_right(point: Vector2) -> bool:
-	return _rect.position.x + _rect.size.x * 0.5 < point.x
+func output(sense: Sense):
+	var line: Line = line(sense.prev_view_id())
+	if line:
+		if sense.targeting():
+			untarget_card()
+		line.aligment()
 
-func has_point_on_card(point: Vector2) -> int:
-	var offset := _card_size.x + _x_indent
-	if _avatar_rect.has_point(point):
-		return _avatar_id
-	var pos := Vector2(_avatar_rect.end.x + _x_indent, _margin.position.y)
-	for i in range(_avatar_id + 1, card_count()):
-		if Rect2(pos, _card_size).has_point(point):
-			return i
-		pos.x += offset
-	pos = Vector2(_avatar_rect.position.x - _x_indent - _card_size.x, _margin.position.y)
-	for i in range(_avatar_id - 1, -1, -1):
-		if Rect2(pos, _card_size).has_point(point):
-			return i
-		pos.x -= offset
-	return -1
+func target_card(sense: Sense):
+	_targeting_player_id = sense.player_id()
+	_targeting_view_id = sense.view_id()
+	_targeting_card_id = sense.card_id()
+	if _targeting_card_id == -1:
+		return
+	if _targeting_player_id == _cached_player_id and _targeting_view_id == _cached_view_id \
+	and _targeting_card_id == _cached_card_id:
+		return
+	var line: Line = line(_targeting_view_id)
+	if line:
+		var card: Card = line._cards[_targeting_card_id]
+		card.set_highlight(true, Color.red)
 
-func has_point_on_cast(point: Vector2) -> int:
-	var line_center_x := _rect.position.x + _rect.size.x * 0.5
-	var is_right := line_center_x < point.x
-	var offset := _card_size.x + _x_indent
-	var pos := Vector2(line_center_x, _margin.position.y)
-	if is_right:
-		for i in range(_avatar_id + 1, card_count() + 1):
-			if Rect2(pos, _card_size).has_point(point):
-				return i
-			pos.x += offset
-	else:
-		for i in range(_avatar_id, -1, -1):
-			if Rect2(pos, _card_size).has_point(point):
-				return i
-			pos.x -= offset
-	return -1
+func untarget_card():
+	if _targeting_card_id == -1:
+		return
+	if _targeting_player_id == _cached_player_id and _targeting_view_id == _cached_view_id \
+	and _targeting_card_id == _cached_card_id:
+		return
+	var line: Line = line(_targeting_view_id)
+	if line:
+		var card: Card = line._cards[_targeting_card_id]
+		_targeting_card_id = -1
+		card.set_highlight(false, Color.aliceblue)
 
+func unhighlight_all_card():
+	for card in left_line._cards:
+		card.set_highlight(false)
+	for card in right_line._cards:
+		card.set_highlight(false)
+
+func targeting_arrow(screen_size: Vector2, mouse_pos: Vector2):
+	_arrow.clear_points()
+	var curve = Curve2D.new()
+	curve.add_point(
+			_cached_start_pos,
+#			screen_size/2,
+			Vector2(0,0),
+#			TODO:
+#			(board._rect.size/2).direction_to(get_viewport().size/2) * 75)
+			(screen_size/2).direction_to(screen_size/2) * 75)
+	curve.add_point(mouse_pos,
+			Vector2(0, 0), Vector2(0, 0))
+	_arrow.set_points(curve.get_baked_points())
+	
+#	var card: Card = _cards[_cached_card_id]
+#	card.set_visible(true)
+#	card.set_position(position-_card_pivot)
+#	draw_card(ctx, card)
+#	card.set_visible(false)
+
+func select_card(sense: Sense):
+	var line: Line = line(sense.view_id())
+	if line:
+		var card: Card = line._cards[sense.card_id()]
+		_cached_start_pos = card.position() + _card_pivot
+		_cached_player_id = sense.player_id()
+		_cached_view_id = sense.view_id()
+		_cached_card_id = sense.card_id()
+		card.set_highlight(true)
+		_arrow.set_visible(true)
+
+func unselect_card():
+	var line: Line = line(_cached_view_id)
+	if line:
+		var card: Card = line._cards[_cached_card_id]
+		_cached_card_id = -1
+		card.set_highlight(false)
+		_arrow.set_visible(false)
+	
 func draw(ctx: CanvasItem):
 	if _texture:
 		ctx.draw_texture_rect(_texture, _rect, false)
-	draw_card(ctx, _cards[_avatar_id], _avatar_rect.size, _avatar_pivot)
-	for i in range(_avatar_id + 1, card_count()):
-		draw_card(ctx, _cards[i], _card_size, _card_pivot)
-	for i in range(_avatar_id - 1, -1, -1):
-		draw_card(ctx, _cards[i], _card_size, _card_pivot)
+	draw_card(ctx, _avatar_card, _avatar_rect.size, _avatar_pivot)
+	for i in range(0, left_line.card_count()):
+		draw_card(ctx, left_line._cards[i], _card_size, _card_pivot)
+	for i in range(0, right_line.card_count()):
+		draw_card(ctx, right_line._cards[i], _card_size, _card_pivot)
 #	ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 #	avatar.draw(ctx, font)
 
@@ -255,5 +201,5 @@ func draw_card(ctx: CanvasItem, card: Card, card_size: Vector2, card_pivot: Vect
 		ctx.draw_rect(Rect2(card.position() - Vector2(0, 56), Vector2(card_size.x, 42)), Color.black)
 		ctx.draw_string(font, card.position() - Vector2(0, 16), "3000")
 		if card.highlight():
-			ctx.draw_rect(Rect2(Vector2.ZERO - card_pivot, card_size), card.hightlight_color(), false, 30)
+			ctx.draw_rect(Rect2(card.position(), card_size), card.highlight_color(), false, 30)
 

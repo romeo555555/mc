@@ -1,7 +1,7 @@
 extends Object
 class_name Sense
 
-enum { None, Hand, Tabel, Deck, Factorys, Graveyard, Secrets, Setting, End}
+enum { None, Hand, L_Tabel, R_Tabel, Deck, Factorys, Graveyard, Secrets, Setting, End}
 enum { Cast, Attack, ShiftinHand }
 #TODO:scene state
 enum Screen { Main, Setting, Deck, Factorys, Graveyard, Secrets, Card, Attack }
@@ -9,27 +9,25 @@ enum Screen { Main, Setting, Deck, Factorys, Graveyard, Secrets, Card, Attack }
 var _mouse_pos: Vector2
 var _clicked := false setget , clicked
 
+var _targeting := false
 var _dragging := false
 var _drag_player_id: String
-var _drag_view_id: int
-var _drag_card_id: int
-var _is_right := false
+var _drag_view_id: int = 0
+var _drag_card_id: int = -1
 
 var _prev_player_id: String
-var _prev_view_id: int
-var _prev_card_id: int
+var _prev_view_id: int = 0
+var _prev_card_id: int = -1
 
 var _events: Array = []
 var _this_player_id: String
 var _player_id: String
-var _view_id: int
-var _card_id: int
+var _view_id: int = 0
+var _card_id: int = -1
 
 #var _target: []
-var _card: Card = null
-var _card_pivote = Vector2.ZERO
-
-var arrow: Line2D = null
+#var _card: Card = null
+#var _card_pivote = Vector2.ZERO
 
 #func input_event(event_id: int, view_id: int = 0, player_id: String = "", card_id: int = -1):
 #	if _player_id != player_id and _view_id != view_id:
@@ -52,12 +50,6 @@ func prev_view_id() -> int:
 	
 func prev_player_id() -> String:
 	return _prev_player_id
-
-func set_is_right(is_right: bool):
-	_is_right = is_right
-
-func is_right() -> bool:
-	return _is_right
 
 func set_card_id(card_id: int):
 	_prev_card_id = _card_id
@@ -96,6 +88,17 @@ func mouse_pos() -> Vector2:
 func clicked() -> bool:
 	return _clicked
 
+func start_targeting():
+	_targeting = true
+	start_drag()
+
+func targeting() -> bool:
+	return _targeting
+
+func stop_targeting():
+	_targeting = false
+	stop_drag()
+
 func start_drag():
 	_dragging = true
 	_drag_player_id = _player_id
@@ -105,7 +108,7 @@ func start_drag():
 func dragging() -> bool:
 	return _dragging
 
-func start_drop():
+func stop_drag():
 	_dragging = false
 
 func drag_card_id() -> int:
@@ -116,27 +119,6 @@ func drag_view_id() -> int:
 
 func drag_player_id() -> String:
 	return _drag_player_id
-
-func set_arrow(ar: Line2D):
-	arrow = ar
-
-#func draw(ctx: CanvasItem, font):
-#	if _card:
-#		_card.set_position(mouse_pos() - _card_pivote)
-#		this_player().hand.draw_card(ctx, _card, font)
-##		ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-
-#func aim():
-#	arrow.clear_points()
-#	var curve = Curve2D.new()
-#	curve.add_point(board._rect.size/2,
-#			Vector2(0,0),
-##			TODO:
-##			(board._rect.size/2).direction_to(get_viewport().size/2) * 75)
-#			(board._rect.size/2).direction_to(board._rect.size/2) * 75)
-#	curve.add_point(mouse_pos(),
-#			Vector2(0, 0), Vector2(0, 0))
-#	arrow.set_points(curve.get_baked_points())
 
 #func card(card_id: int = _card_id):
 #	var player: Player = player(_player_id)

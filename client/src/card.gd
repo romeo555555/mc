@@ -1,6 +1,7 @@
 extends Object
 class_name Card
 
+#var _rect: Rect2
 var _texture: Texture
 var _position: Vector2
 var _rotation: float

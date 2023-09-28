@@ -1,7 +1,6 @@
 extends View
 class_name Player
 
-
 var hand: Hand = Hand.new()
 var tabel: Tabel = Tabel.new()
 var factorys: Factorys = Factorys.new()
@@ -12,7 +11,7 @@ var deck: Deck = Deck.new()
 var _margin: Rect2
 #var _data
 
-func setup(id: int, rect: Rect2, texture: Texture = null, margin_offset: Vector2 = Vector2.ZERO, miroring: bool = false):
+func setup(rect: Rect2, texture: Texture = null, arrow: Line2D = null, margin_offset: Vector2 = Vector2.ZERO, miroring: bool = false):
 	_texture = texture
 	_margin = Rect2(rect.position + margin_offset, rect.size - margin_offset * 2.0)
 	_rect = rect
@@ -30,27 +29,27 @@ func setup(id: int, rect: Rect2, texture: Texture = null, margin_offset: Vector2
 	avatar.setup()
 	
 	if miroring:
-		tabel.setup(Sense.Tabel, Rect2(rect.position, line_size), null, avatar, card_x_indent, line_margin)
-		hand.setup(Sense.Hand, Rect2(tabel.position() + Vector2(0.0, line_size.y), line_size), null, hadn_card_x_indent, line_margin)
+		tabel.setup(Rect2(rect.position, line_size), null, arrow, avatar, card_x_indent, line_margin)
+		hand.setup(Rect2(tabel.position() + Vector2(0.0, line_size.y), line_size), null, hadn_card_x_indent, line_margin)
 		var other_pos := Vector2(_margin.position.x, _margin.end.y - other_size.y)
-		factorys.setup(Sense.Factorys, Rect2(other_pos, other_size))
+		factorys.setup(Rect2(other_pos, other_size))
 		other_pos.x += other_indent.x + other_size.x
-		secrets.setup(Sense.Secrets, Rect2(other_pos, other_size))
+		secrets.setup(Rect2(other_pos, other_size))
 		other_pos = _margin.end - other_size
-		deck.setup(Sense.Deck, Rect2(other_pos, other_size))
+		deck.setup(Rect2(other_pos, other_size))
 		other_pos.x -= other_indent.x + other_size.x
-		graveyard.setup(Sense.Graveyard, Rect2(other_pos, other_size))
+		graveyard.setup(Rect2(other_pos, other_size))
 	else:
-		hand.setup(Sense.Hand, Rect2(rect.position, line_size), null, hadn_card_x_indent, line_margin)
-		tabel.setup(Sense.Tabel, Rect2(hand.position() + Vector2(0.0, line_size.y), line_size), null, avatar, card_x_indent, line_margin)
+		hand.setup(Rect2(rect.position, line_size), null, hadn_card_x_indent, line_margin)
+		tabel.setup(Rect2(hand.position() + Vector2(0.0, line_size.y), line_size), null, arrow, avatar, card_x_indent, line_margin)
 		var other_pos := _margin.position
-		deck.setup(Sense.Deck, Rect2(other_pos, other_size))
+		deck.setup(Rect2(other_pos, other_size))
 		other_pos.x += other_indent.x + other_size.x
-		graveyard.setup(Sense.Graveyard, Rect2(other_pos, other_size))
+		graveyard.setup(Rect2(other_pos, other_size))
 		other_pos = Vector2(_margin.end.x - other_size.x, _margin.position.y)
-		factorys.setup(Sense.Factorys, Rect2(other_pos, other_size))
+		factorys.setup(Rect2(other_pos, other_size))
 		other_pos.x -= other_indent.x + other_size.x
-		secrets.setup(Sense.Secrets, Rect2(other_pos, other_size))
+		secrets.setup(Rect2(other_pos, other_size))
 
 func set_position(pos: Vector2):
 	_rect.position = pos
@@ -58,14 +57,24 @@ func set_position(pos: Vector2):
 func position() -> Vector2:
 	return _rect.position
 
-func input(sense: Sense):
-	if factorys._mouse_enter(sense) \
-	|| secrets._mouse_enter(sense) \
-	|| graveyard._mouse_enter(sense) \
-	|| deck._mouse_enter(sense) \
-	|| hand._mouse_enter(sense) \
-	|| tabel._mouse_enter(sense):
-		return
+func _mouse_enter(sense: Sense) -> bool:
+	if _rect.has_point(sense.mouse_pos()):
+		if factorys._mouse_enter(sense):
+			sense.set_view_id(Sense.Factorys)
+		elif secrets._mouse_enter(sense):
+			sense.set_view_id(Sense.Secrets)
+		elif graveyard._mouse_enter(sense):
+			sense.set_view_id(Sense.Graveyard)
+		elif deck._mouse_enter(sense):
+			sense.set_view_id(Sense.Deck)
+		elif hand._mouse_enter(sense):
+			sense.set_view_id(Sense.Hand)
+		elif tabel._mouse_enter(sense):
+			pass
+		else:
+			sense.set_view_id(Sense.None)
+		return true
+	return false
 
 func draw(ctx: CanvasItem):
 	if _texture:

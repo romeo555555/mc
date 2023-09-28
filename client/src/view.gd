@@ -1,16 +1,14 @@
 extends Object
 class_name View
 
-var _id: int
 var _texture: Texture
 var _rect: Rect2
 var _highlight := false
 var _highlight_color := Color.aliceblue
 
-func setup(id: int, rect: Rect2, texture: Texture = load("res://assets/error.png") as Texture):
+func setup(rect: Rect2, texture: Texture = load("res://assets/error.png") as Texture):
 	_texture = texture
 	_rect = rect
-	_id = id
 
 func set_position(pos: Vector2):
 	_rect.position = pos
@@ -20,8 +18,13 @@ func position() -> Vector2:
 	
 func _mouse_enter(sense: Sense) -> bool:
 	if _rect.has_point(sense.mouse_pos()):
-		input(sense)
-		hovered(sense)
+		if sense.targeting():
+			targeting(sense)
+		if sense.dragging():
+			dragging(sense)
+		else:
+			input(sense)
+			hovered(sense)
 		return true
 	return false
 
@@ -30,12 +33,15 @@ func _mouse_exit(sense: Sense):
 	unhovered(sense)
 
 func input(sense: Sense):
-	sense.set_view_id(_id)
-
-func output(sense: Sense):
 	pass
 
-func drop(sense: Sense):
+func dragging(sense: Sense):
+	pass
+
+func targeting(sense: Sense):
+	pass
+
+func output(sense: Sense):
 	pass
 
 func hovered(sense: Sense):

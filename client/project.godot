@@ -54,6 +54,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/hand.gd"
 }, {
+"base": "Object",
+"class": "Line",
+"language": "GDScript",
+"path": "res://src/line.gd"
+}, {
 "base": "Reference",
 "class": "NakamaAPI",
 "language": "GDScript",
@@ -169,6 +174,7 @@ _global_script_class_icons={
 "Factorys": "",
 "Graveyard": "",
 "Hand": "",
+"Line": "",
 "NakamaAPI": "",
 "NakamaAsyncResult": "",
 "NakamaClient": "",

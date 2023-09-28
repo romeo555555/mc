@@ -18,7 +18,6 @@ var _cached_card_pos: Vector2
 var _cached_card_rot: float
 
 func setup(
-	id: int,
 	rect: Rect2, 
 	texture: Texture = null,
 	x_indent: float = 0, 
@@ -31,8 +30,6 @@ func setup(
 	_x_indent = x_indent
 	_texture = texture
 	_rect = rect
-	_id = id
-	_cards.resize(_max_count)
 
 func card_count() -> int:
 	return _cards.size()
@@ -147,7 +144,6 @@ func has_point_on_card(point: Vector2) -> int:
 func input(sense: Sense):
 	var card_id := has_point_on_card(sense.mouse_pos())
 	sense.set_card_id(card_id)
-	sense.set_view_id(_id)
 #	if sense.clicked():
 #	sense.input_event(sense.MouseEnter, Hand, player_id, card_id, can_drag)
 
