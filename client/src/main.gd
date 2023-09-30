@@ -1,8 +1,10 @@
 extends Control
 
+onready var scroll_container: Control = $ScrollContainer/Control
 var screen_size := Vector2(1980, 1080)
 var sense: Sense = Sense.new()
 var font = DynamicFont.new()
+var font_size: int = 42
 #var font = get_font("font")
 var players: Dictionary = {}
 var board: View = View.new()
@@ -21,7 +23,7 @@ func _ready():
 	PhysicsServer.set_active(false)
 
 	font.font_data = load("res://assets/font/SansSerif.ttf")
-	font.size = 42
+	font.set_size(font_size)
 	board.setup(Rect2(Vector2.ZERO, screen_size), load("res://assets/board1.png"))
 	setting.setup(Rect2(30,30, 100, 100))
 	end.setup(Rect2(screen_size.x - 500, screen_size.y * 0.5, 300, 300))
@@ -60,6 +62,11 @@ func setup_player(state: Dictionary, player_id: String, is_this_player: bool = f
 		var card: Card = Card.new()
 		card.setup()
 		player.hand.add_card(card)
+	
+	for i in range(30): 
+		var card: Card = Card.new()
+		card.setup()
+		player.deck.add_card(card)
 	
 	players[player_id] = player
 	print("Add player", player_id)
@@ -102,6 +109,11 @@ func input():
 func events_handler():
 	for event in sense.event():
 		match event:
+			Sense.Screen.Deck:
+				var player: Player = players.get(sense.player_id())
+				var deck: Deck = player.deck
+				scroll_container.setup(deck._cards)
+				 
 			#input_event
 			Sense.Cast:
 				pass
@@ -124,7 +136,12 @@ func get_drag_data(position: Vector2):
 			players.get(sense.this_player_id()).tabel.select_card(sense)
 			sense.start_targeting()
 			return { id = "drag" }
-	return null
+#func release_left_mouse_button():
+#    var a = InputEventMouseButton.new()
+#    a.set_button_index(1)
+#    a.set_pressed(false)
+#    Input.parse_input_event(a)
+#	return null
 
 func can_drop_data(position: Vector2, data) -> bool:
 	return true
@@ -210,7 +227,17 @@ func _draw():
 		player.hand.draw_select_card(self, sense.mouse_pos())
 	if sense.targeting():
 		player.tabel.targeting_arrow(screen_size, sense.mouse_pos())
-	
+#	Render.buttom(self, "Hello", 150, Rect2(0,0, 400, 400))
+#	Render.setting_menu(self, 150, Rect2(400, 400, 400, 400), Rect2(450, 450, 250, 250), 10)
+	Render.shadowing(self, screen_size)
+	var card: Card = player.hand.get_card(4)
+	var def_pos := card.position()
+	var def_pot := card.rotation()
+	card.set_position(Vector2(200, 200)) 
+	card.set_rotation(0) 
+	Render.draw_card(self, card, Vector2(700, 700))
+	card.set_position(def_pos) 
+	card.set_rotation(def_pot) 
 #	if sense.casting():
 #		sense.draw(self, font)
 #	if sense_card:

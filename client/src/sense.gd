@@ -39,6 +39,9 @@ var _card_id: int = -1
 #	_view_id = view_id
 #	_card_id = card_id
 
+func set_event(event: int):
+	_events.push_back(event)
+
 func event() -> Array:
 	return _events
 

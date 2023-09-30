@@ -3,8 +3,8 @@
 [ext_resource path="res://addons/com.heroiclabs.nakama/client/NakamaHTTPAdapter.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.heroiclabs.nakama/socket/NakamaSocketAdapter.gd" type="Script" id=2]
 [ext_resource path="res://src/main.gd" type="Script" id=3]
+[ext_resource path="res://src/scroll_container.gd" type="Script" id=4]
 [ext_resource path="res://assets/board1.png" type="Texture" id=6]
-[ext_resource path="res://old/src/CardList.gd" type="Script" id=7]
 
 [sub_resource type="Curve2D" id=1]
 _data = {
@@ -32,6 +32,18 @@ polygon = PoolVector2Array( 16, 24, 32, 8, 16, -8 )
 visible = false
 scale = Vector2( 3.80231, 1.59091 )
 curve = SubResource( 1 )
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_right = 1980.0
+margin_bottom = 1080.0
+
+[node name="Control" type="Control" parent="ScrollContainer"]
+visible = false
+margin_right = 1980.0
+margin_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 4 )
 
 [node name="Board" type="TextureRect" parent="."]
 visible = false
@@ -84,18 +96,6 @@ margin_top = 641.0
 margin_right = 1230.0
 margin_bottom = 732.0
 text = "Continue"
-
-[node name="BuildScreen" type="ScrollContainer" parent="Board"]
-visible = false
-margin_right = 1980.0
-margin_bottom = 1080.0
-
-[node name="Control" type="Control" parent="Board/BuildScreen"]
-margin_right = 1980.0
-margin_bottom = 1080.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource( 7 )
 
 [node name="DeckScreen" type="Control" parent="Board"]
 visible = false

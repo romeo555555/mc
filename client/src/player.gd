@@ -51,12 +51,6 @@ func setup(rect: Rect2, texture: Texture = null, arrow: Line2D = null, margin_of
 		other_pos.x -= other_indent.x + other_size.x
 		secrets.setup(Rect2(other_pos, other_size))
 
-func set_position(pos: Vector2):
-	_rect.position = pos
-
-func position() -> Vector2:
-	return _rect.position
-
 func _mouse_enter(sense: Sense) -> bool:
 	if _rect.has_point(sense.mouse_pos()):
 		if factorys._mouse_enter(sense):

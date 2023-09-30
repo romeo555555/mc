@@ -48,10 +48,10 @@ func add_card(card: Card, idx: int = -1):
 	aligment()
 
 func get_card(card_id: int) -> Card:
-	if _cards.has(card_id):
-		return _cards[card_id]
-	else:
-		return null
+#	if _cards.has(card_id):
+	return _cards[card_id]
+#	else:
+#		return null
 
 func remove_card(idx: int) -> Card:
 	var card: Card = _cards.pop_at(idx)
@@ -184,7 +184,7 @@ func draw_select_card(ctx: CanvasItem, position: Vector2):
 	var card: Card = _cards[_cached_card_id]
 	card.set_visible(true)
 	card.set_position(position-_card_pivot)
-	draw_card(ctx, card)
+	Render.draw_card(ctx, card, _card_size)
 	card.set_visible(false)
 
 func draw(ctx: CanvasItem):
@@ -192,15 +192,6 @@ func draw(ctx: CanvasItem):
 		ctx.draw_texture_rect(_texture, _rect, false)
 	for i in range(card_count() - 1, -1, -1):
 		var card: Card = _cards[i]
-		draw_card(ctx, card)
+		Render.draw_card(ctx, card, _card_size)
 	ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 
-func draw_card(ctx: CanvasItem, card: Card):
-	if card.visible():
-		#	var _pivot := size * 0.5 * _scale
-		ctx.draw_set_transform(card.position() + _card_pivot, card.rotation(), card.scale())
-		ctx.draw_texture_rect(card.texture(), Rect2(Vector2.ZERO - _card_pivot, _card_size), false)
-		#	ctx.draw_rect()
-		#	ctx.draw_string()
-		if card.highlight():
-			ctx.draw_rect(Rect2(Vector2.ZERO - _card_pivot, _card_size), card.highlight_color(), false, 15)
