@@ -9,6 +9,5 @@ const Secrets = preload("res://src/secrets.gd")
 const Graveyard = preload("res://src/graveyard.gd")
 const Deck = preload("res://src/deck.gd")
 const View = preload("res://src/view.gd")
-const Render = preload("res://src/render.gd")
-
+const Util = preload("res://src/util.gd")
 const Sense = preload("res://src/sense.gd")

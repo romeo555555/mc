@@ -1,5 +1,8 @@
-extends View
+extends Component
 class_name Deck
+
+var screen: Screen
+var _texture: Texture
 
 var _max_row_count := 9
 var _row_count := 0
@@ -7,8 +10,25 @@ var _card_size := Vector2(200, 200)
 var _card_indent := Vector2(10, 10)
 var _cards: Array = []
 var _rect_min_size: Vector2
-#func setup():
-#	pass
+
+func new(rect: Rect2, texture: Texture = load("res://assets/error.png") as Texture):
+	_texture = texture
+	_rect = rect
+
+func input(sense: Sense):
+	if sense.clicked():
+		sense.set_event(Sense.Screen.Deck)
+	pass
+
+func output(sense: Sense):
+	pass
+
+func draw(ctx: CanvasItem):
+#	if _texture:
+	ctx.draw_texture_rect(_texture, _rect, false)
+	if is_focused():
+		ctx.draw_rect(_rect, ctx.hovered_color, false, 30)
+#		_highlight = false
 
 func add_card(card: Card):
 	var _last_colum_count = _cards.size() % _max_row_count
@@ -43,7 +63,22 @@ func add_card(card: Card):
 #	for i in range(2, count):
 #		get_child(i).set_position(Vector2(x, 0))
 #		x += offset
-func input(sense: Sense):
-	if sense.clicked():
-		sense.set_event(Sense.Screen.Deck)
+
+class Screen extends Component:
+	var _texture: Texture
+
+	func new(rect: Rect2):
+		_rect = rect
+
+	func input(sense: Sense):
+		pass
+
+	func output(sense: Sense):
+		pass
+
+	func draw(ctx: CanvasItem):
+	#	if _sense_rect.focused:
+			#hovered ctx.hovered_color
+		pass
+
 

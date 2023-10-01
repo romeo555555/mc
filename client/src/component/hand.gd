@@ -1,6 +1,7 @@
-extends View
+extends Component
 class_name Hand
 
+var _texture: Texture
 var _max_count := 10
 #export(bool) var _can_drag := false
 #export(bool) var _can_drop := false
@@ -17,19 +18,19 @@ var _cached_card_id: int
 var _cached_card_pos: Vector2
 var _cached_card_rot: float
 
-func setup(
+func new(
 	rect: Rect2, 
 	texture: Texture = null,
 	x_indent: float = 0, 
 	margin_offset: Vector2 = Vector2.ZERO, 
 	card_aspect: float = 1
 ):
+	_rect = rect
 	_margin = Rect2(rect.position + margin_offset, rect.size - margin_offset * 2.0)
 	_card_size = Vector2(_margin.size.y * card_aspect, _margin.size.y)
 	_card_pivot = _card_size * 0.5
 	_x_indent = x_indent
 	_texture = texture
-	_rect = rect
 
 func card_count() -> int:
 	return _cards.size()
@@ -141,6 +142,14 @@ func has_point_on_card(point: Vector2) -> int:
 #	return Transform2D(_rotation, _position + _pivot).xform(Rect2(Vector2.ZERO - _pivot, _size)).has_point(point)
 ##	return  Rect2(_position, _size).has_point(point)
 
+#func input(sense: Sense):
+#	_hovered = true
+#	if _clicked:
+#		sense.send_action(Sense.EndTurn)
+#
+#func output(sense: Sense):
+#	_hovered = false
+
 func input(sense: Sense):
 	var card_id := has_point_on_card(sense.mouse_pos())
 	sense.set_card_id(card_id)
@@ -184,7 +193,7 @@ func draw_select_card(ctx: CanvasItem, position: Vector2):
 	var card: Card = _cards[_cached_card_id]
 	card.set_visible(true)
 	card.set_position(position-_card_pivot)
-	Render.draw_card(ctx, card, _card_size)
+	ctx.draw_card(card, _card_size)
 	card.set_visible(false)
 
 func draw(ctx: CanvasItem):
@@ -192,6 +201,7 @@ func draw(ctx: CanvasItem):
 		ctx.draw_texture_rect(_texture, _rect, false)
 	for i in range(card_count() - 1, -1, -1):
 		var card: Card = _cards[i]
-		Render.draw_card(ctx, card, _card_size)
+		ctx.draw_card(card, _card_size)
 	ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 
+#	ctx.draw_hovered(_rect, _hovered, _clicked)

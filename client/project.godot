@@ -24,40 +24,55 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://old/src/Arrow.gd"
 }, {
+"base": "Component",
+"class": "Board",
+"language": "GDScript",
+"path": "res://src/component/board.gd"
+}, {
 "base": "Object",
 "class": "Card",
 "language": "GDScript",
-"path": "res://src/card.gd"
+"path": "res://src/component/card.gd"
 }, {
 "base": "Reference",
 "class": "Client",
 "language": "GDScript",
 "path": "res://old/src/Client.gd"
 }, {
-"base": "View",
+"base": "Object",
+"class": "Component",
+"language": "GDScript",
+"path": "res://src/component.gd"
+}, {
+"base": "Component",
 "class": "Deck",
 "language": "GDScript",
-"path": "res://src/deck.gd"
+"path": "res://src/component/deck.gd"
 }, {
-"base": "View",
+"base": "Component",
+"class": "End",
+"language": "GDScript",
+"path": "res://src/component/end.gd"
+}, {
+"base": "Component",
 "class": "Factorys",
 "language": "GDScript",
-"path": "res://src/factorys.gd"
+"path": "res://src/component/factorys.gd"
 }, {
-"base": "View",
+"base": "Component",
 "class": "Graveyard",
 "language": "GDScript",
-"path": "res://src/graveyard.gd"
+"path": "res://src/component/graveyard.gd"
 }, {
-"base": "View",
+"base": "Component",
 "class": "Hand",
 "language": "GDScript",
-"path": "res://src/hand.gd"
+"path": "res://src/component/hand.gd"
 }, {
 "base": "Object",
 "class": "Line",
 "language": "GDScript",
-"path": "res://src/line.gd"
+"path": "res://src/component/line.gd"
 }, {
 "base": "Reference",
 "class": "NakamaAPI",
@@ -134,30 +149,35 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/com.heroiclabs.nakama/api/NakamaWriteStorageObject.gd"
 }, {
-"base": "View",
+"base": "Object",
+"class": "New",
+"language": "GDScript",
+"path": "res://script_templates/new.gd"
+}, {
+"base": "Component",
 "class": "Player",
 "language": "GDScript",
-"path": "res://src/player.gd"
+"path": "res://src/component/player.gd"
 }, {
-"base": "Object",
-"class": "Render",
-"language": "GDScript",
-"path": "res://src/render.gd"
-}, {
-"base": "View",
+"base": "Component",
 "class": "Secrets",
 "language": "GDScript",
-"path": "res://src/secrets.gd"
+"path": "res://src/component/secrets.gd"
 }, {
 "base": "Object",
 "class": "Sense",
 "language": "GDScript",
 "path": "res://src/sense.gd"
 }, {
-"base": "View",
+"base": "Component",
+"class": "Setting",
+"language": "GDScript",
+"path": "res://src/component/setting.gd"
+}, {
+"base": "Component",
 "class": "Tabel",
 "language": "GDScript",
-"path": "res://src/tabel.gd"
+"path": "res://src/component/tabel.gd"
 }, {
 "base": "Line2D",
 "class": "TargetingArrow2",
@@ -165,17 +185,20 @@ _global_script_classes=[ {
 "path": "res://old/TargetingArrow1.gd"
 }, {
 "base": "Object",
-"class": "View",
+"class": "Util",
 "language": "GDScript",
-"path": "res://src/view.gd"
+"path": "res://src/component/util.gd"
 } ]
 _global_script_class_icons={
 "AbstractCard": "",
 "AbstractContainer": "",
 "Arrow": "",
+"Board": "",
 "Card": "",
 "Client": "",
+"Component": "",
 "Deck": "",
+"End": "",
 "Factorys": "",
 "Graveyard": "",
 "Hand": "",
@@ -195,13 +218,14 @@ _global_script_class_icons={
 "NakamaSocketAdapter": "",
 "NakamaStorageObjectId": "",
 "NakamaWriteStorageObject": "",
+"New": "",
 "Player": "",
-"Render": "",
 "Secrets": "",
 "Sense": "",
+"Setting": "",
 "Tabel": "",
 "TargetingArrow2": "",
-"View": ""
+"Util": ""
 }
 
 [application]
@@ -211,7 +235,7 @@ run/main_scene="res://src/Main.tscn"
 
 [autoload]
 
-Autoloader="*res://src/singelton.gd"
+Global="*res://src/autoloader.gd"
 
 [display]
 

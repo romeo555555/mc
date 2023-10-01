@@ -1,10 +1,11 @@
-extends View
+extends Component
 class_name Tabel
 
 #export(bool) var _can_drag := false
 #export(bool) var _can_drop := false
 #export(bool) var _miroring := false
 #var _card_size := Vector2(200, 200)
+var _texture: Texture
 var _margin: Rect2
 var _card_size := Vector2.ZERO
 var _card_pivot := Vector2.ZERO

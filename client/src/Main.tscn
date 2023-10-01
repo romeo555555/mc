@@ -3,7 +3,7 @@
 [ext_resource path="res://addons/com.heroiclabs.nakama/client/NakamaHTTPAdapter.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.heroiclabs.nakama/socket/NakamaSocketAdapter.gd" type="Script" id=2]
 [ext_resource path="res://src/main.gd" type="Script" id=3]
-[ext_resource path="res://src/scroll_container.gd" type="Script" id=4]
+[ext_resource path="res://src/component/scroll_container.gd" type="Script" id=4]
 [ext_resource path="res://assets/board1.png" type="Texture" id=6]
 
 [sub_resource type="Curve2D" id=1]

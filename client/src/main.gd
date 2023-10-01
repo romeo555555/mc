@@ -2,14 +2,18 @@ extends Control
 
 onready var scroll_container: Control = $ScrollContainer/Control
 var screen_size := Vector2(1980, 1080)
-var sense: Sense = Sense.new()
+var active_screen: int = 0
 var font = DynamicFont.new()
-var font_size: int = 42
+const FONT_SIZE: int = 42
+const CLICKED_COLOR := Color.red
+const HOVER_COLOR := Color.aliceblue
+const HOVER_LIZE_SIZE := 15
 #var font = get_font("font")
 var players: Dictionary = {}
-var board: View = View.new()
-var setting: View = View.new()
-var end: View = View.new()
+var board: Board = Board.new()
+var setting: Setting = Setting.new()
+var end: End = End.new()
+var sense: Sense = Sense.new()
 
 func _ready():
 	print("                 [Screen Metrics]")
@@ -23,13 +27,18 @@ func _ready():
 	PhysicsServer.set_active(false)
 
 	font.font_data = load("res://assets/font/SansSerif.ttf")
-	font.set_size(font_size)
+	font.set_size(FONT_SIZE)
 	board.setup(Rect2(Vector2.ZERO, screen_size), load("res://assets/board1.png"))
 	setting.setup(Rect2(30,30, 100, 100))
 	end.setup(Rect2(screen_size.x - 500, screen_size.y * 0.5, 300, 300))
-	var state: Dictionary = {}
-	setup_player(state, "Opp")
-	setup_player(state, "Client", true)
+	
+	var player_id := "Client"
+	sense.set_this_player_id(player_id)
+	players[player_id] = Player.new(true, player_id, screen_size,
+	 null, $Arrow, Vector2(20, 20))
+	player_id = "Opp"
+	players[player_id] = Player.new(false, player_id, screen_size,
+	 null, $Arrow, Vector2(20, 20))
 	
 	var curve = $Path2D.curve
 	for i in range(curve.get_point_count()):
@@ -39,42 +48,10 @@ func _ready():
 			"\n out: ", curve.get_point_out(i)
 		)
 
-func setup_player(state: Dictionary, player_id: String, is_this_player: bool = false):
-#	var id := player_id.hash()
-	var width: float = 1980
-	var height: float = 1080
-	var half_height: float = height * 0.5
-	var player := Player.new()
-	if is_this_player:
-		sense.set_this_player_id(player_id)
-		player.setup(Rect2(0.0, half_height, width, half_height), null, $Arrow, Vector2(20, 20), true)
-	else:
-		player.setup(Rect2(0.0, 0.0, width, half_height), null, $Arrow, Vector2(20, 20))
-	for i in range(2): 
-		var card: Card = Card.new()
-		card.setup()
-		player.tabel.left_line.add_card(card)
-	for i in range(2): 
-		var card: Card = Card.new()
-		card.setup()
-		player.tabel.right_line.add_card(card)
-	for i in range(7): 
-		var card: Card = Card.new()
-		card.setup()
-		player.hand.add_card(card)
-	
-	for i in range(30): 
-		var card: Card = Card.new()
-		card.setup()
-		player.deck.add_card(card)
-	
-	players[player_id] = player
-	print("Add player", player_id)
-
 func _input(event: InputEvent):
-	if sense.prev_view_id() != Sense.None:
-		get_view(sense.prev_player_id(), sense.prev_view_id())._mouse_exit(sense)
-		sense.set_prev_view_id_none()
+#	if sense.prev_view_id() != Sense.None:
+#		get_view(sense.prev_player_id(), sense.prev_view_id())._mouse_exit(sense)
+#		sense.set_prev_view_id_none()
 	var mouse_pos: Vector2 = \
 		event.position \
 		if event is InputEventMouseMotion \
@@ -84,45 +61,7 @@ func _input(event: InputEvent):
 		and event.button_index == BUTTON_LEFT \
 		and event.pressed
 	sense.set_input(mouse_pos, clicked)
-	input()
-	print("selset:")
-	print(sense.player_id())
-	print(sense.view_id())
-	print(sense.card_id())
-	events_handler()
-
-func input():
-#	print("CLICKED: ", clicked, mouse_pos)
-#	if setting._mouse_enter(sense):
-#		sense.set_view_id(Sense.Setting)
-#		return
-#	if end._mouse_enter(sense):
-#		sense.set_view_id(Sense.End)
-#		return
-	for player_id in players:
-		var player: Player = players.get(player_id)
-		#TODO: detect up or down and active or no
-		if player._mouse_enter(sense):
-			sense.set_player_id(player_id)
-			return
-
-func events_handler():
-	for event in sense.event():
-		match event:
-			Sense.Screen.Deck:
-				var player: Player = players.get(sense.player_id())
-				var deck: Deck = player.deck
-				scroll_container.setup(deck._cards)
-				 
-			#input_event
-			Sense.Cast:
-				pass
-			Sense.Attack:
-				pass
-			Sense.ShiftinHand:
-				pass
-			#network_event
-	sense.event().clear()
+	sense.send_action(Sense.MouseMove)
 
 func get_drag_data(position: Vector2):
 	if sense.player_id() == sense.this_player_id() and sense.card_id() > -1:
@@ -183,31 +122,49 @@ func drop_data(position: Vector2, data) -> void:
 		for player_id in players:
 			players[player_id].tabel.unhighlight_all_card()
 
-func get_view(player_id: String, view_id: int) -> View:
-	var player: Player = players.get(player_id)
-	match view_id:
-		Sense.Setting:
-			return setting
-		Sense.End:
-			return end
-		Sense.Hand:
-			return player.hand
-		Sense.L_Tabel:
-			return player.tabel
-		Sense.R_Tabel:
-			return player.tabel
-		Sense.Deck: 
-			return player.deck
-		Sense.Factorys: 
-			return player.factorys
-		Sense.Graveyard: 
-			return player.graveyard
-		Sense.Secrets:
-			return player.secrets
-		_:
-			return null
-
-func _process(delta):
+func _process(delta: float):
+	for event in sense.event():
+		match event:
+			#input_event
+			Sense.MouseMove:
+				if setting.mouse_enter(sense):
+					setting.input(sense)
+					return
+				match active_screen:
+					Sense.ScreenMain:
+						if end.mouse_enter(sense):
+							end.input(sense)
+							return
+						for player_id in players:
+							var player: Player = players.get(player_id)
+							#TODO: detect up or down and active or no
+							if player.mouse_enter(sense):
+								return
+#					Sense.ScreenSetting:
+					Sense.ScreenDeck:
+						var player: Player = players.get(sense.player_id())
+						player.deck.screen.input(sense)
+						return
+#					Sense.ScreenFactorys:
+#					Sense.ScreenGraveyard: 
+#					Sense.ScreenSecrets:
+#					Sense.ScreenCard: 
+#					Sense.ScreenTabelCard: 
+#					Sense.ScreenAttack:
+			Sense.MouseExit:
+				pass
+			Sense.ScreenDeck:
+				var player: Player = players.get(sense.player_id())
+				var deck: Deck = player.deck
+				scroll_container.setup(deck._cards)
+			Sense.Cast:
+				pass
+			Sense.Attack:
+				pass
+			Sense.ShiftinHand:
+				pass
+			#network_event
+	sense.event().clear()
 	update()
 #	if sense.targeting():
 #		sense.aim()
@@ -229,19 +186,72 @@ func _draw():
 		player.tabel.targeting_arrow(screen_size, sense.mouse_pos())
 #	Render.buttom(self, "Hello", 150, Rect2(0,0, 400, 400))
 #	Render.setting_menu(self, 150, Rect2(400, 400, 400, 400), Rect2(450, 450, 250, 250), 10)
-	Render.shadowing(self, screen_size)
-	var card: Card = player.hand.get_card(4)
-	var def_pos := card.position()
-	var def_pot := card.rotation()
-	card.set_position(Vector2(200, 200)) 
-	card.set_rotation(0) 
-	Render.draw_card(self, card, Vector2(700, 700))
-	card.set_position(def_pos) 
-	card.set_rotation(def_pot) 
-#	if sense.casting():
-#		sense.draw(self, font)
-#	if sense_card:
-#		draw_rect(_cached_rect, Color.aquamarine, false, 10)
-#	if card:
-#		card.set_position(mouse_pos)
-#		card.draw(self, Vector2(200, 200))
+#	Render.shadowing(self, screen_size)
+#	var card: Card = player.hand.get_card(4)
+#	var def_pos := card.position()
+#	var def_pot := card.rotation()
+#	card.set_position(Vector2(200, 200)) 
+#	card.set_rotation(0) 
+#	Render.draw_card(self, card, Vector2(700, 700))
+#	card.set_position(def_pos) 
+#	card.set_rotation(def_pot) 
+
+####Render
+func draw_hovered(rect: Rect2, hovered: bool, clicked: bool):
+	self.draw_rect(rect, self.CLICKED_COLOR if clicked else self.HOVER_COLOR, false, self.HOVER_LIZE_SIZE)
+
+func draw_buttom(text: String, font_size: int, rect: Rect2, texture: Texture = load("res://assets/error.png") as Texture):
+#	ctx.draw_texture_rect(texture, rect, false)
+	self.draw_rect(rect, Color.violet)
+	self.font.set_size(font_size)
+	var h_font_size = font_size * 0.5
+	self.draw_string(self.font, rect.get_center() - self.font.get_string_size(text) * 0.5 + Vector2(0, h_font_size), text)
+
+#func draw_setting_menu(ctx: CanvasItem, font_size: int, rect: Rect2, margin: Rect2, indent: float):
+#	var buttom_count := 3
+#	var y_offset := margin.size.y + indent
+#	var brect := Rect2(margin.position, Vector2(margin.size.x, margin.size.y / buttom_count - indent))
+#	ctx.draw_rect(rect, Color.brown)
+#	buttom(ctx, "Play", font_size, brect)
+#	brect.position.y += y_offset
+#	buttom(ctx, "Setting", font_size, brect)
+#	brect.position.y += y_offset
+#	buttom(ctx, "Exit", font_size, brect)
+
+#var _max_row_count := 9
+#var _row_count := 0
+#var _card_size := Vector2(200, 200)
+#var _card_indent := Vector2(10, 10)
+#func deck(ctx: CanvasItem, cards: Array, max_row_count: int):
+#	var current_row_count := 0
+#	var _last_colum_count = cards.size() % max_row_count
+#	if _last_colum_count == 0:
+#		_row_count += 1
+##		rect_min_size = Vector2(1000, 1000)
+#	var pos := _card_indent + (_card_size + _card_indent) \
+#	 * Vector2(_last_colum_count, _row_count) - Vector2(0, _card_size.y)
+#	if pos.y + _card_size.y + _card_indent.y > rect_min_size.y:
+#		rect_min_size.y += _card_size.y + _card_indent.y
+#	card.set_position(pos)
+#	add_child(card)
+
+#func take_card_screen(ctx: CanvasItem, font_size: int, rect: Rect2, margin: Rect2, indent: float):
+#				ctx.draw_rect(Rect2(Vector2.ZERO - card_pivot, card_size), card.highlight_color(), false, 15)
+#	for i in range(3):
+#		draw_card(ctx, card, card_size)
+
+func draw_shadowing():
+	self.draw_rect(Rect2(Vector2.ZERO, self.screen_size), Color(0,0,0, 0.5))
+
+func draw_zoom_card(card: Card, card_size: Vector2):
+	self.draw_card(card, card_size)
+
+func draw_card(card: Card, card_size: Vector2):
+	if card.visible():
+		var card_pivot := card_size * 0.5 #* _scale
+		self.draw_set_transform(card.position() + card_pivot, card.rotation(), card.scale())
+		self.draw_texture_rect(card.texture(), Rect2(Vector2.ZERO - card_pivot, card_size), false)
+		#	ctx.draw_rect()
+		#	ctx.draw_string()
+		if card.highlight():
+			self.draw_rect(Rect2(Vector2.ZERO - card_pivot, card_size), card.highlight_color(), false, 15)

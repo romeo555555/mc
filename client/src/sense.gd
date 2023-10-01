@@ -1,10 +1,25 @@
 extends Object
 class_name Sense
 
-enum { None, Hand, L_Tabel, R_Tabel, Deck, Factorys, Graveyard, Secrets, Setting, End}
-enum { Cast, Attack, ShiftinHand }
-#TODO:scene state
-enum Screen { Main, Setting, Deck, Factorys, Graveyard, Secrets, Card, Attack }
+
+#enum { None, Hand, L_Tabel, R_Tabel, Deck, Factorys, Graveyard, Secrets, Setting, End}
+enum { 
+	ScreenMain, 
+	ScreenSetting, 
+	ScreenDeck, 
+	ScreenFactorys, 
+	ScreenGraveyard, 
+	ScreenSecrets, 
+	ScreenCard, 
+	ScreenTabelCard, 
+	ScreenAttack,
+	MouseExit,
+	MouseMove,
+	Cast, 
+	Attack, 
+	ShiftinHand,
+	EndTurn
+}
 
 var _mouse_pos: Vector2
 var _clicked := false setget , clicked
@@ -19,11 +34,12 @@ var _prev_player_id: String
 var _prev_view_id: int = 0
 var _prev_card_id: int = -1
 
-var _events: Array = []
+var _actions: Array = []
 var _this_player_id: String
 var _player_id: String
 var _view_id: int = 0
 var _card_id: int = -1
+
 
 #var _target: []
 #var _card: Card = null
@@ -39,11 +55,11 @@ var _card_id: int = -1
 #	_view_id = view_id
 #	_card_id = card_id
 
-func set_event(event: int):
-	_events.push_back(event)
+func send_action(action: int):
+	_actions.push_back(action)
 
-func event() -> Array:
-	return _events
+func actions() -> Array:
+	return _actions
 
 func set_prev_view_id_none():
 	_prev_view_id = 0
