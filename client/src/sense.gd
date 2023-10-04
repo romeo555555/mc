@@ -4,6 +4,7 @@ class_name Sense
 
 #enum { None, Hand, L_Tabel, R_Tabel, Deck, Factorys, Graveyard, Secrets, Setting, End}
 enum { 
+	None,
 	ScreenMain, 
 	ScreenSetting, 
 	ScreenDeck, 
@@ -21,8 +22,10 @@ enum {
 	EndTurn
 }
 
+var _last_entered_mouse_pos: Vector2 = Vector2(-100, -100)
 var _mouse_pos: Vector2
 var _clicked := false setget , clicked
+var _select := false
 
 var _targeting := false
 var _dragging := false
@@ -34,7 +37,9 @@ var _prev_player_id: String
 var _prev_view_id: int = 0
 var _prev_card_id: int = -1
 
-var _actions: Array = []
+#var actions_count: int = 0
+#var actions : PoolIntArray = PoolIntArray([0,0,0,0,0,0,0,0,0,0])
+var actions: Array = []
 var _this_player_id: String
 var _player_id: String
 var _view_id: int = 0
@@ -56,10 +61,15 @@ var _card_id: int = -1
 #	_card_id = card_id
 
 func send_action(action: int):
-	_actions.push_back(action)
+	actions.push_front(action)
+#	actions.set(actions_count, action)
+#	actions_count += 1
 
-func actions() -> Array:
-	return _actions
+func selecting():
+	_select = true
+
+func select() -> bool:
+	return _select
 
 func set_prev_view_id_none():
 	_prev_view_id = 0
@@ -98,8 +108,15 @@ func this_player_id() -> String:
 	return _this_player_id
 
 func set_input(pos: Vector2, clicked: bool):
+	_select = false
 	_mouse_pos = pos
 	_clicked = clicked
+
+func set_last_entered_mouse_pos(pos: Vector2):
+	_last_entered_mouse_pos = pos
+
+func last_entered_mouse_pos() -> Vector2:
+	return _last_entered_mouse_pos
 
 func mouse_pos() -> Vector2:
 	return _mouse_pos

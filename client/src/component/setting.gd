@@ -4,7 +4,7 @@ class_name Setting
 var _texture: Texture
 var screen: Screen
 
-func new(pos: Vector2, size: Vector2, texture: Texture = load("res://assets/error.png") as Texture):
+func init(pos: Vector2, size: Vector2, texture: Texture = load("res://assets/error.png") as Texture):
 	_texture = texture
 	_rect = Rect2(pos, size)
 

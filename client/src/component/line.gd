@@ -1,18 +1,31 @@
-extends Object
+extends Component
 class_name Line
 
 var _max_size_line := 4
 var _center_tabel: Vector2
 var _start_pos: Vector2
+var _x_indent: float
 var _x_offset: float
-var _miroring := false
+#var _miroring := false
 var _cards: Array
+var _card_size := Vector2.ZERO
 
-func setup(center_tabel: Vector2, max_size_line: int, start_pos: Vector2, x_offset: float):
-	_center_tabel = center_tabel
-	_max_size_line = max_size_line
-	_start_pos = start_pos
-	_x_offset = x_offset
+func init_right(pos: Vector2, size: Vector2, card_size: Vector2, x_indent: float):
+	_center_tabel = Vector2(pos.x + x_indent, pos.y + (size.y - card_size.y) * 0.5)
+	_start_pos = Vector2(_center_tabel.x + card_size.x * 0.5 + x_indent, _center_tabel.y)
+	_x_offset = card_size.x + x_indent
+	_card_size = card_size
+	_x_indent = x_indent
+	_rect = Rect2(pos, size)
+
+func init_left(pos: Vector2, size: Vector2, card_size: Vector2, x_indent: float):
+	_center_tabel = Vector2(pos.x + size.x - card_size.x - card_size.x * 0.5 - x_indent, 
+	 pos.y + (size.y - card_size.y) * 0.5)
+	_start_pos = Vector2(_center_tabel.x - x_indent, _center_tabel.y)
+	_x_offset = -1 * (card_size.x + x_indent)
+	_card_size = card_size
+	_x_indent = x_indent
+	_rect = Rect2(pos, size)
 
 func card_count() -> int:
 	return _cards.size()
@@ -52,11 +65,11 @@ func get_card(card_id: int) -> Card:
 func remove_card(idx: int) -> Card:
 	return _cards.pop_at(idx)
 
-func has_point_on_card(point: Vector2, card_size: Vector2) -> int:
+func has_point_on_card(point: Vector2) -> int:
 #	var pos := Vector2(_avatar_rect.end.x + _x_indent, _margin.position.y)
 	var pos := _start_pos
 	for i in range(0, card_count()):
-		if Rect2(pos, card_size).has_point(point):
+		if Rect2(pos, _card_size).has_point(point):
 			return i
 		pos.x += _x_offset
 	return -1
@@ -76,10 +89,10 @@ func has_point_on_card(point: Vector2, card_size: Vector2) -> int:
 #		pos.x -= offset
 #	return -1
 
-func has_point_on_cast(point: Vector2, card_size: Vector2) -> int:
+func has_point_on_cast(point: Vector2) -> int:
 	var pos := _center_tabel
 	for i in range(0, card_count()):
-		if Rect2(pos, card_size).has_point(point):
+		if Rect2(pos, _card_size).has_point(point):
 			return i
 		pos.x += _x_offset
 	return -1
@@ -152,23 +165,30 @@ func casting_on(card_id: int):
 #				x -= offset
 #				_cards[i].set_position(Vector2(x, _margin.position.y))
 
-func input(sense: Sense, card_size: Vector2):
+func input(sense: Sense):
 #		var is_right := tabel.has_right_side(mouse_pos)
 #		#if casting change type check card position evaible
 #		#if card_id >= avatar_id = is_right
-	var card_id := has_point_on_card(sense.mouse_pos(), card_size)
+	var card_id := has_point_on_card(sense.mouse_pos())
 	sense.set_card_id(card_id)
 #	if sense.clicked():
 #		sense.input_event(MouseEnter, Tabel, player_id, card_id, can_drag)
 #func has_right_side(point: Vector2) -> bool:
 #	return point.x > _rect.size.x * 0.5
 
-func dragging(sense: Sense, card_size: Vector2):
+func output(sense: Sense):
+	pass
+
+func dragging(sense: Sense):
 	#	if targgeting() and player_id != this_player_id():
 #	if casting() and player_id == this_player_id() and card_id > -1:
 #	tabel.casting_on(card_id, is_right)
 	if sense.drag_view_id() == Sense.Hand:
-		var card_id := has_point_on_cast(sense.mouse_pos(), card_size)
+		var card_id := has_point_on_cast(sense.mouse_pos())
 		sense.set_card_id(card_id)
 		casting_on(card_id)
 #	if sense.drag_view_id() == Sense.Tabel:
+
+func draw(ctx: CanvasItem):
+	for card in _cards:
+		ctx.draw_tabel_card(card, _card_size)

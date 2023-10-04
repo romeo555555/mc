@@ -11,24 +11,23 @@ var _card_indent := Vector2(10, 10)
 var _cards: Array = []
 var _rect_min_size: Vector2
 
-func new(rect: Rect2, texture: Texture = load("res://assets/error.png") as Texture):
+func init(pos: Vector2, size: Vector2, texture: Texture = load("res://assets/error.png") as Texture):
 	_texture = texture
-	_rect = rect
+	_rect = Rect2(pos, size)
 
 func input(sense: Sense):
+	_hovered = true
 	if sense.clicked():
 		sense.set_event(Sense.Screen.Deck)
 	pass
 
 func output(sense: Sense):
-	pass
+	_hovered = false
 
 func draw(ctx: CanvasItem):
 #	if _texture:
 	ctx.draw_texture_rect(_texture, _rect, false)
-	if is_focused():
-		ctx.draw_rect(_rect, ctx.hovered_color, false, 30)
-#		_highlight = false
+	ctx.draw_hovered(_rect, _hovered, _clicked)	
 
 func add_card(card: Card):
 	var _last_colum_count = _cards.size() % _max_row_count

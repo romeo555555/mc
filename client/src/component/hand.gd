@@ -18,15 +18,18 @@ var _cached_card_id: int
 var _cached_card_pos: Vector2
 var _cached_card_rot: float
 
-func new(
-	rect: Rect2, 
+var _hovered_card_id: int = -1
+
+func init(
+	pos: Vector2,
+	size: Vector2,
 	texture: Texture = null,
 	x_indent: float = 0, 
 	margin_offset: Vector2 = Vector2.ZERO, 
 	card_aspect: float = 1
 ):
-	_rect = rect
-	_margin = Rect2(rect.position + margin_offset, rect.size - margin_offset * 2.0)
+	_rect = Rect2(pos, size)
+	_margin = Rect2(_rect.position + margin_offset, _rect.size - margin_offset * 2.0)
 	_card_size = Vector2(_margin.size.y * card_aspect, _margin.size.y)
 	_card_pivot = _card_size * 0.5
 	_x_indent = x_indent
@@ -142,22 +145,16 @@ func has_point_on_card(point: Vector2) -> int:
 #	return Transform2D(_rotation, _position + _pivot).xform(Rect2(Vector2.ZERO - _pivot, _size)).has_point(point)
 ##	return  Rect2(_position, _size).has_point(point)
 
-#func input(sense: Sense):
-#	_hovered = true
-#	if _clicked:
-#		sense.send_action(Sense.EndTurn)
-#
-#func output(sense: Sense):
-#	_hovered = false
 
 func input(sense: Sense):
-	var card_id := has_point_on_card(sense.mouse_pos())
-	sense.set_card_id(card_id)
-#	if sense.clicked():
+	_hovered_card_id = has_point_on_card(sense.mouse_pos())
+#	sense.set_card_id(_hovered_card_id)
+#	if _clicked:
 #	sense.input_event(sense.MouseEnter, Hand, player_id, card_id, can_drag)
 
 func output(sense: Sense):
 #	aligment()
+	_hovered_card_id = -1
 	pass
 
 func highlight_reset():

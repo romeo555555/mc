@@ -1,8 +1,9 @@
 extends Component
-class_name Factorys
+class_name Avatar
 
 var _texture: Texture
 #var screen: Screen
+#var _card: Card
 
 func init(pos: Vector2, size: Vector2, texture: Texture = load("res://assets/error.png") as Texture):
 	_texture = texture
@@ -18,4 +19,4 @@ func output(sense: Sense):
 
 func draw(ctx: CanvasItem):
 	ctx.draw_texture_rect(_texture, _rect, false)
-	ctx.draw_hovered(_rect, _hovered, _clicked)
+	ctx.draw_hovered(_rect, _focused, _clicked)

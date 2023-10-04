@@ -7,26 +7,50 @@ var _hovered := false
 var _clicked := false
 var _visible := true
 
-func is_focused() -> bool:
-	return _focused
+
+#func mouse_enter(sense: Sense) -> bool:
+#	if _rect.has_point(sense.mouse_pos()):
+#		if !_focused:
+#			_focused = true
+#			sense.send_action(Sense.MouseExit)
+#		_clicked = sense.clicked()
+#		return true
+#	return false
+#
+#func mouse_exit(sense: Sense) -> bool:
+#	if _rect.has_point(sense.last_mouse_pos()):
+##		if focused:
+#		_focused = false
+#		return true
+#	return false
+func _mouse_enter(sense: Sense) -> void:
+	if sense.select() or not _rect.has_point(sense.mouse_pos()):
+		if _focused:
+			_focused = false
+			output()
+	else:
+		sense.selecting()
+		_focused = true
+		input()
+
+func input() -> void:
+	pass
+func output() -> void:
+	pass
 
 func mouse_enter(sense: Sense) -> bool:
 	if _rect.has_point(sense.mouse_pos()):
-		if !_focused:
-			_focused = true
-			sense.send_action(Sense.MouseExit)
-		_clicked = sense.clicked()
-		return true
-	return false
+		_focused = true
+	return _focused
+
+func is_focused() -> bool:
+	return _focused
 
 func mouse_exit(sense: Sense) -> bool:
-	if _rect.has_point(sense.mouse_pos()):
-#		if focused:
+	if _focused and not _rect.has_point(sense.mouse_pos()):
 		_focused = false
 		return true
 	return false
-
-
 #func draw(ctx: CanvasItem):
 ##	if _texture:
 #	ctx.draw_texture_rect(_texture, _rect, false)

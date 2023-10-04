@@ -176,31 +176,15 @@ func unselect_card():
 		card.set_highlight(false)
 		_arrow.set_visible(false)
 	
-func draw(ctx: CanvasItem):
-	if _texture:
-		ctx.draw_texture_rect(_texture, _rect, false)
-	draw_card(ctx, _avatar_card, _avatar_rect.size, _avatar_pivot)
-	for i in range(0, left_line.card_count()):
-		draw_card(ctx, left_line._cards[i], _card_size, _card_pivot)
-	for i in range(0, right_line.card_count()):
-		draw_card(ctx, right_line._cards[i], _card_size, _card_pivot)
-#	ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-#	avatar.draw(ctx, font)
+#func draw(ctx: CanvasItem):
+#	if _texture:
+#		ctx.draw_texture_rect(_texture, _rect, false)
+#	draw_card(ctx, _avatar_card, _avatar_rect.size, _avatar_pivot)
+#	for i in range(0, left_line.card_count()):
+#		draw_card(ctx, left_line._cards[i], _card_size, _card_pivot)
+#	for i in range(0, right_line.card_count()):
+#		draw_card(ctx, right_line._cards[i], _card_size, _card_pivot)
+##	ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+##	avatar.draw(ctx, font)
 
-func draw_card(ctx: CanvasItem, card: Card, card_size: Vector2, card_pivot: Vector2):
-	if card.visible():
-		var font: DynamicFont = ctx.font
-	#	var _pivot := size * 0.5 * _scale
-#		ctx.draw_set_transform(card.position + _card_pivot, card.rotation, card.scale)
-#		ctx.draw_texture_rect(_texture, Rect2(Vector2.ZERO - _card_pivot, _card_size), false)
-		ctx.draw_texture_rect(card.texture(), Rect2(card.position(), card_size), false)
-		ctx.draw_rect(Rect2(card.position() - Vector2(0, 56), Vector2(card_size.x, 42)), Color.black)
-		ctx.draw_string(font, card.position() - Vector2(0, 16), "Bill Amstrong")
-		ctx.draw_rect(Rect2(card.position() - Vector2(0, 56), Vector2(card_size.x, 42)), Color(255, 0 ,0))
-		ctx.draw_rect(Rect2(card.position() - Vector2(0, 56), Vector2(card_size.x, 42)), Color(219, 172 ,0))
-		ctx.draw_rect(Rect2(card.position() - Vector2(0, 56), Vector2(card_size.x, 42)), Color(163, 0 ,242))
-		ctx.draw_rect(Rect2(card.position() - Vector2(0, 56), Vector2(card_size.x, 42)), Color.black)
-		ctx.draw_string(font, card.position() - Vector2(0, 16), "3000")
-		if card.highlight():
-			ctx.draw_rect(Rect2(card.position(), card_size), card.highlight_color(), false, 30)
 

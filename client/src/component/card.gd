@@ -11,7 +11,7 @@ var _highlight := false
 var _highlight_color := Color.aliceblue
 #var _data
 
-func setup(texture: Texture = load("res://assets/error.png") as Texture):
+func init(texture: Texture = load("res://assets/error.png") as Texture):
 	_texture = texture
 
 func set_texture(texture: Texture):
