@@ -20,7 +20,7 @@ func _init(
 	texture: Texture = null, 
 	arrow: Line2D = null, 
 	margin_offset: Vector2 = Vector2.ZERO
-):
+) -> void:
 	init(miroring, player_id, screen_size, texture, arrow, margin_offset)
 
 func init(
@@ -30,7 +30,7 @@ func init(
 	texture: Texture = null, 
 	arrow: Line2D = null, 
 	margin_offset: Vector2 = Vector2.ZERO
-):
+) -> void:
 	player_id = player_id
 
 	var avatar_size := Vector2(200, 270) 
@@ -39,7 +39,7 @@ func init(
 	var hadn_card_x_indent := -50.0
 	var other_size := Vector2(200, 200) 
 	var other_indent := Vector2(10, 0) 
-	var linemargin := Vector2(20, 20) 
+	var startoffset := Vector2(20, 20) 
 #	var avatar_card: Card = Card.new()
 #	avatar_card.init()
 	
@@ -48,13 +48,14 @@ func init(
 		var margin = Rect2(_rect.position + margin_offset, _rect.size - margin_offset * 2.0)
 		var line_size := Vector2(_rect.size.x, _rect.size.y * 0.5)
 		
-#		tabel.init(Rect2(_rect.position, line_size), null, arrow, avatar, card_x_indent, linemargin)
+#		tabel.init(Rect2(_rect.position, line_size), null, arrow, avatar, card_x_indent, startoffset)
 		avatar.init(Vector2(_rect.position.x + (_rect.size.x - avatar_size.x) * 0.5, 
 			_rect.position.y + (line_size.y - avatar_size.y) * 0.5), avatar_size)
-		left_tabel.init_left(_rect.position, _rect.size * 0.5, card_size, card_x_indent)
-		right_tabel.init_right(Vector2(_rect.position.x + _rect.size.x * 0.5, _rect.position.y),
+		left_tabel.init_left(true, _rect.position, _rect.size * 0.5, card_size, card_x_indent)
+		right_tabel.init_right(true, Vector2(_rect.position.x + _rect.size.x * 0.5, _rect.position.y),
 			_rect.size * 0.5, card_size, card_x_indent)
-		hand.init(_rect.position + Vector2(0.0, line_size.y), line_size, null, hadn_card_x_indent, linemargin)
+		hand.init(true, _rect.position + Vector2(0.0, line_size.y), line_size, null, 
+			card_size, hadn_card_x_indent, startoffset)
 		
 		var other_pos := Vector2(margin.position.x, margin.end.y - other_size.y)
 		factorys.init(other_pos, other_size)
@@ -71,10 +72,11 @@ func init(
 		
 		avatar.init(Vector2(_rect.position.x + (_rect.size.x - avatar_size.x) * 0.5, 
 			_rect.position.y + (line_size.y - avatar_size.y) * 0.5) + Vector2(0.0, line_size.y), avatar_size)
-		left_tabel.init_left(_rect.position + Vector2(0.0, line_size.y), _rect.size * 0.5, card_size, card_x_indent)
-		right_tabel.init_right(Vector2(_rect.position.x + _rect.size.x * 0.5, _rect.position.y) 
+		left_tabel.init_left(false, _rect.position + Vector2(0.0, line_size.y), _rect.size * 0.5, card_size, card_x_indent)
+		right_tabel.init_right(false, Vector2(_rect.position.x + _rect.size.x * 0.5, _rect.position.y) 
 				+ Vector2(0.0, line_size.y), _rect.size * 0.5, card_size, card_x_indent)
-		hand.init(_rect.position, line_size, null, hadn_card_x_indent, linemargin)
+		hand.init(false, _rect.position, line_size, null, 
+			card_size, hadn_card_x_indent, startoffset)
 		
 		var other_pos: Vector2 = margin.position
 		deck.init(other_pos, other_size)
@@ -103,51 +105,54 @@ func init(
 		card.init()
 		deck.add_card(card)
 
-func mouse_enter(sense: Sense) -> bool:
+func input(sense: Sense) -> void:
 	if _rect.has_point(sense.mouse_pos()):
-		if factorys.mouse_enter(sense):
-			factorys.input(sense)
-		elif secrets.mouse_enter(sense):
-			secrets.input(sense)
-		elif graveyard.mouse_enter(sense):
-			graveyard.input(sense)
-		elif deck.mouse_enter(sense):
-			deck.input(sense)
-		elif avatar.mouse_enter(sense):
-			avatar.input(sense)
-		elif hand.mouse_enter(sense):
-			hand.input(sense)
-		elif left_tabel.mouse_enter(sense):
-			left_tabel.input(sense)
-		elif right_tabel.mouse_enter(sense):
-			right_tabel.input(sense)
-		else:
-			return false
-		return true
-	return false
+		sense.set_player_id(player_id)
+	match factorys.box.input(sense):
+		Sense.Enter: 
+			factorys.box.set_hovered(true)
+		Sense.Exit: 
+			factorys.box.set_hovered(false)
+		Sense.Click: 
+			sense.send_action(Sense.EndTurn)
+		_: pass
+	match secrets.box.input(sense):
+		Sense.Enter: secrets.mouse_enter(sense)
+		Sense.Exit: secrets.mouse_exit(sense)
+		Sense.Click: secrets.mouse_click(sense)
+		_: pass
+	match graveyard.box.input(sense):
+		Sense.Enter: graveyard.mouse_enter(sense)
+		Sense.Exit: graveyard.mouse_exit(sense)
+		Sense.Click: graveyard.mouse_click(sense)
+		_: pass
+	match deck.box.input(sense):
+		Sense.Enter: deck.mouse_enter(sense)
+		Sense.Exit: deck.mouse_exit(sense)
+		Sense.Click: deck.mouse_click(sense)
+		_: pass
+	match avatar.box.input(sense):
+		Sense.Enter: avatar.mouse_enter(sense)
+		Sense.Exit: avatar.mouse_exit(sense)
+		Sense.Click: avatar.mouse_click(sense)
+		_: pass
+	match hand.box.input(sense):
+		Sense.Enter: hand.mouse_enter(sense)
+		Sense.Exit: hand.mouse_exit(sense)
+		Sense.Click: hand.mouse_click(sense)
+		_: pass
+	match left_tabel.box.input(sense):
+		Sense.Enter: left_tabel.mouse_enter(sense)
+		Sense.Exit: left_tabel.mouse_exit(sense)
+		Sense.Click: left_tabel.mouse_click(sense)
+		_: pass
+	match right_tabel.box.input(sense):
+		Sense.Enter: right_tabel.mouse_enter(sense)
+		Sense.Exit: right_tabel.mouse_exit(sense)
+		Sense.Click: right_tabel.mouse_click(sense)
+		_: pass
 
-func mouse_exit(sense: Sense) -> bool:
-	if factorys.mouse_exit(sense):
-		factorys.output(sense)
-	elif secrets.mouse_exit(sense):
-		secrets.output(sense)
-	elif graveyard.mouse_exit(sense):
-		graveyard.output(sense)
-	elif deck.mouse_exit(sense):
-		deck.output(sense)
-	elif avatar.mouse_exit(sense):
-		avatar.output(sense)
-	elif hand.mouse_exit(sense):
-		hand.output(sense)
-	elif left_tabel.mouse_exit(sense):
-		left_tabel.output(sense)
-	elif right_tabel.mouse_exit(sense):
-		right_tabel.output(sense)
-	else:
-		return false
-	return true
-
-func draw(ctx: CanvasItem):
+func draw(ctx: CanvasItem) -> void:
 #	if _texture:
 #		ctx.draw_texture_rect(_texture, _rect, false)
 	factorys.draw(ctx)

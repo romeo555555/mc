@@ -3,7 +3,7 @@
 [ext_resource path="res://addons/com.heroiclabs.nakama/client/NakamaHTTPAdapter.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.heroiclabs.nakama/socket/NakamaSocketAdapter.gd" type="Script" id=2]
 [ext_resource path="res://src/main.gd" type="Script" id=3]
-[ext_resource path="res://src/component/scroll_container.gd" type="Script" id=4]
+[ext_resource path="res://src/element/modal_scroll_list.gd" type="Script" id=4]
 [ext_resource path="res://assets/board1.png" type="Texture" id=6]
 
 [sub_resource type="Curve2D" id=1]
@@ -38,7 +38,6 @@ margin_right = 1980.0
 margin_bottom = 1080.0
 
 [node name="Control" type="Control" parent="ScrollContainer"]
-visible = false
 margin_right = 1980.0
 margin_bottom = 1080.0
 size_flags_horizontal = 3
