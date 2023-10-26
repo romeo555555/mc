@@ -2,16 +2,20 @@ extends Object
 class_name Deck
 
 var box: Box = Box.new()
+var list: List = List.new()
 var texture: Texture = load("res://assets/error.png") as Texture
-var _cards: Array = []
 
 func draw(ctx: CanvasItem) -> void:
+	
+#	match box.containe(sense):
+#	match input(sense):
+##		Sense.Enter:
+##		Sense.Exit:
+#		Sense.Click:
+	
 #	if _texture:
 	ctx.draw_texture_rect(texture, box.rect(), false)
 	ctx.draw_hovered(box)
-
-func add_card(card: Card) -> void:
-	_cards.push_back(card)
 
 #func remove_card(card: Control) -> void:
 #	var _last_colum_count = card_count() % _max_row_count

@@ -1,190 +1,185 @@
-extends Component
+extends Object
 class_name Tabel
 
-#export(bool) var _can_drag := false
-#export(bool) var _can_drop := false
-#export(bool) var _miroring := false
-#var _card_size := Vector2(200, 200)
-var _texture: Texture
-var _margin: Rect2
-var _card_size := Vector2.ZERO
-var _card_pivot := Vector2.ZERO
-var _avatar_rect: Rect2
-var _avatar_pivot := Vector2.ZERO
-var _x_indent := 0.0
-var _avatar_card: Card
-var left_line: Line
-var right_line: Line
+var box: Box = Box.new()
+var texture: Texture = load("res://assets/error.png") as Texture
+var left_list: List = List.new()
+var right_list: List = List.new()
+var avatar_list: List = List.new()
 
-#var _left_count := 0
-#var _right_count := 0
-#var _avatar_id := 0
-#var _cards: Array
+func draw(ctx: CanvasItem) -> void:
+#	if texture:
+#		ctx.draw_texture_rect(texture, box.rect(), false)
+	for i in range(avatar_list.size() - 1, -1, -1):
+		var card: Card = avatar_list.get_card(i)
+		card.draw_on_line(ctx, avatar_list.card_size())
+	for i in range(right_list.size() - 1, -1, -1):
+		var card: Card = right_list.get_card(i)
+		card.draw_on_line(ctx, right_list.card_size())
+	for i in range(left_list.size() - 1, -1, -1):
+		var card: Card = left_list.get_card(i)
+		card.draw_on_line(ctx, left_list.card_size())
+	if box.is_hovered():
+		var card: Card = get_focused_card()
+		if card:
+			var box: Box = Box.new()
+			box.set_rect(Rect2(card.position(), Vector2(200, 200)))
+			box.set_hovered(true)
+			ctx.draw_hovered(box)
+#	if list.get_focused_card_id() > -1:
+#		var card: Card = list.get_focused_card()
+#		var box: Box = Box.new()
+#		box.set_rect(Rect2(card.position(), list.card_size()))
+#		box.set_hovered(true)
+#		ctx.draw_hovered(box)
 
-var _cached_start_pos := Vector2.ZERO
-var _cached_player_id: String
-var _cached_view_id: int = 0
-var _cached_card_id: int
-var _targeting_player_id: String
-var _targeting_view_id: int = 0
-var _targeting_card_id: int = -1
-var _arrow: Line2D = null
-#var _data
+#func draw_hovered(ctx: CanvasItem) -> void:
+#func draw_avatar_list(ctx: CanvasItem) -> void:
 
-func setup(
-	rect: Rect2, 
-	texture: Texture = null,
-	arrow: Line2D = null,
-	avatar: Card = null,
-	x_indent: float = 0, 
-	margin_offset: Vector2 = Vector2.ZERO, 
-	card_aspect_x: float = 1,
-	avatar_aspect_y: float = 1.25
-):
-	_margin = Rect2(rect.position + margin_offset, rect.size - margin_offset * 2.0)
-	_card_size = Vector2(_margin.size.y * card_aspect_x, _margin.size.y)
-	_card_pivot = _card_size * 0.5
-	_x_indent = x_indent
-	var avatar_size: Vector2 = Vector2(_card_size.x, _card_size.y * avatar_aspect_y)
-	_avatar_rect = Rect2(Vector2(rect.position.x + (rect.size.x - _card_size.x) * 0.5, 
-		rect.position.y + (rect.size.y - avatar_size.y) * 0.5), avatar_size)
-	_avatar_pivot = avatar_size * 0.5
-	avatar.set_position(_avatar_rect.position)
-	_avatar_card = avatar
-	left_line = Line.new()
-	right_line = Line.new()
-	var center_tabel := Vector2(rect.position.x + rect.size.x * 0.5, _margin.position.y)
-	right_line.setup(center_tabel, 4, Vector2(_avatar_rect.end.x + _x_indent, _margin.position.y), _card_size.x + _x_indent)
-	center_tabel.x -= _card_size.x
-	left_line.setup(center_tabel, 4, Vector2(_avatar_rect.position.x - _card_size.x - _x_indent, _margin.position.y), -1 * (_card_size.x + _x_indent))
-#	avatar.setup(Rect2(rect.position + Vector2((rect.size.x - _card_size.x) * 0.5, 0), _card_size))
-	_arrow = arrow
-	_texture = texture
-	_rect = rect
+func add_card_to_focus(card: Card) -> void:
+	if left_list.has_focused_card():
+		left_list.add_card(card, get_focused_card_id())
+	elif right_list.has_focused_card():
+		right_list.add_card(card, get_focused_card_id())
 
-func line_has_point(point: Vector2) -> int:
-	if _rect.position.x + _rect.size.x * 0.5 < point.x:
-		return Sense.R_Tabel
-	return Sense.L_Tabel
+func casting(point: Vector2) -> void:
+	if left_list.has_focused_card():
+		left_list.casting(point)
+	elif right_list.has_focused_card():
+		right_list.casting(point)
 
-func line(view_id) -> Line:
-	if view_id == Sense.R_Tabel:
-		return right_line
-	elif view_id == Sense.L_Tabel:
-		return left_line
+func focused_card(point: Vector2) -> void:
+	if avatar_list.focused_card(point):
+		pass
+	elif left_list.focused_card(point):
+		pass
+	elif right_list.focused_card(point):
+		pass
+
+func get_focused_card() -> Card:
+	if avatar_list.has_focused_card():
+		return avatar_list.get_focused_card()
+	elif left_list.has_focused_card():
+		return left_list.get_focused_card()
+	elif right_list.has_focused_card():
+		return right_list.get_focused_card()
 	return null
 
-func input(sense: Sense):
-	var line_id := line_has_point(sense.mouse_pos())
-	var line: Line = line(line_id)
-	if line:
-		line.input(sense, _card_size)
-		sense.set_view_id(line_id)
+func get_focused_card_id() -> int:
+	if avatar_list.has_focused_card():
+		return avatar_list.get_focused_card_id()
+	elif left_list.has_focused_card():
+		return left_list.get_focused_card_id()
+	elif right_list.has_focused_card():
+		return right_list.get_focused_card_id()
+	return -1
 
-func targeting(sense: Sense):
-	var line_id := line_has_point(sense.mouse_pos())
-	var line: Line = line(line_id)
-	if line:
-		line.input(sense, _card_size)
-		sense.set_view_id(line_id)
-		target_card(sense)
+func has_focused_card() -> bool:
+	return avatar_list.has_focused_card() or \
+		left_list.has_focused_card() or \
+		right_list.has_focused_card()
 
-func dragging(sense: Sense):
-	var line_id := line_has_point(sense.mouse_pos())
-	var line: Line = line(line_id)
-	if line:
-		line.dragging(sense, _card_size)
-		sense.set_view_id(line_id)
-#		return true
-#	return false
+func unfocused_card() -> void:
+	if avatar_list.has_focused_card():
+		avatar_list.aligment_line()
+		avatar_list.unfocused_card()
+	if left_list.has_focused_card():
+		left_list.aligment_line()
+		left_list.unfocused_card()
+	if right_list.has_focused_card():
+		right_list.aligment_line()
+		right_list.unfocused_card()
 
-func output(sense: Sense):
-	var line: Line = line(sense.prev_view_id())
-	if line:
-		if sense.targeting():
-			untarget_card()
-		line.aligment()
+func cached_card(card_id: int) -> void:
+	if avatar_list.has_focused_card():
+		avatar_list.cached_card(card_id)
+	if left_list.has_focused_card():
+		left_list.cached_card(card_id)
+	if right_list.has_focused_card():
+		right_list.cached_card(card_id)
 
-func target_card(sense: Sense):
-	_targeting_player_id = sense.player_id()
-	_targeting_view_id = sense.view_id()
-	_targeting_card_id = sense.card_id()
-	if _targeting_card_id == -1:
-		return
-	if _targeting_player_id == _cached_player_id and _targeting_view_id == _cached_view_id \
-	and _targeting_card_id == _cached_card_id:
-		return
-	var line: Line = line(_targeting_view_id)
-	if line:
-		var card: Card = line._cards[_targeting_card_id]
-		card.set_highlight(true, Color.red)
+func get_cached_card() -> Card:
+	if avatar_list.has_focused_card():
+		return avatar_list.get_cached_card()
+	elif left_list.has_focused_card():
+		return left_list.get_cached_card()
+	elif right_list.has_focused_card():
+		return right_list.get_cached_card()
+	return null
 
-func untarget_card():
-	if _targeting_card_id == -1:
-		return
-	if _targeting_player_id == _cached_player_id and _targeting_view_id == _cached_view_id \
-	and _targeting_card_id == _cached_card_id:
-		return
-	var line: Line = line(_targeting_view_id)
-	if line:
-		var card: Card = line._cards[_targeting_card_id]
-		_targeting_card_id = -1
-		card.set_highlight(false, Color.aliceblue)
+func uncached_card() -> void:
+	if avatar_list.has_focused_card():
+		avatar_list.uncached_card()
+	if left_list.has_focused_card():
+		left_list.uncached_card()
+	if right_list.has_focused_card():
+		right_list.uncached_card()
 
-func unhighlight_all_card():
-	for card in left_line._cards:
-		card.set_highlight(false)
-	for card in right_line._cards:
-		card.set_highlight(false)
-
-func targeting_arrow(screen_size: Vector2, mouse_pos: Vector2):
-	_arrow.clear_points()
-	var curve = Curve2D.new()
-	curve.add_point(
-			_cached_start_pos,
-#			screen_size/2,
-			Vector2(0,0),
-#			TODO:
-#			(board._rect.size/2).direction_to(get_viewport().size/2) * 75)
-			(screen_size/2).direction_to(screen_size/2) * 75)
-	curve.add_point(mouse_pos,
-			Vector2(0, 0), Vector2(0, 0))
-	_arrow.set_points(curve.get_baked_points())
-	
-#	var card: Card = _cards[_cached_card_id]
-#	card.set_visible(true)
-#	card.set_position(position-_card_pivot)
-#	draw_card(ctx, card)
-#	card.set_visible(false)
-
-func select_card(sense: Sense):
-	var line: Line = line(sense.view_id())
-	if line:
-		var card: Card = line._cards[sense.card_id()]
-		_cached_start_pos = card.position() + _card_pivot
-		_cached_player_id = sense.player_id()
-		_cached_view_id = sense.view_id()
-		_cached_card_id = sense.card_id()
-		card.set_highlight(true)
-		_arrow.set_visible(true)
-
-func unselect_card():
-	var line: Line = line(_cached_view_id)
-	if line:
-		var card: Card = line._cards[_cached_card_id]
-		_cached_card_id = -1
-		card.set_highlight(false)
-		_arrow.set_visible(false)
-	
-#func draw(ctx: CanvasItem):
-#	if _texture:
-#		ctx.draw_texture_rect(_texture, _rect, false)
-#	draw_card(ctx, _avatar_card, _avatar_rect.size, _avatar_pivot)
-#	for i in range(0, left_line.card_count()):
-#		draw_card(ctx, left_line._cards[i], _card_size, _card_pivot)
-#	for i in range(0, right_line.card_count()):
-#		draw_card(ctx, right_line._cards[i], _card_size, _card_pivot)
-##	ctx.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-##	avatar.draw(ctx, font)
+func remove_cached_card() -> Card:
+	if avatar_list.has_focused_card():
+		return avatar_list.remove_cached_card()
+	elif left_list.has_focused_card():
+		return left_list.remove_cached_card()
+	elif right_list.has_focused_card():
+		return right_list.remove_cached_card()
+	return null
 
 
+
+
+#func input(sense: Sense) -> void:
+#	pass
+#	if box.is_dragging():
+#		_focused_card_id = has_point_on_cast(sense.mouse_pos())
+#		casting_on(_focused_card_id)
+#	elif box.is_targeting():
+#		pass
+#	else:
+#		_focused_card_id = has_point_on_card(sense.mouse_pos())
+		
+#		box.set_hovered(true)
+#	if box.is_clicked():
+#		var is_right := tabel.has_right_side(mouse_pos)
+#		#if casting change type check card position evaible
+#		#if card_id >= avatar_id = is_right
+#	if sense.clicked():
+#		sense.input_event(MouseEnter, Tabel, player_id, card_id, can_drag)
+#func has_right_side(point: Vector2) -> bool:
+#	return point.x > _rect.size.x * 0.5
+
+#func dragging(sense: Sense):
+#	#	if targgeting() and player_id != this_player_id():
+##	if casting() and player_id == this_player_id() and card_id > -1:
+##	tabel.casting_on(card_id, is_right)
+#	if sense.drag_view_id() == Sense.Hand:
+#		var card_id := has_point_on_cast(sense.mouse_pos())
+#		sense.set_card_id(card_id)
+#		casting_on(card_id)
+##	if sense.drag_view_id() == Sense.Tabel:
+
+
+#func draw(ctx: CanvasItem) -> void:
+##	if texture:
+##		ctx.draw_texture_rect(texture, box.rect(), false)
+#	for i in range(list.size() - 1, -1, -1):
+#		var card: Card = list.get_card(i)
+#		card.draw_on_line(ctx, list.card_size())
+#	#todo
+##	if _focused_card_id > -1:
+##		if box.is_dragging():
+##			pass
+##		elif box.is_targeting():
+##			if _miroring:
+##				pass
+##			else:
+##				pass
+##		else:
+##			pass
+##	if _cached_card_id > -1:
+##		pass
+#	if list.get_focused_card_id() > -1:
+#		var card: Card = list.get_focused_card()
+#		var box: Box = Box.new()
+#		box.set_rect(Rect2(card.position(), list.card_size()))
+#		box.set_hovered(true)
+#		ctx.draw_hovered(box)

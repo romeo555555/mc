@@ -1,12 +1,16 @@
 extends Object
 class_name Box
 
-enum { FirstHSplit, SecondHSplit, FirstVSplit, SecondVSplit, 
-	Center, LeftCenter, RightCenter, TopCenter, BottomCenter, 
-	LeftTop, LeftBottom, RightTop, RightBottom }
+enum { TopHSplit, BottomHSplit, LeftVSplit, RightVSplit, 
+	Center, CenterLeft, CenterRight, CenterTop, CenterBottom, 
+	TopLeft, TopRight, BottomLeft, BottomRight, Padding,
+	MarginLeft, MarginRight, MarginTop, MarginBottom }
 var _rect: Rect2
-var _padding: Rect2
 var _focused := false
+
+var _padding: Vector2
+var _content: Rect2 #get_content_rect
+
 var _clicked := false
 var _dragging := false
 var _targeting := false
@@ -14,8 +18,11 @@ var _hovered := false
 var _visible := true
 #var _active := true
 
-func init(pos: Vector2, size: Vector2) -> void:
-	_rect = Rect2(pos, size)
+func set_rect(rect: Rect2) -> void:
+	_rect = rect
+
+#func has_point(sense: Sense) -> bool:
+#	return _rect.has_point(sense.mouse_pos())
 
 func input(sense: Sense) -> int:
 	if _visible:
@@ -32,7 +39,9 @@ func input(sense: Sense) -> int:
 			if _clicked:
 				return Sense.Click
 			return Sense.Enter
-	return Sense.None
+	
+	return Sense.ClickOutside if _clicked else Sense.None
+
 
 func is_focused() -> bool:
 	return _focused
@@ -61,6 +70,9 @@ func size() -> Vector2:
 func rect() -> Rect2:
 	return _rect
 
+func center() -> Vector2:
+	return _rect.get_center()
+
 func expand(to: Vector2) -> void:
 	_rect = _rect.expand(to)
 
@@ -70,54 +82,8 @@ func set_hovered(hovered: bool) -> void:
 func set_visible(visible: bool) -> void:
 	_visible = visible
 
-#func draw(ctx: CanvasItem) -> void:
-##	if _texture:
-#	ctx.draw_texture_rect(_texture, _rect, false)
-#	if _highlight:
-#		ctx.draw_rect(_rect, _highlight_color, false, 30)
-##		_highlight = false
-
 #func set_position(pos: Vector2) -> void:
 #	_rect.position = pos
-#
-#func position() -> Vector2:
-#	return _rect.position
-#
-#func _mouse_enter(sense: Sense) -> bool:
-#	if _rect.has_point(sense.mouse_pos()):
-#		if sense.targeting():
-#			targeting(sense)
-#		if sense.dragging():
-#			dragging(sense)
-#		else:
-#			input(sense)
-#			hovered(sense)
-#		return true
-#	return false
-
-#func _mouse_exit(sense: Sense) -> void:
-#	output(sense)
-#	unhovered(sense)
-
-#func input(sense: Sense) -> void:
-#	pass
-#
-#func dragging(sense: Sense) -> void:
-#	pass
-#
-#func targeting(sense: Sense) -> void:
-#	pass
-#
-#func output(sense: Sense) -> void:
-#	pass
-#
-#func hovered(sense: Sense) -> void:
-##	sense.set_hovered(true)
-#	set_highlight(true, (Color.red if sense.clicked() else Color.yellow))
-#
-#func unhovered(sense: Sense) -> void:
-##	sense.set_hovered(false)
-#	set_highlight(false)
 
 #func set_highlight(highlight: bool = true, color: Color = Color.aqua) -> void:
 #	_highlight_color = color
@@ -128,117 +94,125 @@ func set_visible(visible: bool) -> void:
 #
 #func highlight_color() -> Color:
 #	return _highlight_color
-#
-#func draw(ctx: CanvasItem) -> void:
-##	if _texture:
-#	ctx.draw_texture_rect(_texture, _rect, false)
-#	if _highlight:
-#		ctx.draw_rect(_rect, _highlight_color, false, 30)
-##		_highlight = false
 
-#func init_from(
-#	type: int, 
-#	size: Vector2 = Vector2.ZERO, 
-#	margin: float = 0,
-#	box: Box = Box.new()
-#) -> Box:
-#	match type:
-#		FirstHSplit:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			p_size.y *= 0.5
-#			box.init(p_pos, p_size)
-#			return box
-#		SecondHSplit:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			p_size.y *= 0.5
-#			p_pos.y += p_size.y
-#			box.init(p_pos, p_size)
-#			return box
-#		FirstVSplit:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			p_size.x *= 0.5
-#			box.init(p_pos, p_size)
-#			return box
-#		SecondVSplit:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			p_size.x *= 0.5
-#			p_pos.x += p_size.x
-#			box.init(p_pos, p_size)
-#			return box
-#		Center:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			assert(size != Vector2.ZERO)
-#			p_pos.y += (p_size.y - size.y) * 0.5
-#			p_pos.x += (p_size.x - size.x) * 0.5
-#			box.init(p_pos, size)
-#			return box
-#		LeftCenter:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			assert(size != Vector2.ZERO)
-#			p_pos.y += (p_size.y - size.y) * 0.5
-#			p_pos.x += margin
-#			box.init(p_pos, size)
-#			return box
-#		RightCenter:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			assert(size != Vector2.ZERO)
-#			p_pos.y += (p_size.y - size.y) * 0.5
-#			p_pos.x += p_size.x - size.x - margin
-#			box.init(p_pos, size)
-#			return box
-#		TopCenter:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			assert(size != Vector2.ZERO)
-#			p_pos.y += margin
-#			p_pos.x += (p_size.x - size.x) * 0.5
-#			box.init(p_pos, size)
-#			return box
-#		BottomCenter:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			assert(size != Vector2.ZERO)
-#			p_pos.y += p_size.y - size.y - margin
-#			p_pos.x += (p_size.x - size.x) * 0.5
-#			box.init(p_pos, size)
-#			return box
-#		LeftTop:
-#			var p_pos := _rect.position
-#			assert(size != Vector2.ZERO)
-#			p_pos.x += margin
-#			p_pos.y += margin
-#			box.init(p_pos, size)
-#			return box
-#		LeftBottom:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			assert(size != Vector2.ZERO)
-#			p_pos.y += p_size.y - size.y - margin
-#			p_pos.x += margin
-#			box.init(p_pos, size)
-#			return box
-#		RightTop:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			assert(size != Vector2.ZERO)
-#			p_pos.x += p_size.x - size.x - margin
-#			p_pos.y += margin
-#			box.init(p_pos, size)
-#			return box
-#		RightBottom:
-#			var p_pos := _rect.position
-#			var p_size := _rect.size
-#			assert(size != Vector2.ZERO)
-#			p_pos.x += p_size.x - size.x - margin
-#			p_pos.y += p_size.y - size.y - margin
-#			box.init(p_pos, size)
-#			return box
-#		_: return null
+func relative_rect(
+	type: int, 
+	offset: float = 0,
+	custom_size: Vector2 = _rect.size
+) -> Rect2:
+	match type:
+		TopHSplit:
+			var pos := _rect.position
+			var size := _rect.size
+			size.y *= 0.5
+			pos += Vector2(offset, offset)
+			size -= Vector2(offset, offset) * 2
+			return Rect2(pos, size)
+		BottomHSplit:
+			var pos := _rect.position
+			var size := _rect.size
+			size.y *= 0.5
+			pos.y += size.y
+			pos += Vector2(offset, offset)
+			size -= Vector2(offset, offset) * 2
+			return Rect2(pos, size)
+		LeftVSplit:
+			var pos := _rect.position
+			var size := _rect.size
+			size.x *= 0.5
+			pos += Vector2(offset, offset)
+			size -= Vector2(offset, offset) * 2
+			return Rect2(pos, size)
+		RightVSplit:
+			var pos := _rect.position
+			var size := _rect.size
+			size.x *= 0.5
+			pos.x += size.x
+			pos += Vector2(offset, offset)
+			size -= Vector2(offset, offset) * 2
+			return Rect2(pos, size)
+		Center:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.x += (size.x - custom_size.x) * 0.5
+			pos.y += (size.y - custom_size.y) * 0.5
+			pos += Vector2(offset, offset)
+			size -= Vector2(offset, offset) * 2
+			return Rect2(pos, custom_size)
+		CenterLeft:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.x += offset
+			pos.y += (size.y - custom_size.y) * 0.5
+			return Rect2(pos, custom_size)
+		CenterRight:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.x += size.x - custom_size.x - offset
+			pos.y += (size.y - custom_size.y) * 0.5
+			return Rect2(pos, custom_size)
+		CenterTop:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.x += (size.x - custom_size.x) * 0.5
+			pos.y += offset
+			return Rect2(pos, custom_size)
+		CenterBottom:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.y += size.y - custom_size.y - offset
+			pos.x += (size.x - custom_size.x) * 0.5
+			return Rect2(pos, custom_size)
+		TopLeft:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.x += offset
+			pos.y += offset
+			return Rect2(pos, custom_size)
+		BottomLeft:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.y += size.y - custom_size.y - offset
+			pos.x += offset
+			return Rect2(pos, custom_size)
+		TopRight:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.x += size.x - custom_size.x - offset
+			pos.y += offset
+			return Rect2(pos, custom_size)
+		BottomRight:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.x += size.x - custom_size.x - offset
+			pos.y += size.y - custom_size.y - offset
+			return Rect2(pos, custom_size)
+		Padding:
+			var pos := _rect.position
+			var size := _rect.size
+			pos += Vector2(offset, offset)
+			size -= Vector2(offset, offset) * 2
+			return Rect2(pos, size)
+		MarginLeft:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.x -= (size.x + offset)
+			return Rect2(pos, custom_size)
+		MarginRight:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.x += (size.x + offset)
+			return Rect2(pos, custom_size)
+		MarginTop:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.y -= (size.x + offset)
+			return Rect2(pos, custom_size)
+		MarginBottom:
+			var pos := _rect.position
+			var size := _rect.size
+			pos.y += (size.y + offset)
+			return Rect2(pos, custom_size)
+	push_error("Null return rect2")
+	return Rect2(Vector2.ZERO, Vector2.ZERO)
 

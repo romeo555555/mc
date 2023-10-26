@@ -2,7 +2,9 @@ extends Object
 class_name ModalChooseCard
 
 var box: Box = Box.new()
-var _texture: Texture
+var list: List = List.new()
+var texture: Texture = load("res://assets/error.png") as Texture
+
 var _card_size: Vector2
 var _x_indent: float
 var _x_offset: float
@@ -10,13 +12,12 @@ var _cards: Array
 var _focused_card_id: int = -1
 #TODO buttom for svernuty
 
-func init(screen_size: Vector2, size: Vector2, card_size: Vector2, x_indent: float = 10, texture: Texture = load("res://assets/error.png") as Texture) -> void:
+func init(screen_size: Vector2, size: Vector2, card_size: Vector2, x_indent: float = 10) -> void:
 	var card_count := 3
 	box.init((screen_size - size) * 0.5, size)
 	_card_size = card_size
 	_x_indent = x_indent
 	_x_offset = card_size.x + x_indent
-	_texture = texture
 	
 	var cards: Array = []
 	for i in range(0, card_count):

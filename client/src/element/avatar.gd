@@ -4,7 +4,7 @@ class_name Avatar
 var box: Box = Box.new()
 var texture: Texture = load("res://assets/error.png") as Texture
 #var screen: Screen
-#var _card: Card
+
 
 func draw(ctx: CanvasItem) -> void:
 	ctx.draw_texture_rect(texture, box.rect(), false)

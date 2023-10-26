@@ -8,7 +8,6 @@ const ModalSetting = preload("res://src/element/modal_setting.gd")
 
 const Card = preload("res://src/element/card.gd")
 const Hand = preload("res://src/element/hand.gd")
-const Line = preload("res://src/element/line.gd")
 const Factorys = preload("res://src/element/factorys.gd")
 const Secrets = preload("res://src/element/secrets.gd")
 const Graveyard = preload("res://src/element/graveyard.gd")
@@ -17,5 +16,4 @@ const Avatar = preload("res://src/element/avatar.gd")
 const Box = preload("res://src/component/box.gd")
 const List = preload("res://src/component/list.gd")
 const Sense = preload("res://src/sense.gd")
-
-
+const Config = preload("res://src/config.gd")

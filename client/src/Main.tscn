@@ -34,6 +34,7 @@ scale = Vector2( 3.80231, 1.59091 )
 curve = SubResource( 1 )
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
+visible = false
 margin_right = 1980.0
 margin_bottom = 1080.0
 
