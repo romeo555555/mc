@@ -1,15 +1,31 @@
 extends Object
-class_name Sense
+class_name Context
+
+var screen_size := Vector2(1980, 1080)
+var hover_line_size := 15
+var hover_color := Color.aliceblue
+var clicked_color := Color.red
+var font_size: int = 42
+var font = DynamicFont.new()
+#var font = get_font("font")
+
+var arrow: Line2D
+var tween: Tween
+var canvas: CanvasItem
+var delta: float = 0
+var _mouse_pos: Vector2
+var _clicked := false setget , clicked
+
+
+var _player_id: String
+var _this_player_id: String
+var _targeting := false
+var _dragging := false
+
 
 enum { None, Enter, Exit, Click, ClickOutside }
 #enum { None, Hand, L_Tabel, R_Tabel, Deck, Factorys, Graveyard, Secrets, Setting, End}
-
-var _mouse_pos: Vector2
-var _clicked := false setget , clicked
 var _selected := false
-
-var _targeting := false
-var _dragging := false
 #var _drag_player_id: String
 #var _drag_view_id: int = 0
 #var _drag_card_id: int = -1
@@ -20,8 +36,6 @@ var _dragging := false
 
 #var actions_count: int = 0
 var actions: Array = []
-var _this_player_id: String
-var _player_id: String
 #var _view_id: int = 0
 #var _card_id: int = -1
 
@@ -29,6 +43,13 @@ var _player_id: String
 #var _target: []
 #var _card: Card = null
 #var _card_pivote = Vector2.ZERO
+
+func _init(node_arrow: Line2D, node_tween: Tween):
+	arrow = node_arrow
+	tween = node_tween
+	
+func set_canvas(cs: CanvasItem) -> void:
+	canvas = cs
 
 func send_action(action: int) -> void:
 	actions.push_front(action)
@@ -73,6 +94,9 @@ func set_input(event: InputEvent) -> void:
 
 func mouse_pos() -> Vector2:
 	return _mouse_pos
+
+func set_clicked(clicked: bool) -> void:
+	_clicked = clicked
 
 func clicked() -> bool:
 	return _clicked

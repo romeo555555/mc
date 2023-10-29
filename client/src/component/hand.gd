@@ -1,27 +1,26 @@
-extends Object
+extends Component
 class_name Hand
 
-var box: Box = Box.new()
 var list: List = List.new()
 var texture: Texture = load("res://assets/error.png") as Texture
 #export(bool) var _can_drag := false
 #export(bool) var _can_drop := false
 
-func draw(ctx: CanvasItem) -> void:
+func draw(ctx: Context) -> void:
 #	if texture:
 #		ctx.draw_texture_rect(texture, box.rect(), false)
-	for i in range(list.size() - 1, -1, -1):
-		var card: Card = list.get_card(i)
+	for i in range(list.lenght() - 1, -1, -1):
+		var card: Card = list.get_item(i)
 		card.draw(ctx, list.card_size())
 	#todo
-	if list.get_focused_card_id() > -1:
-		var card: Card = list.get_focused_card()
-		var box: Box = Box.new()
-		box.set_rect(Rect2(card.position(), list.card_size()))
-		box.set_hovered(true)
-		ctx.draw_hovered(box)
+#	if list.get_focused_card_id() > -1:
+#		var card: Card = list.get_focused_card()
+#		var box: Box = Box.new()
+#		box.set_rect(Rect2(card.position(), list.card_size()))
+#		box.set_hovered(true)
+#		ctx.draw_hovered(box)
 
-func draw_cached_card(ctx: CanvasItem, position: Vector2) -> void:
+func draw_cached_card(ctx: Context, position: Vector2) -> void:
 	var card: Card = list.get_cached_card()
 	card.set_visible(true)
 	card.set_position(position - list.card_size() * 0.5)
@@ -71,3 +70,30 @@ func uncached_card() -> void:
 
 func remove_cached_card() -> Card:
 	return list.remove_cached_card()
+	
+
+#var _cached_card_id: int
+#var _cached_card_pos: Vector2
+#var _cached_card_rot: float
+#
+#func cached_card(card_id: int) -> void:
+#	var card: Card = _list[card_id]
+#	_cached_card_id = card_id
+#	_cached_card_pos = card.position()
+#	_cached_card_rot = card.rotation()
+##	card.set_visible(false)
+##	card.set_rotation(0)
+##	card.set_scale(Vector2.ONE)
+#
+#func get_cached_card() -> Card:
+#	return get_card(_cached_card_id)
+#
+#func uncached_card() -> void:
+#	var card: Card = _list[_cached_card_id]
+#	card.set_visible(true)
+#	card.set_position(_cached_card_pos)
+#	card.set_rotation(_cached_card_rot)
+#	card.set_scale(Vector2.ONE)
+#
+#func remove_cached_card() -> Card:
+#	return remove_card(_cached_card_id)

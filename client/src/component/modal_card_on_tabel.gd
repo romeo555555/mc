@@ -1,9 +1,9 @@
-extends Object
-class_name ModalCard
+extends Component
+class_name ModalCardOnTabel
 
 var box: Box = Box.new()
-var texture: Texture = load("res://assets/error.png") as Texture
 var _start_pos: Vector2
+var texture: Texture = load("res://assets/error.png") as Texture
 var _card_size: Vector2
 var _x_indent: float
 var _x_offset: float

@@ -1,10 +1,11 @@
-extends Object
-class_name ModalChooseCard
+extends Component
+class_name ModalAttack
 
 var box: Box = Box.new()
-var list: List = List.new()
 var texture: Texture = load("res://assets/error.png") as Texture
-
+var target_card: Card
+var current_card: Card
+var _start_pos: Vector2
 var _card_size: Vector2
 var _x_indent: float
 var _x_offset: float
@@ -15,30 +16,23 @@ var _focused_card_id: int = -1
 func init(screen_size: Vector2, size: Vector2, card_size: Vector2, x_indent: float = 10) -> void:
 	var card_count := 3
 	box.init((screen_size - size) * 0.5, size)
+	_start_pos = Vector2(box.rect().position.x + (size.x - card_size.x * card_count - x_indent * card_count - 1) * 0.5,
+		box.rect().position.y + (size.y - card_size.y) * 0.5)
 	_card_size = card_size
 	_x_indent = x_indent
 	_x_offset = card_size.x + x_indent
-	
-	var cards: Array = []
+
 	for i in range(0, card_count):
 		var card: Card = Card.new()
 		card.init()
-		cards.push_back(card)
-	setup(cards)
-
-func setup(cards: Array) -> void:
-	_cards = cards
+		_cards.push_back(card)
 	aligment()
-
-func start_pos() -> Vector2:
-	return Vector2(box.position().x + (box.size().x - _card_size.x * card_count() - _x_indent * card_count() - 1) * 0.5,
-		box.position().y + (box.size().y - _card_size.y) * 0.5)
 
 func card_count() -> int:
 	return _cards.size()
 
 func has_point_on_card(point: Vector2) -> int:
-	var pos := start_pos()
+	var pos := _start_pos
 	for i in range(0, card_count()):
 		if Rect2(pos, _card_size).has_point(point):
 			return i
@@ -46,7 +40,7 @@ func has_point_on_card(point: Vector2) -> int:
 	return -1
 
 func aligment() -> void:
-	var pos := start_pos()
+	var pos := _start_pos
 	for i in range(0, card_count()):
 		_cards[i].set_position(pos)
 		pos.x += _x_offset

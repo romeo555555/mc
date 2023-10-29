@@ -1,14 +1,14 @@
-extends Object
+extends Component
 class_name ModalSetting
 
-var box: Box = Box.new()
 var texture: Texture = load("res://assets/error.png") as Texture
 var buttom_play: Buttom = Buttom.new() 
 var buttom_setting: Buttom = Buttom.new()
 var buttom_exit: Buttom = Buttom.new()
 
-func init(screen_size: Vector2, size: Vector2, padding: float, y_indent: float = 10) -> void:
-	box.set_rect(Rect2((screen_size - size) * 0.5, size))
+func _init(ctx: Context, size: Vector2, padding: float, y_indent: float = 10) -> void:
+	set_position((ctx.screen_size - size) * 0.5)
+	set_size(size)
 	var _margin := box.relative_rect(Box.Padding, padding)
 	var buttom_count := 3
 	var buttom_size := Vector2(_margin.size.x, _margin.size.y / buttom_count - y_indent)

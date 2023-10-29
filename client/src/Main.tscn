@@ -3,7 +3,7 @@
 [ext_resource path="res://addons/com.heroiclabs.nakama/client/NakamaHTTPAdapter.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.heroiclabs.nakama/socket/NakamaSocketAdapter.gd" type="Script" id=2]
 [ext_resource path="res://src/main.gd" type="Script" id=3]
-[ext_resource path="res://src/element/modal_scroll_list.gd" type="Script" id=4]
+[ext_resource path="res://src/component/modal_scroll_list.gd" type="Script" id=4]
 [ext_resource path="res://assets/board1.png" type="Texture" id=6]
 
 [sub_resource type="Curve2D" id=1]
@@ -15,6 +15,8 @@ _data = {
 margin_right = 1980.0
 margin_bottom = 1080.0
 script = ExtResource( 3 )
+
+[node name="Tween" type="Tween" parent="."]
 
 [node name="Arrow" type="Line2D" parent="."]
 width = 15.0
@@ -51,8 +53,6 @@ margin_right = 1980.0
 margin_bottom = 1080.0
 texture = ExtResource( 6 )
 expand = true
-
-[node name="Tween" type="Tween" parent="Board"]
 
 [node name="Fog" type="ColorRect" parent="Board"]
 visible = false

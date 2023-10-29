@@ -1,10 +1,8 @@
-extends Object
-class_name ModalAttack
+extends Component
+class_name ModalCard
 
 var box: Box = Box.new()
 var texture: Texture = load("res://assets/error.png") as Texture
-var target_card: Card
-var current_card: Card
 var _start_pos: Vector2
 var _card_size: Vector2
 var _x_indent: float
@@ -21,7 +19,6 @@ func init(screen_size: Vector2, size: Vector2, card_size: Vector2, x_indent: flo
 	_card_size = card_size
 	_x_indent = x_indent
 	_x_offset = card_size.x + x_indent
-
 	for i in range(0, card_count):
 		var card: Card = Card.new()
 		card.init()

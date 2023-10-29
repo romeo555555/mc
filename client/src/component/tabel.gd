@@ -1,31 +1,31 @@
-extends Object
+extends Component
 class_name Tabel
 
-var box: Box = Box.new()
 var texture: Texture = load("res://assets/error.png") as Texture
 var left_list: List = List.new()
 var right_list: List = List.new()
 var avatar_list: List = List.new()
 
-func draw(ctx: CanvasItem) -> void:
+func draw(ctx: Context) -> void:
 #	if texture:
 #		ctx.draw_texture_rect(texture, box.rect(), false)
-	for i in range(avatar_list.size() - 1, -1, -1):
+	for i in range(avatar_list.lenght() - 1, -1, -1):
 		var card: Card = avatar_list.get_card(i)
 		card.draw_on_line(ctx, avatar_list.card_size())
-	for i in range(right_list.size() - 1, -1, -1):
+	for i in range(right_list.lenght() - 1, -1, -1):
 		var card: Card = right_list.get_card(i)
 		card.draw_on_line(ctx, right_list.card_size())
-	for i in range(left_list.size() - 1, -1, -1):
+	for i in range(left_list.lenght() - 1, -1, -1):
 		var card: Card = left_list.get_card(i)
 		card.draw_on_line(ctx, left_list.card_size())
-	if box.is_hovered():
-		var card: Card = get_focused_card()
-		if card:
-			var box: Box = Box.new()
-			box.set_rect(Rect2(card.position(), Vector2(200, 200)))
-			box.set_hovered(true)
-			ctx.draw_hovered(box)
+#	if box.is_hovered():
+#		var card: Card = get_focused_card()
+#		if card:
+#			var box: Box = Box.new()
+#			box.set_rect(Rect2(card.position(), Vector2(200, 200)))
+#			box.set_hovered(true)
+#			ctx.draw_hovered(box)
+
 #	if list.get_focused_card_id() > -1:
 #		var card: Card = list.get_focused_card()
 #		var box: Box = Box.new()

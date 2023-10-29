@@ -1,21 +1,21 @@
-extends Object
+extends Component
 class_name Deck
 
-var box: Box = Box.new()
 var list: List = List.new()
 var texture: Texture = load("res://assets/error.png") as Texture
 
-func draw(ctx: CanvasItem) -> void:
-	
-#	match box.containe(sense):
-#	match input(sense):
-##		Sense.Enter:
-##		Sense.Exit:
-#		Sense.Click:
-	
-#	if _texture:
-	ctx.draw_texture_rect(texture, box.rect(), false)
-	ctx.draw_hovered(box)
+func _init() -> void:
+	pass
+
+func render(ctx: Context) -> void:
+	input(ctx)
+	if visible():
+		ctx.canvas.draw_set_transform(center(), rotation(), scale())
+		var rect: Rect2 = rect()
+		ctx.canvas.draw_texture_rect(texture, rect, false)
+		if mouse_hover():
+			ctx.canvas.draw_rect(rect, ctx.clicked_color if mouse_click() else ctx.hover_color, false, ctx.hover_line_size)
+		ctx.canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
 
 #func remove_card(card: Control) -> void:
 #	var _last_colum_count = card_count() % _max_row_count
