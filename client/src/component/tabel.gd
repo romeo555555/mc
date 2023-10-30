@@ -2,22 +2,53 @@ extends Component
 class_name Tabel
 
 var texture: Texture = load("res://assets/error.png") as Texture
-var left_list: List = List.new()
-var right_list: List = List.new()
-var avatar_list: List = List.new()
+var left_list: List
+var right_list: List
+var avatar_list: List
 
-func draw(ctx: Context) -> void:
+func _init(
+	ctx: Context,
+	parent: Component,
+	relative_type: int = 0,
+	offset: Vector2 = Vector2.ZERO,
+	custom_size: Vector2 = Vector2.ZERO
+).(
+	ctx,
+	parent,
+	relative_type,
+	offset,
+	custom_size
+) -> void:
+	left_list = List.new(ctx, self, Component.LeftVSplit, Vector2(20, 20))
+	left_list.set_item_size(1, 10.0)
+	left_list.set_capacity(4)
+	left_list.set_aligment_type(List.Aligment.Right)
+	right_list = List.new(ctx, self, Component.RightVSplit, Vector2(20, 20))
+	right_list.set_item_size(1, 10.0)
+	right_list.set_capacity(4)
+	right_list.set_aligment_type(List.Aligment.Left)
+	avatar_list = List.new(ctx, self, Component.Center, Vector2(0, 20))
+	avatar_list.set_item_size(1, 0.0)
+	avatar_list.set_capacity(1)
+	avatar_list.set_aligment_type(List.Aligment.Center)
+
+func render(ctx: Context) -> void:
+	input(ctx)
 #	if texture:
 #		ctx.draw_texture_rect(texture, box.rect(), false)
-	for i in range(avatar_list.lenght() - 1, -1, -1):
-		var card: Card = avatar_list.get_card(i)
-		card.draw_on_line(ctx, avatar_list.card_size())
-	for i in range(right_list.lenght() - 1, -1, -1):
-		var card: Card = right_list.get_card(i)
-		card.draw_on_line(ctx, right_list.card_size())
-	for i in range(left_list.lenght() - 1, -1, -1):
-		var card: Card = left_list.get_card(i)
-		card.draw_on_line(ctx, left_list.card_size())
+#	for i in range(avatar_list.lenght() - 1, -1, -1):
+	for i in range(0, avatar_list.lenght()):
+		var card: Card = avatar_list.get_item(i)
+		card.render(ctx)
+#	for i in range(right_list.lenght() - 1, -1, -1):
+	for i in range(0, right_list.lenght()):
+		var card: Card = right_list.get_item(i)
+		card.render(ctx)
+#	for i in range(left_list.lenght() - 1, -1, -1):
+	for i in range(0, left_list.lenght()):
+		var card: Card = left_list.get_item(i)
+		card.render(ctx)
+	
 #	if box.is_hovered():
 #		var card: Card = get_focused_card()
 #		if card:

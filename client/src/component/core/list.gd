@@ -1,7 +1,7 @@
 extends Component
 class_name List
 
-#var _capacity: int
+var _capacity: int
 var _list: Array
 enum Aligment { Left, Right, Center, Bent, Grid }
 var _aligment_type: int = 0
@@ -15,6 +15,21 @@ var _item_size: Vector2
 var _focused_item_id: int = -1
 var _row_capacity: int
 
+func _init(
+	ctx: Context,
+	parent: Component,
+	relative_type: int = 0,
+	offset: Vector2 = Vector2.ZERO,
+	custom_size: Vector2 = Vector2.ZERO
+).(
+	ctx,
+	parent,
+	relative_type,
+	offset,
+	custom_size
+) -> void:
+	pass
+	
 func set_angel(min_angel: float = -0.35, max_angel: float = 0.35) -> void:
 	_min_angel = min_angel
 	_max_angel = max_angel
@@ -45,25 +60,25 @@ func lenght() -> int:
 #func set_row_capacity(count: int) -> void:
 #	_row_capacity = count
 #
-#func set_capacity(count: int) -> void:
-#	_capacity = count
-#
-#func capacity() -> int:
-#	return _capacity
+func set_capacity(count: int) -> void:
+	_capacity = count
 
-#func is_full() -> bool:
-#	return _list.size() == _capacity
-#
-#func is_empety() -> bool:
-#	return _list.size() == 0
+func capacity() -> int:
+	return _capacity
+
+func is_full() -> bool:
+	return _list.size() == _capacity
+
+func is_empety() -> bool:
+	return _list.size() == 0
 
 func add_item(item: Component, idx: int = -1) -> void:
-#	item.set_rotation(0)
+	item.set_size(_item_size)
 	if idx > -1:
 		_list.insert(idx, item)
 	else:
 		_list.push_back(item)
-#	aligment_line()
+	aligment()
 
 func get_item(idx: int) -> Component:
 	if idx > -1: 
@@ -104,8 +119,7 @@ func aligment() -> void:
 		Aligment.Center:
 			var lenght_x := _item_size.x * float(lenght()) + _x_indent * float(lenght() - 1)
 			var pos := Vector2(position().x + (size().x - lenght_x) * 0.5, position().y)
-#			\
-#				- Vector2(_item_size.x * 0.5 - _x_indent, 0)
+#				\ - Vector2(_item_size.x * 0.5 - _x_indent, 0)
 			for i in range(0, lenght()):
 				_list[i].set_position(pos)
 				pos.x += _x_offset
@@ -159,13 +173,6 @@ func aligment() -> void:
 				var item = _list[i]
 				item.set_position(curve.interpolate_baked(t * curve.get_baked_length(), false))
 				item.set_rotation(angel)
-
-func render(ctx: Context) -> void:
-	input(ctx)
-	for i in range(0, lenght()):
-		var comp: Component = get_item(i)
-		comp.render(ctx)
-#		if comp.mouse_enter():
 
 ###del
 #func focused_item(point: Vector2) -> bool:

@@ -4,7 +4,19 @@ class_name Buttom
 var texture: Texture = load("res://assets/error.png") as Texture
 var text: String = "text"
 
-func _init() -> void:
+func _init(
+	ctx: Context,
+	parent: Component,
+	relative_type: int = 0,
+	offset: Vector2 = Vector2.ZERO,
+	custom_size: Vector2 = Vector2.ZERO
+).(
+	ctx,
+	parent,
+	relative_type,
+	offset,
+	custom_size
+) -> void:
 	pass
 
 func render(ctx: Context) -> void:

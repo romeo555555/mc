@@ -11,6 +11,21 @@ var _cards: Array
 var _focused_card_id: int = -1
 #TODO buttom for svernuty
 
+func _init(
+	ctx: Context,
+	parent: Component,
+	relative_type: int = 0,
+	offset: Vector2 = Vector2.ZERO,
+	custom_size: Vector2 = Vector2.ZERO
+).(
+	ctx,
+	parent,
+	relative_type,
+	offset,
+	custom_size
+) -> void:
+	pass
+
 func init(screen_size: Vector2, size: Vector2, card_size: Vector2, x_indent: float = 10) -> void:
 	var card_count := 3
 	box.init((screen_size - size) * 0.5, size)

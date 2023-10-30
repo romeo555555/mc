@@ -16,19 +16,19 @@ margin_right = 1980.0
 margin_bottom = 1080.0
 script = ExtResource( 3 )
 
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+emitting = false
+
 [node name="Tween" type="Tween" parent="."]
 
 [node name="Arrow" type="Line2D" parent="."]
 width = 15.0
 default_color = Color( 0, 1, 1, 1 )
 
-[node name="Head" type="Control" parent="Arrow"]
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="Head" type="Polygon2D" parent="Arrow/Head"]
+[node name="Head2" type="Polygon2D" parent="Arrow"]
+visible = false
 offset = Vector2( -32, -8 )
-polygon = PoolVector2Array( 16, 24, 32, 8, 16, -8 )
+polygon = PoolVector2Array( 46, 8, 32, 28, 19, 8, 32, -6 )
 
 [node name="Path2D" type="Path2D" parent="."]
 visible = false

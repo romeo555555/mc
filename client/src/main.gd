@@ -4,11 +4,11 @@ enum Screen {
 	Main,
 	Setting
 }
-var ctx: Context = Context.new($Arrow, $Tween)
+var ctx: Context
 var active_screen: int = Screen.Main
 var arrow_pos: Vector2 = Vector2.ZERO
-var board: Board = Board.new()
-var card: Card = Card.new()
+var board: Board
+var card: Card
 
 #263e33
 func _ready() -> void:
@@ -21,18 +21,10 @@ func _ready() -> void:
 	print(OS.get_window_size().y)
 	Physics2DServer.set_active(false)
 	PhysicsServer.set_active(false)
-#	card.animation.set_animation(
-#		Component.Transition.new(),
-#		Component.Transition.new(
-#			Vector2(500, 500),
-#			4
-#		),
-#		40,
-#		0
-#	)
-#	card.animation.run()
-	tween.interpolate_method(card, "set_position", Vector2.ZERO, Vector2(500, 500), 3, 1)
-	tween.start()
+	
+	ctx = Context.new($Arrow, $Tween)
+	board = Board.new(ctx)
+	card = Card.new(ctx)
 #	config.font.font_data = load("res://assets/font/SansSerif.ttf")
 #	config.font.set_size(config.font_size)
 #	$ScrollContainer/Control.config = config
@@ -60,14 +52,6 @@ func _ready() -> void:
 #		)
 
 func _input(event: InputEvent) -> void:
-#	var mouse_pos: Vector2 = \
-#		event.position \
-#		if event is InputEventMouseMotion \
-#		else sense.mouse_pos()
-#	var clicked: bool = \
-#		event is InputEventMouseButton \
-#		and event.button_index == BUTTON_LEFT \
-#		and event.pressed
 	ctx.set_input(event)
 #	while !sense.actions.empty():
 #		var action: int = sense.actions.pop_back()
@@ -190,16 +174,16 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	ctx.set_canvas(self)
-	card.draw(ctx, Vector2(200, 200))
+#	card.draw(ctx, Vector2(200, 200))
 #	card.set_position(card.position()+Vector2.ONE)
 #	card.set_rotation(card.rotation()+0.3)
 #	card.set_scale(card.scale() + Vector2(0.0001, 0.0001))
-	ctx.set_canvas(null)
 
 #	setting.draw(self)
-#	board.draw(self)
+	board.render(ctx)
 #	if sense.dragging():
 #		board.draw_dragging(self, sense.mouse_pos())
+	ctx.set_canvas(null)
 
 ####Render
 #func draw_shadowing() -> void:

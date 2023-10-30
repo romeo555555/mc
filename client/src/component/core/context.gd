@@ -33,9 +33,6 @@ var _selected := false
 #var _prev_player_id: String
 #var _prev_view_id: int = 0
 #var _prev_card_id: int = -1
-
-#var actions_count: int = 0
-var actions: Array = []
 #var _view_id: int = 0
 #var _card_id: int = -1
 
@@ -47,39 +44,16 @@ var actions: Array = []
 func _init(node_arrow: Line2D, node_tween: Tween):
 	arrow = node_arrow
 	tween = node_tween
+#	tween.interpolate_method(card, "set_position", Vector2.ZERO, Vector2(500, 500), 3, 1)
+#	tween.start()
+#	if ctx.clicked():
+#		ctx.tween.interpolate_method(card, "set_position", card.position(), ctx.mouse_pos(), 3, 1)
+##		ctx.tween.start()
+#	ctx.tween.interpolate_method(card1, "set_position", card1.position(), ctx.mouse_pos(), 3, 1)
+#	ctx.tween.start()
 	
 func set_canvas(cs: CanvasItem) -> void:
 	canvas = cs
-
-func send_action(action: int) -> void:
-	actions.push_front(action)
-#	actions.set(actions_count, action)
-#	actions_count += 1
-
-func selecting() -> void:
-	_selected = true
-
-func selected() -> bool:
-	return _selected
-
-#func set_card_id(card_id: int) -> void:
-#	_prev_card_id = _card_id
-#	_card_id = card_id
-#
-#func card_id() -> int:
-#	return _card_id
-
-func set_player_id(player_id: String) -> void:
-#	_prev_player_id = _player_id
-	_player_id = player_id
-
-func player_id() -> String:
-	return _player_id
-
-#func set_input(pos: Vector2, clicked: bool) -> void:
-#	_mouse_pos = pos
-#	_clicked = clicked
-#	_selected = false
 
 func set_input(event: InputEvent) -> void:
 	_mouse_pos = \
@@ -101,11 +75,25 @@ func set_clicked(clicked: bool) -> void:
 func clicked() -> bool:
 	return _clicked
 
-#func set_last_entered_mouse_pos(pos: Vector2) -> void:
-#	_last_entered_mouse_pos = pos
-#
-#func last_entered_mouse_pos() -> Vector2:
-#	return _last_entered_mouse_pos
+func set_player_id(player_id: String) -> void:
+#	_prev_player_id = _player_id
+	_player_id = player_id
+
+func player_id() -> String:
+	return _player_id
+
+func draw_shadowing() -> void:
+	canvas.draw_rect(Rect2(Vector2.ZERO, screen_size), Color(0,0,0, 0.5))
+#func send_action(action: int) -> void:
+#	actions.push_front(action)
+#	actions.set(actions_count, action)
+#	actions_count += 1
+
+func selecting() -> void:
+	_selected = true
+
+func selected() -> bool:
+	return _selected
 
 func start_targeting() -> void:
 	_targeting = true
@@ -144,5 +132,12 @@ func stop_drag() -> void:
 #			Tabel:
 #				_card_pivote = player.hand._card_pivot
 #				return player.tabel.get_card(card_id)
+
+#func set_card_id(card_id: int) -> void:
+#	_prev_card_id = _card_id
+#	_card_id = card_id
+#
+#func card_id() -> int:
+#	return _card_id
 
 

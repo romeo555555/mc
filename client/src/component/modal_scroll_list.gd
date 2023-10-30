@@ -1,17 +1,10 @@
 extends Control #Component
 class_name ModalScrollList
 
-var ctx: CanvasItem = null
-#var config: Config
-var _visible := false
-
-#func _process(delta) -> void:
-#	if _visible:
-#		update()
-var screen_size: Vector2
-var list: List = List.new()
+var list: List
 var texture: Texture = load("res://assets/error.png") as Texture
 
+var ctx: Context
 var _margin_offset: Vector2
 var _card_size: Vector2
 var _indent: Vector2
@@ -21,7 +14,24 @@ var _max_row_count: int = 5
 #var _rect_min_size: Vector2
 var _focused_card_id: int = -1
 
-var _buttom_back: Buttom = Buttom.new()
+var _buttom_back: Buttom
+
+func _init(
+	ctx: Context,
+	parent: Component,
+	relative_type: int = 0,
+	offset: Vector2 = Vector2.ZERO,
+	custom_size: Vector2 = Vector2.ZERO
+#).(
+#	ctx,
+#	parent,
+#	relative_type,
+#	offset,
+#	custom_size
+) -> void:
+#	list = List.new()
+#	buttom = Buttom.new()
+	pass
 
 func set_setting(setting: Setting) -> void:
 	setting = setting
@@ -64,11 +74,13 @@ func setup(cards: Array) -> void:
 ##	card.set_position(pos)
 ##	card.set_rotation(0)
 
-func draw(ctx: CanvasItem) -> void:
-#	ctx = ctx
+func render(ctx: Context) -> void:
+	ctx = ctx
 	update()
+
 func _draw() -> void:
-	pass
+	ctx.draw_shadowing()
+	ctx = null
 	#func draw_buttom_setting_menu(ctx: CanvasItem, font_size: int, rect: Rect2, margin: Rect2, indent: float):
 #	ctx.draw_shadowing()
 

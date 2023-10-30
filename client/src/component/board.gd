@@ -20,35 +20,43 @@ var active_screen: int = Screen.Board
 enum MatchType { OneVsOne, TwoVsTwo }
 var match_type: int = 0
 var texture: Texture = load("res://assets/error.png") as Texture
-var end: End = End.new()
+var end: End
 #var players: Dictionary = {}
-var client_player1: Player = Player.new()
-var client_player2: Player = null
-var opp_player1: Player = Player.new()
-var opp_player2: Player = null
+var client_player1: Player
+var client_player2: Player
+var opp_player1: Player
+var opp_player2: Player
 
-var setting: Setting = Setting.new()
-#var modal_setting: ModalSetting = ModalSetting.new()
+var setting: Setting
+var modal_setting: ModalSetting
 #var modal_attack = ModalAttack.new()
 #var modal_card = ModalCard.new()
 #var modal_card_on_tabel = ModalCardOnTabel.new()
 #var modal_choose_card = ModalChooseCard.new()
 #var modal_scroll_list: ModalScrollList
 
-func init(modal_scroll_list: Control) -> void:
-	pass
-#	config = modal_scroll_list.config
-#	setting.box.set_rect(Rect2(Vector2(30,30), Vector2(100, 100)))
+func _init(ctx: Context).(
+	ctx,
+	self, 
+	Component.TopLeft, 
+	Vector2.ZERO, 
+	ctx.screen_size
+) -> void:
+	set_pivot(Vector2.ZERO)
+	texture = load("res://assets/board1.png") as Texture
+#	box.set_rect(Rect2(Vector2.ZERO, config.screen_size))
+#	end = End.new(ctx, self)
+	setting = Setting.new(ctx, self, Component.TopLeft, Vector2(30,30), Vector2(100, 100))
+	modal_setting = ModalSetting.new(100, ctx, self, Component.Center, Vector2.ZERO, Vector2(700, 700))
+	opp_player1 = Player.new(false, "Opp", ctx, self, Component.TopHSplit)
+	client_player1 = Player.new(true, "Client", ctx, self, Component.BottomHSplit)
+#func init(modal_scroll_list: Control) -> void:
+#	config = modal_scroll_list.config1
 #	modal_setting.init(config.screen_size, Vector2(700, 700), 100)
 #
 #	modal_scroll_list = modal_scroll_list as ModalScrollList
 #	modal_scroll_list.set_setting(setting)
-#	box.set_rect(Rect2(Vector2.ZERO, config.screen_size))
 #	match_type = MatchType.OneVsOne
-#	client_player1.box.set_rect(box.relative_rect(Box.BottomHSplit))
-#	client_player1.init(true, "Client")
-#	opp_player1.box.set_rect(box.relative_rect(Box.TopHSplit))
-#	opp_player1.init(false, "Client")
 
 func get_player(player_id: String) -> Player:
 	if client_player1.player_id == player_id:
@@ -200,19 +208,23 @@ func this_player() -> Player:
 func draw_dragging(ctx: Context, mouse_pos: Vector2) -> void:
 	client_player1.hand.draw_cached_card(ctx, mouse_pos)
 
-func draw(ctx: Context) -> void:
-	ctx.draw_texture_rect(texture, rect(), false)
+func render(ctx: Context) -> void:
+	ctx.canvas.draw_texture_rect(texture, rect(), false)
 	#	end.draw(self)
-	match match_type:
-		MatchType.OneVsOne:
-			opp_player1.draw(ctx)
-			client_player1.draw(ctx)
-		MatchType.TwoVsTwo:
-			opp_player2.draw(ctx)
-			client_player2.draw(ctx)
-			opp_player1.draw(ctx)
-			client_player1.draw(ctx)
-	setting.draw(ctx)
+	opp_player1.render(ctx)
+	client_player1.render(ctx)
+#	match match_type:
+#		MatchType.OneVsOne:
+#			opp_player1.draw(ctx)
+#			client_player1.draw(ctx)
+#		MatchType.TwoVsTwo:
+#			opp_player2.draw(ctx)
+#			client_player2.draw(ctx)
+#			opp_player1.draw(ctx)
+#			client_player1.draw(ctx)
+	setting.render(ctx)
+	if setting.modal:
+		modal_setting.render(ctx)
 #	match active_screen:
 #		Screen.Setting:
 #			modal_setting.draw(ctx)

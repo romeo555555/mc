@@ -1,92 +1,7 @@
 extends Object
 class_name Component
 
-class Transition:
-#	var is_pos := false
-	var _position: Vector2
-	var _rotation: float
-	var _scale: Vector2
-	
-	func _init(pos: Vector2 = Vector2.ZERO, rot: float = 0, scale: Vector2 = Vector2.ONE) -> void:
-		_position = pos
-		_rotation = rot
-		_scale = scale
-	
-	func set_position(position: Vector2) -> void:
-		_position = position
-
-	func position() -> Vector2:
-		return _position
-
-	func set_rotation(rotation: float) -> void:
-		_rotation = rotation
-
-	func rotation() -> float:
-		return _rotation
-
-	func set_scale(scale: Vector2) -> void:
-		_scale = scale
-
-	func scale() -> Vector2:
-		return _scale
-
-class CompAnimation:
-	var _run: bool
-#	var _name: String
-#	enum { None, Pos, Rot, Size, PosRot, PosSize, RotSize, PosRotSize }
-#	var _animation_type: int = 0 
-	var _from: Transition
-	var _offset: Transition
-	var _to: Transition
-#	var _start_frame: float
-	var _current_frame: float
-	var _duration: float
-	enum { Ease, Linear, EaseIn, EaseOut, EaseInOut, CubicBezier} 
-	var _timing_func: int
-	var _delay: float
-	var _iter_count: int
-#	var _direction: normal reverse
-	
-	func set_animation(
-		from: Transition,
-		to: Transition,
-		duration: float,
-		timing_func: int
-#		delay: float = 0.0
-#		iter_count: int = 1
-	) -> void:
-		_from = from
-		_to = to
-		_duration = duration
-		_timing_func = timing_func
-#		_delay = delay
-#		_iter_count = iter_count
-		_offset = Transition.new(
-			_from.position() - _to.position(),
-			_from.rotation() - _to.rotation(),
-			_from.scale() - _to.scale()
-		)
-	
-	func run() -> void:
-		_run = true
-	
-	func stop() -> void:
-		_run = false
-	
-	func running() -> bool:
-		return _run
-	
-	func step(comp: Component, delta: float) -> void:
-		_current_frame += _duration / 100 #delta
-#		match _timing_func: 
-#		easeInOutQuad
-		var i: float = _current_frame < 0.5 if 2 * _current_frame * _current_frame \
-			else 1 - pow(-2 * _current_frame + 2, 2) / 2
-		comp.set_transform(_offset.position() * i, _offset.scale() * i, _offset.rotation() * i)
-		if _current_frame >= _duration:
-			stop()
-
-enum { TopHSplit, BottomHSplit, LeftVSplit, RightVSplit, 
+enum { Custom, TopHSplit, BottomHSplit, LeftVSplit, RightVSplit, 
 	Center, CenterLeft, CenterRight, CenterTop, CenterBottom, 
 	TopLeft, TopRight, BottomLeft, BottomRight, Padding,
 	MarginLeft, MarginRight, MarginTop, MarginBottom }
@@ -96,7 +11,7 @@ var _position: Vector2 = Vector2.ZERO
 var _rotation: float = 0
 var _scale: Vector2 = Vector2.ONE
 ##local
-var _rect: Rect2 = Rect2(-Vector2(100, 100), Vector2(200, 200)) #-pivot, size
+var _rect: Rect2 #= Rect2(-Vector2(100, 100), Vector2(200, 200)) #-pivot, size
 var _padding: Vector2 = Vector2.ZERO
 
 var _visible := true
@@ -105,7 +20,7 @@ var _mouse_hover := false
 var _mouse_exit := false
 var _mouse_click := false
 
-var animation: CompAnimation = CompAnimation.new()
+#var animation: CompAnimation = CompAnimation.new()
 
 var _clicked := false
 var _dragging := false
@@ -115,8 +30,103 @@ var _hovered := false
 #var _visible := true
 #var _active := true
 
-#func _init(ctx: Context) -> void:
-#	pass
+func _init(
+	ctx: Context,
+	parent: Component = null,
+	relative_type: int = Custom, #Component.TopLeft
+	offset: Vector2 = Vector2.ZERO,
+	custom_size: Vector2 = Vector2.ZERO
+) -> void:
+	if not parent:
+		#todo
+		if custom_size == Vector2.ZERO:
+			custom_size = Vector2(200, 200)
+		set_transform(offset, custom_size, 0)
+		return
+	var pos: Vector2 = parent.position()
+	var rotation: float = parent.rotation()
+	var size: Vector2 = parent.size()
+	if custom_size == Vector2.ZERO:
+		custom_size = parent.size() 
+	match relative_type:
+		Custom:
+			pos = offset
+			set_transform(pos, size, rotation)
+		TopHSplit:
+			size.y *= 0.5
+			pos += offset
+			size -= offset * 2
+			set_transform(pos, size, rotation)
+		BottomHSplit:
+			size.y *= 0.5
+			pos.y += size.y
+			pos += offset
+			size -= offset * 2
+			set_transform(pos, size, rotation)
+		LeftVSplit:
+			size.x *= 0.5
+			pos += offset
+			size -= offset * 2
+			set_transform(pos, size, rotation)
+		RightVSplit:
+			size.x *= 0.5
+			pos.x += size.x
+			pos += offset
+			size -= offset * 2
+			set_transform(pos, size, rotation)
+		Center:
+			pos.x += (size.x - custom_size.x) * 0.5
+			pos.y += (size.y - custom_size.y) * 0.5
+			pos += offset
+			custom_size -= offset * 2
+			set_transform(pos, custom_size, rotation)
+		CenterLeft:
+			pos.x += offset.x
+			pos.y += (size.y - custom_size.y) * 0.5
+			set_transform(pos, custom_size, rotation)
+		CenterRight:
+			pos.x += size.x - custom_size.x - offset.x
+			pos.y += (size.y - custom_size.y) * 0.5
+			set_transform(pos, custom_size, rotation)
+		CenterTop:
+			pos.x += (size.x - custom_size.x) * 0.5
+			pos.y += offset.y
+			set_transform(pos, custom_size, rotation)
+		CenterBottom:
+			pos.y += size.y - custom_size.y - offset.x
+			pos.x += (size.x - custom_size.x) * 0.5
+			set_transform(pos, custom_size, rotation)
+		TopLeft:
+			pos += offset
+			set_transform(pos, custom_size, rotation)
+		BottomLeft:
+			pos.x += offset.x
+			pos.y += size.y - custom_size.y - offset.y
+			set_transform(pos, custom_size, rotation)
+		TopRight:
+			pos.x += size.x - custom_size.x - offset.x
+			pos.y += offset.y
+			set_transform(pos, custom_size, rotation)
+		BottomRight:
+			pos.x += size.x - custom_size.x - offset.x
+			pos.y += size.y - custom_size.y - offset.y
+			set_transform(pos, custom_size, rotation)
+		Padding:
+			pos += offset
+			size -= offset * 2
+			set_transform(pos, size, rotation)
+		MarginLeft:
+			pos.x -= (size.x + offset.x)
+			set_transform(pos, custom_size, rotation)
+		MarginRight:
+			pos.x += (size.x + offset.x)
+			set_transform(pos, custom_size, rotation)
+		MarginTop:
+			pos.y -= (size.y + offset.y)
+			set_transform(pos, custom_size, rotation)
+		MarginBottom:
+			pos.y += (size.y + offset.y)
+			set_transform(pos, custom_size, rotation)
 
 func render(ctx: Context) -> void:
 	pass
@@ -177,10 +187,15 @@ func scale() -> Vector2:
 func set_size(size: Vector2) -> void:
 #	_size = size 
 #	_pivot = _size * 0.5
-	_rect = Rect2(-size * 0.5, size * 0.5)
+	_rect = Rect2(-size * 0.5, size)
 
 func size() -> Vector2:
 	return _rect.size
+
+func set_pivot(pivot: Vector2) -> void:
+#	_size = size 
+#	_pivot = _size * 0.5
+	_rect.position = pivot
 
 func pivot() -> Vector2:
 	return -_rect.position
@@ -271,124 +286,3 @@ func rect_has_point(point: Vector2):
 	if point.y >= (_position.y + size.y):
 		return false
 	return true
-
-func relative_transform(
-	compponent: Component,
-	type: int,
-	offset: Vector2 = Vector2.ZERO,
-	custom_size: Vector2 = _rect.size
-) -> void:
-	match type:
-		TopHSplit:
-			var t = Transform2D.IDENTITY
-			t.origin = Vector2(100, 100)
-			var pos := _position
-			var size := _rect.size
-			size.y *= 0.5
-			pos += offset
-			size -= offset * 2
-			compponent.set_transform(pos, size, _rotation)
-		BottomHSplit:
-			var pos := _position
-			var size := _rect.size
-			size.y *= 0.5
-			pos.y += size.y
-			pos += offset
-			size -= offset * 2
-			compponent.set_transform(pos, size, _rotation)
-		LeftVSplit:
-			var pos := _position
-			var size := _rect.size
-			size.x *= 0.5
-			pos += offset
-			size -= offset * 2
-			compponent.set_transform(pos, size, _rotation)
-		RightVSplit:
-			var pos := _position
-			var size := _rect.size
-			size.x *= 0.5
-			pos.x += size.x
-			pos += offset
-			size -= offset * 2
-			compponent.set_transform(pos, size, _rotation)
-		Center:
-			var pos := _position
-			var size := _rect.size
-			pos.x += (size.x - custom_size.x) * 0.5
-			pos.y += (size.y - custom_size.y) * 0.5
-			pos += offset
-			custom_size -= offset * 2
-			compponent.set_transform(pos, custom_size, _rotation)
-		CenterLeft:
-			var pos := _position
-			var size := _rect.size
-			pos.x += offset.x
-			pos.y += (size.y - custom_size.y) * 0.5
-			compponent.set_transform(pos, custom_size, _rotation)
-		CenterRight:
-			var pos := _position
-			var size := _rect.size
-			pos.x += size.x - custom_size.x - offset.x
-			pos.y += (size.y - custom_size.y) * 0.5
-			compponent.set_transform(pos, custom_size, _rotation)
-		CenterTop:
-			var pos := _position
-			var size := _rect.size
-			pos.x += (size.x - custom_size.x) * 0.5
-			pos.y += offset.y
-			compponent.set_transform(pos, custom_size, _rotation)
-		CenterBottom:
-			var pos := _position
-			var size := _rect.size
-			pos.y += size.y - custom_size.y - offset.x
-			pos.x += (size.x - custom_size.x) * 0.5
-			compponent.set_transform(pos, custom_size, _rotation)
-		TopLeft:
-			var pos := _position
-			var size := _rect.size
-			pos += offset
-			compponent.set_transform(pos, custom_size, _rotation)
-		BottomLeft:
-			var pos := _position
-			var size := _rect.size
-			pos.x += offset.x
-			pos.y += size.y - custom_size.y - offset.y
-			compponent.set_transform(pos, custom_size, _rotation)
-		TopRight:
-			var pos := _position
-			var size := _rect.size
-			pos.x += size.x - custom_size.x - offset.x
-			pos.y += offset.y
-			compponent.set_transform(pos, custom_size, _rotation)
-		BottomRight:
-			var pos := _position
-			var size := _rect.size
-			pos.x += size.x - custom_size.x - offset.x
-			pos.y += size.y - custom_size.y - offset.y
-			compponent.set_transform(pos, custom_size, _rotation)
-		Padding:
-			var pos := _position
-			var size := _rect.size
-			pos += offset
-			size -= offset * 2
-			compponent.set_transform(pos, size, _rotation)
-		MarginLeft:
-			var pos := _position
-			var size := _rect.size
-			pos.x -= (size.x + offset.x)
-			compponent.set_transform(pos, custom_size, _rotation)
-		MarginRight:
-			var pos := _position
-			var size := _rect.size
-			pos.x += (size.x + offset.x)
-			compponent.set_transform(pos, custom_size, _rotation)
-		MarginTop:
-			var pos := _position
-			var size := _rect.size
-			pos.y -= (size.y + offset.y)
-			compponent.set_transform(pos, custom_size, _rotation)
-		MarginBottom:
-			var pos := _position
-			var size := _rect.size
-			pos.y += (size.y + offset.y)
-			compponent.set_transform(pos, custom_size, _rotation)
