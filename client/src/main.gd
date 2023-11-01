@@ -22,11 +22,10 @@ func _ready() -> void:
 	Physics2DServer.set_active(false)
 	PhysicsServer.set_active(false)
 	
+#	var tween = get_tree().create_tween()
 	ctx = Context.new($Arrow, $Tween)
-	board = Board.new(ctx)
+	board = Board.new(self, ctx)
 	card = Card.new(ctx)
-#	config.font.font_data = load("res://assets/font/SansSerif.ttf")
-#	config.font.set_size(config.font_size)
 #	$ScrollContainer/Control.config = config
 #	board.init($ScrollContainer/Control)
 #	board.texture = load("res://assets/board1.png") as Texture
@@ -78,7 +77,9 @@ func _input(event: InputEvent) -> void:
 ##			setting.input(sense)
 
 func get_drag_data(position: Vector2):
-	pass
+#	print("drag222")
+	return Card.new(ctx)
+	# Card.new(ctx)
 #	if active_screen != Screen.Main:
 #		return null
 #	var player: Player = board.this_player()
@@ -94,6 +95,7 @@ func get_drag_data(position: Vector2):
 
 
 func can_drop_data(position: Vector2, data) -> bool:
+	print("drag")
 #	#TODO add 2  and 3 to box input return (dragging and targeting)
 #	if sense.dragging():
 #		var player: Player = board.this_player()
@@ -126,6 +128,7 @@ func can_drop_data(position: Vector2, data) -> bool:
 	return true
 
 func drop_data(position: Vector2, data) -> void:
+	print("drop")
 	pass
 #	if sense.dragging():
 #		var player: Player = board.this_player()

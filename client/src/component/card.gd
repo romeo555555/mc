@@ -72,8 +72,8 @@ func render(ctx: Context) -> void:
 		#	ctx.draw_string()
 #		if animation.running():
 #			animation.step(self, ctx.delta)
-		if mouse_hover():
-			ctx.canvas.draw_rect(rect, ctx.clicked_color if mouse_click() else ctx.hover_color, false, ctx.hover_line_size)
+#		if mouse_hover():
+#			ctx.canvas.draw_rect(rect, ctx.clicked_color if mouse_click() else ctx.hover_color, false, ctx.hover_line_size)
 #		if highlight():
 #			ctx.canvas.draw_rect(rect(), highlight_color(), false, 15)
 		ctx.canvas.draw_set_transform_matrix(Transform2D.IDENTITY)

@@ -42,6 +42,8 @@ var _selected := false
 #var _card_pivote = Vector2.ZERO
 
 func _init(node_arrow: Line2D, node_tween: Tween):
+	font.font_data = load("res://assets/font/SansSerif.ttf")
+	font.set_size(font_size)
 	arrow = node_arrow
 	tween = node_tween
 #	tween.interpolate_method(card, "set_position", Vector2.ZERO, Vector2(500, 500), 3, 1)
@@ -81,6 +83,14 @@ func set_player_id(player_id: String) -> void:
 
 func player_id() -> String:
 	return _player_id
+
+func text_position(text: String) -> Vector2:
+#	var h_font_size = ctx.font_size * 0.5
+#	ctx.canvas.draw_string(ctx.font, center() - ctx.font.get_string_size(text) * 0.5 + Vector2(0, h_font_size), text)
+	var pos_text: Vector2 = font.get_string_size(text) * 0.5
+	pos_text.x *= -1
+	pos_text.y -= font_size  * 0.25
+	return pos_text
 
 func draw_shadowing() -> void:
 	canvas.draw_rect(Rect2(Vector2.ZERO, screen_size), Color(0,0,0, 0.5))

@@ -29,5 +29,4 @@ func render(ctx: Context) -> void:
 			ctx.canvas.draw_rect(rect, ctx.clicked_color if mouse_click() else ctx.hover_color, false, ctx.hover_line_size)
 		ctx.canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
 		if mouse_click():
-			print("true")
 			modal = true

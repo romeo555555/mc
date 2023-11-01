@@ -3,8 +3,9 @@ extends Node
 #const ModalAttack = preload("res://src/component/modal_attack.gd")
 #const ModalCard = preload("res://src/component/modal_card.gd")
 #const ModalCardOnTabel = preload("res://src/component/modal_card_on_tabel.gd")
-#const ModalChooseCard = preload("res://src/component/modal_choose_card.gd")
+const ModalChooseCard = preload("res://src/component/modal_choose_card.gd")
 const ModalSetting = preload("res://src/component/modal_setting.gd")
+const ModalScrollList = preload("res://src/component/modal_scroll_list.gd")
 
 const Card = preload("res://src/component/card.gd")
 const Hand = preload("res://src/component/hand.gd")

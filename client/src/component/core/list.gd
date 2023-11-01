@@ -13,7 +13,7 @@ var _x_indent: float = 0.0
 var _item_size: Vector2
 
 var _focused_item_id: int = -1
-var _row_capacity: int
+var _row_capacity: int = 4
 
 func _init(
 	ctx: Context,
@@ -34,7 +34,12 @@ func set_angel(min_angel: float = -0.35, max_angel: float = 0.35) -> void:
 	_min_angel = min_angel
 	_max_angel = max_angel
 
-func set_item_size(x_item_aspect: float, x_item_indent: float) -> void:
+func set_item_size(item_size: Vector2, item_indent: Vector2) -> void:
+	_item_size = item_size
+	_x_indent = item_indent.x
+	_x_offset = _x_indent + _item_size.x
+
+func set_item_aspect(x_item_aspect: float, x_item_indent: float = 0) -> void:
 	_item_size = Vector2(size().y * x_item_aspect, size().y)
 	_x_indent = x_item_indent
 	_x_offset = _x_indent + _item_size.x
@@ -86,6 +91,9 @@ func get_item(idx: int) -> Component:
 	else:
 		return null
 
+func get_last_item() -> Component:
+	return _list[lenght() - 1]
+
 func swap_item(idx_to: int, idx_from: int) -> void:
 	_list.insert(idx_to, _list.pop_at(idx_from))
 	
@@ -125,17 +133,19 @@ func aligment() -> void:
 				pos.x += _x_offset
 		Aligment.Grid:
 			#	var pos := _start_pos
-			var pos := position()
+			var start_pos := position() + Vector2(_x_indent, _x_indent)
+			var pos := start_pos
 #				\ + Vector2(_item_size.x * 0.5 - _x_indent, 0)
 			var row := 0
 			for i in range(0, lenght()):
-				var colum := int(i) % _row_capacity
+				var colum := i % _row_capacity
+				print(colum)
+				if colum == 0:
+					pos.y = start_pos.y + _x_offset * row
+					row += 1
+				pos.x = start_pos.x + _x_offset * colum
 				_list[i].set_position(pos)
 				_list[i].set_rotation(0)
-				pos.x += _x_offset
-				if colum == 4:
-					row += 1
-					pos.y += _x_offset
 #			rect_min_size = _cards[card_count()-1].position() + _item_size + _indent + Vector2(0, _margin_offset.y)
 #			box.init(box.position(), Vector2(box.size().x, rect_min_size.y + _margin_offset.y))
 		Aligment.Bent:

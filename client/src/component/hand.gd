@@ -22,19 +22,40 @@ func _init(
 ) -> void:
 	texture = load("res://assets/error.png") as Texture
 	list = List.new(ctx, self, Component.Padding, Vector2(0, 20))
-	list.set_item_size(1, -50.0)
+	list.set_item_aspect(1, -50.0)
 	list.set_capacity(10)
 	list.set_aligment_type(List.Aligment.Bent)
 	list.set_miroring(miroring)
 
 func render(ctx: Context) -> void:
 	input(ctx)
+	var hovered_card_id := -1
+	var rect: Rect2
 #	if texture:
 #		ctx.draw_texture_rect(texture, box.rect(), false)
 #	for i in range(list.lenght() - 1, -1, -1):
 	for i in range(0, list.lenght()):
 		var card: Card = list.get_item(i)
 		card.render(ctx)
+		if card.mouse_hover():
+			hovered_card_id = i
+			rect = Rect2(card.position(), card.size())
+	if hovered_card_id > -1:
+#		var rect: Rect2 = rect()
+#		ctx.canvas.draw_set_transform(center(), rotation(), scale())
+#		ctx.canvas.draw_texture_rect(texture, rect, false)
+#		#	ctx.draw_rect()
+#		#	ctx.draw_string()
+##		if animation.running():
+##			animation.step(self, ctx.delta)
+##		if mouse_hover():
+##			ctx.canvas.draw_rect(rect, ctx.clicked_color if mouse_click() else ctx.hover_color, false, ctx.hover_line_size)
+##		if highlight():
+##			ctx.canvas.draw_rect(rect(), highlight_color(), false, 15)
+#		ctx.canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
+			ctx.canvas.draw_rect(rect, ctx.clicked_color if mouse_click() else ctx.hover_color, false, ctx.hover_line_size)
+			list.get_item(hovered_card_id).set_visible(false)
+			
 	#todo
 #	if list.get_focused_card_id() > -1:
 #		var card: Card = list.get_focused_card()
@@ -63,38 +84,34 @@ func draw_cached_card(ctx: Context, position: Vector2) -> void:
 func add_card(card: Card, idx: int = -1) -> void:
 	list.add_card(card, idx)
 
-func focused_card(point: Vector2) -> void:
-	list.focused_card(point)
-
-func get_focused_card() -> Card:
+func get_hovered_card() -> Card:
 	if list.has_focused_card():
 		return list.get_focused_card()
 	return null
 
-func get_focused_card_id() -> int:
+func get_hovered_card_id() -> int:
 	return list.get_focused_card_id()
 
-func has_focused_card() -> bool:
+func has_hovered_card() -> bool:
 	return list.has_focused_card()
 
-func unfocused_card() -> void:
+func unhovered_card() -> void:
 	if list.has_focused_card():
 		list.aligment_line()
 		list.unfocused_card()
 
-func cached_card(card_id: int) -> void:
-	list.cached_card(card_id)
-
-func get_cached_card() -> Card:
-	return list.get_cached_card()
-
-func uncached_card() -> void:
-	list.uncached_card()
-
-func remove_cached_card() -> Card:
-	return list.remove_cached_card()
-	
-
+#func cached_card(card_id: int) -> void:
+#	list.cached_card(card_id)
+#
+#func get_cached_card() -> Card:
+#	return list.get_cached_card()
+#
+#func uncached_card() -> void:
+#	list.uncached_card()
+#
+#func remove_cached_card() -> Card:
+#	return list.remove_cached_card()
+#
 #var _cached_card_id: int
 #var _cached_card_pos: Vector2
 #var _cached_card_rot: float

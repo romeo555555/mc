@@ -20,15 +20,15 @@ func _init(
 	custom_size
 ) -> void:
 	left_list = List.new(ctx, self, Component.LeftVSplit, Vector2(20, 20))
-	left_list.set_item_size(1, 10.0)
+	left_list.set_item_aspect(1, 10.0)
 	left_list.set_capacity(4)
 	left_list.set_aligment_type(List.Aligment.Right)
 	right_list = List.new(ctx, self, Component.RightVSplit, Vector2(20, 20))
-	right_list.set_item_size(1, 10.0)
+	right_list.set_item_aspect(1, 10.0)
 	right_list.set_capacity(4)
 	right_list.set_aligment_type(List.Aligment.Left)
 	avatar_list = List.new(ctx, self, Component.Center, Vector2(0, 20))
-	avatar_list.set_item_size(1, 0.0)
+	avatar_list.set_item_aspect(1, 0.0)
 	avatar_list.set_capacity(1)
 	avatar_list.set_aligment_type(List.Aligment.Center)
 
@@ -110,52 +110,50 @@ func has_focused_card() -> bool:
 		left_list.has_focused_card() or \
 		right_list.has_focused_card()
 
-func unfocused_card() -> void:
-	if avatar_list.has_focused_card():
-		avatar_list.aligment_line()
-		avatar_list.unfocused_card()
-	if left_list.has_focused_card():
-		left_list.aligment_line()
-		left_list.unfocused_card()
-	if right_list.has_focused_card():
-		right_list.aligment_line()
-		right_list.unfocused_card()
-
-func cached_card(card_id: int) -> void:
-	if avatar_list.has_focused_card():
-		avatar_list.cached_card(card_id)
-	if left_list.has_focused_card():
-		left_list.cached_card(card_id)
-	if right_list.has_focused_card():
-		right_list.cached_card(card_id)
-
-func get_cached_card() -> Card:
-	if avatar_list.has_focused_card():
-		return avatar_list.get_cached_card()
-	elif left_list.has_focused_card():
-		return left_list.get_cached_card()
-	elif right_list.has_focused_card():
-		return right_list.get_cached_card()
-	return null
-
-func uncached_card() -> void:
-	if avatar_list.has_focused_card():
-		avatar_list.uncached_card()
-	if left_list.has_focused_card():
-		left_list.uncached_card()
-	if right_list.has_focused_card():
-		right_list.uncached_card()
-
-func remove_cached_card() -> Card:
-	if avatar_list.has_focused_card():
-		return avatar_list.remove_cached_card()
-	elif left_list.has_focused_card():
-		return left_list.remove_cached_card()
-	elif right_list.has_focused_card():
-		return right_list.remove_cached_card()
-	return null
-
-
+#func unfocused_card() -> void:
+#	if avatar_list.has_focused_card():
+#		avatar_list.aligment_line()
+#		avatar_list.unfocused_card()
+#	if left_list.has_focused_card():
+#		left_list.aligment_line()
+#		left_list.unfocused_card()
+#	if right_list.has_focused_card():
+#		right_list.aligment_line()
+#		right_list.unfocused_card()
+#
+#func cached_card(card_id: int) -> void:
+#	if avatar_list.has_focused_card():
+#		avatar_list.cached_card(card_id)
+#	if left_list.has_focused_card():
+#		left_list.cached_card(card_id)
+#	if right_list.has_focused_card():
+#		right_list.cached_card(card_id)
+#
+#func get_cached_card() -> Card:
+#	if avatar_list.has_focused_card():
+#		return avatar_list.get_cached_card()
+#	elif left_list.has_focused_card():
+#		return left_list.get_cached_card()
+#	elif right_list.has_focused_card():
+#		return right_list.get_cached_card()
+#	return null
+#
+#func uncached_card() -> void:
+#	if avatar_list.has_focused_card():
+#		avatar_list.uncached_card()
+#	if left_list.has_focused_card():
+#		left_list.uncached_card()
+#	if right_list.has_focused_card():
+#		right_list.uncached_card()
+#
+#func remove_cached_card() -> Card:
+#	if avatar_list.has_focused_card():
+#		return avatar_list.remove_cached_card()
+#	elif left_list.has_focused_card():
+#		return left_list.remove_cached_card()
+#	elif right_list.has_focused_card():
+#		return right_list.remove_cached_card()
+#	return null
 
 
 #func input(sense: Sense) -> void:

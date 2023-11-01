@@ -31,8 +31,7 @@ func render(ctx: Context) -> void:
 #		ctx.draw_texture_rect(texture, rect, false)
 		ctx.canvas.draw_rect(rect, Color.violet)
 #		ctx.font.set_size(FONT_SIZE)
-		var h_font_size = ctx.font_size * 0.5
-		ctx.canvas.draw_string(ctx.font, center() - ctx.font.get_string_size(text) * 0.5 + Vector2(0, h_font_size), text)
+		ctx.canvas.draw_string(ctx.font, ctx.text_position(text), text)
 		if mouse_hover():
 			ctx.canvas.draw_rect(rect, ctx.clicked_color if mouse_click() else ctx.hover_color, false, ctx.hover_line_size)
 		ctx.canvas.draw_set_transform_matrix(Transform2D.IDENTITY)

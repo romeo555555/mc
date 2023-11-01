@@ -1,17 +1,15 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/com.heroiclabs.nakama/client/NakamaHTTPAdapter.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.heroiclabs.nakama/socket/NakamaSocketAdapter.gd" type="Script" id=2]
 [ext_resource path="res://src/main.gd" type="Script" id=3]
-[ext_resource path="res://src/component/modal_scroll_list.gd" type="Script" id=4]
-[ext_resource path="res://assets/board1.png" type="Texture" id=6]
 
 [sub_resource type="Curve2D" id=1]
 _data = {
 "points": PoolVector2Array( -22.2589, 43.6794, 22.2589, -43.6794, 178.998, 98.5368, -22.4932, -45.3594, 22.4932, 45.3594, 271.836, 99.1653 )
 }
 
-[node name="Root" type="Control"]
+[node name="Root" type="ScrollContainer"]
 margin_right = 1980.0
 margin_bottom = 1080.0
 script = ExtResource( 3 )
@@ -34,93 +32,6 @@ polygon = PoolVector2Array( 46, 8, 32, 28, 19, 8, 32, -6 )
 visible = false
 scale = Vector2( 3.80231, 1.59091 )
 curve = SubResource( 1 )
-
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
-visible = false
-margin_right = 1980.0
-margin_bottom = 1080.0
-
-[node name="Control" type="Control" parent="ScrollContainer"]
-margin_right = 1980.0
-margin_bottom = 1080.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource( 4 )
-
-[node name="Board" type="TextureRect" parent="."]
-visible = false
-margin_right = 1980.0
-margin_bottom = 1080.0
-texture = ExtResource( 6 )
-expand = true
-
-[node name="Fog" type="ColorRect" parent="Board"]
-visible = false
-margin_left = -3.0
-margin_top = -3.0
-margin_right = 1977.0
-margin_bottom = 1077.0
-mouse_filter = 1
-color = Color( 0.101961, 0.0784314, 0.105882, 0.764706 )
-
-[node name="SettingScreen" type="Control" parent="Board"]
-visible = false
-margin_right = 1980.0
-margin_bottom = 1080.0
-mouse_filter = 1
-
-[node name="Button" type="Button" parent="Board/SettingScreen"]
-margin_left = 769.0
-margin_top = 258.0
-margin_right = 1230.0
-margin_bottom = 349.0
-text = "Continue"
-
-[node name="Button2" type="Button" parent="Board/SettingScreen"]
-margin_left = 769.0
-margin_top = 387.0
-margin_right = 1230.0
-margin_bottom = 478.0
-text = "Continue"
-
-[node name="Button3" type="Button" parent="Board/SettingScreen"]
-margin_left = 769.0
-margin_top = 518.0
-margin_right = 1230.0
-margin_bottom = 609.0
-text = "Continue"
-
-[node name="Button4" type="Button" parent="Board/SettingScreen"]
-margin_left = 769.0
-margin_top = 641.0
-margin_right = 1230.0
-margin_bottom = 732.0
-text = "Continue"
-
-[node name="DeckScreen" type="Control" parent="Board"]
-visible = false
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="DeadScreen" type="Control" parent="Board"]
-visible = false
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="HandCardScreen" type="Control" parent="Board"]
-visible = false
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="TabelCardScreen" type="Control" parent="Board"]
-visible = false
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="AttackScreen" type="Control" parent="Board"]
-visible = false
-margin_right = 40.0
-margin_bottom = 40.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 visible = false

@@ -211,7 +211,7 @@ func content_rect() -> Rect2:
 	return Rect2(_position + _padding, _rect.size - _padding * 2)
 
 func set_visible(visible: bool) -> void:
-	_visible = _visible
+	_visible = visible
 
 func visible() -> bool:
 	return _visible

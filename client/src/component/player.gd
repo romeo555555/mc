@@ -3,6 +3,8 @@ class_name Player
 
 var player_id: String
 var is_this_player: bool
+enum { None, Select, Dragging, Targeting }
+var cached_card: Card
 var hand: Hand
 var tabel: Tabel
 var factorys: Factorys
@@ -58,11 +60,6 @@ func _init(
 	for i in range(7): 
 		var card: Card = Card.new(ctx)
 		hand.list.add_item(card)
-
-#	for i in range(30): 
-#		var card: Card = Card.new()
-#		card.init()
-#		deck.list.add_card(card)
 
 func render(ctx: Context) -> void:
 	factorys.render(ctx)
